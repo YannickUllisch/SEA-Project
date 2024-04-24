@@ -7,6 +7,7 @@
     "dev": "ng serve",
     "electron": "ng build && electron .",
     "build": "ng build",
+    "package": "yarn electron-packager ./ PackagedApp --platform=darwin --overwrite",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "biome format --write --no-errors-on-unmatched . & biome lint --apply --no-errors-on-unmatched ."
