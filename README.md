@@ -2,7 +2,7 @@
 For this project we use a basic Angular Setup combined with TypeScript for the backend. For styling we mainly want to use TailWindCSS, but also have options for classical CSS.
 
 ## Installation Guide
-- Download and install `nodeJS`. https://nodejs.org/en/download  <br />
+- Download and install `nodeJS`, make sure to download v20.12.2, Angular doesn't work for newer versions yet. https://nodejs.org/en/download  <br />
 - Download and install `yarn` (our package manager) - https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable  <br />
 - Install the Angular Client `npm install -g @angular/cli`, (npm comes with nodeJS). If it gives permission errors run `sudo npm install -g @angular/cli` (atleast on Mac). It will then prompt you a answer Yes/No to a few basic thing, I would suggest to enable the auto-complete feature. 
 - Check if yarn and Angular have been installed correctly by checking `ng version` & `yarn version`.
