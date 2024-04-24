@@ -4984,6 +4984,18 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
+lucide-angular@^0.373.0:
+  version "0.373.0"
+  resolved "https://registry.yarnpkg.com/lucide-angular/-/lucide-angular-0.373.0.tgz#97388edce725e376909ecae44b09003cadda8123"
+  integrity sha512-8G+v/kH/UtdoIp+nEeXWWz1xbD5A9bDMO6DGjEd+16vRHImqWLWxcyIK4f0cLrbMQydszcWCrKcSwLfu2fpbgg==
+  dependencies:
+    tslib "^2.3.0"
+
+luxon@^3.4.4:
+  version "3.4.4"
+  resolved "https://registry.yarnpkg.com/luxon/-/luxon-3.4.4.tgz#cf20dc27dc532ba41a169c43fdcc0063601577af"
+  integrity sha512-zobTr7akeGHnv7eBOXcRgMeCP6+uyYsczwmeRCauvpvaAltgNyTbLH/+VaEAPUeWBT+1GuNmz4wC/6jtQzbbVA==
+
 magic-string@0.30.8:
   version "0.30.8"
   resolved "https://registry.npmjs.org/magic-string/-/magic-string-0.30.8.tgz"
@@ -5921,6 +5933,13 @@ postcss@^8.2.14, postcss@^8.4.23, postcss@^8.4.33, postcss@^8.4.35, postcss@^8.4
     nanoid "^3.3.7"
     picocolors "^1.0.0"
     source-map-js "^1.2.0"
+
+primeng@^17.14.1:
+  version "17.14.1"
+  resolved "https://registry.yarnpkg.com/primeng/-/primeng-17.14.1.tgz#3153a83ad9b79604e45bb340a356b96fbc48922a"
+  integrity sha512-hjJzjiNZR0+zCEbvLidXYzJriwgxj4vTBMTmmw9JP5b17mO3Ruhv7h4ofEThpnc1LyE0W91f8jC+Q/Kg2Xuqrw==
+  dependencies:
+    tslib "^2.3.0"
 
 prisma@^5.12.1:
   version "5.12.1"
