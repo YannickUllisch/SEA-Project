@@ -82,8 +82,9 @@ Another good library we can technically use if this one is not sufficient is `An
 ## Useful Links for Web-Dev onboarding
 * For ICONS use Lucide-Angular. The package is already installed, individual Icons can just be imported. You can find the Icon overview here `https://lucide.dev/icons/` and a guide over how to use it here `https://lucide.dev/guide/packages/lucide-angular`. 
 * Angular and OOP
-  * This is long but has explanations of a lot of web-dev stuff (Try to get through as much as you need here): https://www.youtube.com/watch?v=k5E2AVpwsko 
-  * https://medium.com/@greennolgaa/understanding-object-oriented-programming-concepts-in-angular-7549547c3f68
+  * This is long but has explanations of a lot of web-dev stuff (Try to get through as much as you need here): https://www.youtube.com/watch?v=k5E2AVpwsko
+  * Tutorial about Angular hooks - these are also quite important to know and will be used frequently: https://www.youtube.com/watch?v=Qts7H8P-FpI
+  * OOP: https://medium.com/@greennolgaa/understanding-object-oriented-programming-concepts-in-angular-7549547c3f68
   * Atleast watch the project structure and set up part, there is also some intro to APIs: https://www.youtube.com/watch?v=f7BJFTEbc10&t=3838s
   * OOP with Angular: https://www.youtube.com/watch?v=dT-USOLoW5k&list=PLaNS0Z4LpEp0FrYiSQKhFP7kmfLarmSQK&index=9
   * OOP in general with TypeScript: https://www.youtube.com/watch?v=OsFwOzr3_sE
