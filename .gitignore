@@ -11,6 +11,9 @@
 npm-debug.log
 yarn-error.log
 
+# Production App Folder
+/PackagedApp-darwin-arm64
+
 # IDEs and editors
 .idea/
 .project
