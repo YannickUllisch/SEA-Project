@@ -4,7 +4,7 @@ For this project we use a basic Angular Setup combined with TypeScript for the b
 ## Installation Guide
 - Download and install `nodeJS`. https://nodejs.org/en/download  <br />
 - Download and install `yarn` (our package manager) - https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable  <br />
-- Install the Angular Client `npm install -g @angular/cli`, (npm comes with nodeJS).
+- Install the Angular Client `npm install -g @angular/cli`, (npm comes with nodeJS). If it gives permission errors run `sudo npm install -g @angular/cli` (atleast on Mac). It will then prompt you a answer Yes/No to a few basic thing, I would suggest to enable the auto-complete feature. 
 - Check if yarn and Angular have been installed correctly by checking `ng version` & `yarn version`.
 - Add VSCode Extensions listed below AND setup biome as code formatter
 
