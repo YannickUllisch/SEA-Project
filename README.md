@@ -75,7 +75,11 @@ Prisma is a library that makes it easy to setup database tables, perform querys 
 Watch this for a very quick overview: `https://www.youtube.com/watch?v=rLRIB6AF2Dg`.
 
 ## UI Libraries
+<<<<<<< HEAD
 Currently only `PrimeNG` is installed as a UI library. When you want to create new UI stuff which includes more than a basic div visit this page `https://primeng.org/` and see if you can find and import it from there. It will make our life quite easy using this, but its an additional learning curve. I would suggest reading through the 'getting started' pages on primeng.org to understand a bit about it and try to do some imports yourself and see how it works. 
+=======
+Currently only `PrimeNG` is installed as a UI library. When you want to create new UI stuff which includes more than a <div> visit this page `https://primeng.org/` and see if you can find and import it from there. It will make our life quite easy using this, but its an additional learning curve. I would suggest reading through the 'getting started' pages on primeng.org to understand a bit about it and try to do some imports yourself and see how it works. 
+>>>>>>> 35b0656 (feat: angular replaced with react)
 
 Another good library we can technically use if this one is not sufficient is `Angular Material`, don't worry about it in the beginning but if you don't find what you look for on PrimeNG have a look there. 
 
