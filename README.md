@@ -2,7 +2,7 @@
 For this project we use the NextJS framework with react, wrapped by Electron. This is combined with TypeScript/Electron for the backend. For styling we use either TailwindCSS or MaterialUIs theming options. 
 
 ## Installation Guide
-- Download and install `nodeJS`. https://nodejs.org/en/download  <br />
+- Download and install `nodeJS`, make sure to download v20.12.2, Angular doesn't work for newer versions yet. https://nodejs.org/en/download  <br />
 - Download and install `yarn` (our package manager) - https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable  <br />
 - Check if yarn has been installed correctly by checking `yarn version`.
 - Add VSCode Extensions listed below AND setup biome as code formatter
