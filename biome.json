@@ -1,41 +1,40 @@
 {
-    "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
-    "organizeImports": {
-      "enabled": true
-    },
-    "files": {
-      "ignoreUnknown": true
-    },
-    "formatter": {
-      "ignore": ["coverage/**", "node_modules/**", "build/**", "public/**"],
-      "enabled": true,
-      "formatWithErrors": true,
-      "indentStyle": "space",
-      "indentWidth": 2
-    },
-    "linter": {
-      "ignore": ["coverage/**", "node_modules/**", "build/**", "public/**"],
-      "enabled": true,
-      "rules": {
-        "recommended": true,
-        "suspicious": {
-          "noExplicitAny": "off",
-          "noAsyncPromiseExecutor": "off",
-          "noConsoleLog": "warn"
-        },
-        "correctness": {
-          "noUnusedVariables": "error"
-        },
-        "performance": {
-          "noAccumulatingSpread": "off"
-        }
-      }
-    },
-    "javascript": {
-      "formatter": {
-        "quoteStyle": "single",
-        "semicolons": "asNeeded"
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "organizeImports": {
+    "enabled": true
+  },
+  "files": {
+    "ignoreUnknown": true
+  },
+  "formatter": {
+    "ignore": ["coverage/**", "node_modules/**", "build/**", "public/**"],
+    "enabled": true,
+    "formatWithErrors": true,
+    "indentStyle": "space",
+    "indentWidth": 2
+  },
+  "linter": {
+    "ignore": ["coverage/**", "node_modules/**", "build/**", "public/**"],
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "suspicious": {
+        "noExplicitAny": "off",
+        "noAsyncPromiseExecutor": "off",
+        "noConsoleLog": "warn"
+      },
+      "correctness": {
+        "noUnusedVariables": "error"
+      },
+      "performance": {
+        "noAccumulatingSpread": "off"
       }
     }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "semicolons": "asNeeded"
+    }
   }
-  
+}
