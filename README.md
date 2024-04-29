@@ -4,12 +4,12 @@ For this project we use the NextJS framework with react, wrapped by Electron. Th
 ## Installation Guide
 - Download and install `nodeJS`, make sure to download v20.12.2, Angular doesn't work for newer versions yet. https://nodejs.org/en/download  <br />
 - Download and install `yarn` (our package manager) - https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable  <br />
-- Check if yarn has been installed correctly by checking `yarn version`.
+- Check if yarn has been installed correctly by checking `yarn --version`.
 - Add VSCode Extensions listed below AND setup biome as code formatter
 
 ### Add VSCode Extensions
 Add the following extensions:
-  * AMaterial-UI Snippets
+  * Material-UI Snippets
   * React
   * Biome
   * Prisma
