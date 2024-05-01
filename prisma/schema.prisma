@@ -9,18 +9,17 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-
-enum RoleTypes {
-  Admin
-  Assistant
+  provider = "sqlite"
+  url      = "file:./database.db"
 }
 
 model User {
   id        String @default(uuid()) @id
   name      String
   password  String
-  role      RoleTypes
+  role      Int
+}
+
+model Experiment {
+  id        String @default(uuid()) @id
 }
