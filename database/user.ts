@@ -20,7 +20,7 @@ export const getUserById = async (id: string) => {
 /**
  *
  * @param name The name of the new User
- * @param encryptedPassword The user password, MAKE SURE TO ENCRPYT IT BEFORE PASSING IT HERE
+ * @param encryptedPassword The user password, password needs to be encrypted using bcrypt.
  * @param role INT that defines role, 0 = Admin, 1 = Assistant
  * @returns Nothing if it works and an error if it fails.
  */
