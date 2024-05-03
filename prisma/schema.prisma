@@ -18,6 +18,7 @@ model User {
   name      String
   password  String
   role      Int
+  assistant Boolean @default(false)
 }
 
 model Experiment {

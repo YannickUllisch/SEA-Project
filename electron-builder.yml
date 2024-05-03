@@ -1,6 +1,6 @@
 appId: com.example.nextron
-productName: My Nextron App
-copyright: Copyright © 2018 Yoshihide Shiono
+productName: Survey System
+copyright: Copyright © 2024 Group 1 SEA
 directories:
   output: dist
   buildResources: resources

@@ -1,5 +1,4 @@
 // Fetch by Id and Create function for Admins
-
 import { db } from './dbClient'
 
 /**
@@ -10,6 +9,21 @@ import { db } from './dbClient'
 export const getUserById = async (id: string) => {
   try {
     const user = await db.user.findUnique({ where: { id } })
+
+    return user
+  } catch {
+    return null
+  }
+}
+
+/**
+ *
+ * @param username A username, that identifies a specific user
+ * @returns A User object
+ */
+export const getUserByName = async (name: string) => {
+  try {
+    const user = await db.user.findFirst({ where: { name } })
 
     return user
   } catch {
