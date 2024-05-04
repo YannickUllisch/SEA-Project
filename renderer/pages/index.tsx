@@ -1,15 +1,14 @@
 import React, { useEffect } from 'react'
-import Head from 'next/head'
-import Link from 'next/link'
-import Image from 'next/image'
 import { Box, Button, Typography } from '@mui/material'
 import { useRouter } from 'next/router'
 import theme from '@renderer/src/lib/theme'
-import { LogIn } from 'lucide-react'
+import { useSession } from '@renderer/src/components/SessionProvider'
 
 const HomePage = () => {
   const [message, setMessage] = React.useState('No message found')
   const router = useRouter()
+  const session = useSession()
+
   useEffect(() => {
     window.ipc.on('message', (message: string) => {
       setMessage(message)
@@ -36,7 +35,7 @@ const HomePage = () => {
           }}
         >
           <Typography variant="h4" fontWeight={'bolder'}>
-            A/B Testing
+            A/B Testing System
           </Typography>
           <Button
             sx={{
@@ -58,16 +57,17 @@ const HomePage = () => {
             backgroundColor: 'white',
             padding: 5,
             marginTop: 10,
+            minWidth: '500px',
             textAlign: 'center',
             borderRadius: 4,
           }}
         >
           <Box sx={{ marginBottom: 3 }}>
             <Typography variant="h4" fontWeight={'bold'}>
-              Survey System
+              Questionnaire
             </Typography>
             <Typography color={theme.palette.text.secondary} variant="body2">
-              Start your survey below!
+              Start your questionnaire below!
             </Typography>
           </Box>
 
@@ -82,7 +82,7 @@ const HomePage = () => {
             }}
             onClick={() => router.push('/survey')}
           >
-            Start Survey
+            Start Questionnaire
           </Button>
           <Box sx={{ mt: 5 }}>
             <Button
@@ -95,6 +95,7 @@ const HomePage = () => {
               Test IPC
             </Button>
             <p>{message}</p>
+            <Button onClick={() => console.log(session)}>Test Session </Button>
           </Box>
         </Box>
       </Box>

@@ -2,6 +2,7 @@ import path from 'node:path'
 import { app, ipcMain } from 'electron'
 import serve from 'electron-serve'
 import { createWindow } from './helpers'
+import { PrismaClient } from '@prisma/client'
 const isProd = process.env.NODE_ENV === 'production'
 
 if (isProd) {
@@ -29,6 +30,8 @@ if (isProd) {
   }
 })()
 
+const prisma = new PrismaClient()
+
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit()
 })
@@ -37,6 +40,32 @@ ipcMain.on('message', async (event, arg) => {
   event.reply('message', `${arg} World!`)
 })
 
-// ipcMain.on('authenticate', async (event, arg) => {
-//   event.reply('authenticate', 'error')
-// })
+ipcMain.on(
+  'authenticate',
+  async (event, arg: { username: string; password: string }) => {
+    if (arg.username === '') {
+      event.reply('authenticate', 'Username is Required')
+      return
+    }
+    if (arg.password === '') {
+      event.reply('authenticate', 'Password is Required')
+      return
+    }
+
+    const existingUser = await prisma.user.findFirst({
+      where: {
+        name: arg.username,
+      },
+    })
+
+    if (!existingUser) {
+      event.reply('authenticate', 'Invalid credentials!')
+      return
+    }
+
+    if (existingUser.password === arg.password) {
+      // We authenticate the user
+      event.reply('authenticated', { existingUser })
+    }
+  },
+)

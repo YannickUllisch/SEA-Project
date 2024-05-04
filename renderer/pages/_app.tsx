@@ -7,10 +7,10 @@ import theme from '../src/lib/theme'
 import '../styles/styles.css'
 import { Box } from '@mui/material'
 import SessionProvider from '@renderer/src/components/SessionProvider'
-import Rerouter from '@renderer/src/components/Rerouter'
 import Head from 'next/head'
 import { Toaster } from 'sonner'
 import Footer from '@renderer/src/components/Footer'
+import AuthRerouter from '@renderer/src/components/AuthRerouter'
 
 export default function MyApp(props: AppProps) {
   const { Component, pageProps } = props
@@ -18,7 +18,7 @@ export default function MyApp(props: AppProps) {
     <AppCacheProvider {...props}>
       <SessionProvider>
         <ThemeProvider theme={theme}>
-          <Rerouter>
+          <AuthRerouter>
             <CssBaseline />
             <Head>
               <title>Survey System</title>
@@ -32,7 +32,7 @@ export default function MyApp(props: AppProps) {
             </Box>
             <Footer />
             <Toaster closeButton theme={'light'} />
-          </Rerouter>
+          </AuthRerouter>
         </ThemeProvider>
       </SessionProvider>
     </AppCacheProvider>

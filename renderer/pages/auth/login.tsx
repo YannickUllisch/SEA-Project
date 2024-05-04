@@ -18,7 +18,7 @@ const LoginPage = () => {
     >
       <Box
         sx={{
-          width: '25%',
+          width: '18%',
           minWidth: '300px',
           justifyContent: 'center',
           display: 'flex',
@@ -28,6 +28,7 @@ const LoginPage = () => {
         <Card
           sx={{
             borderRadius: 5,
+            padding: 1,
             border: 1,
             borderColor: theme.palette.grey[200],
             boxShadow: 1,

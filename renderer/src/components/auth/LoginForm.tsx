@@ -26,25 +26,27 @@ const LoginForm = () => {
         Sign in
       </Typography>
       <TextField
+        id="username"
         variant="outlined"
         margin="normal"
         required
         fullWidth
-        id="username"
         label="Username"
+        value={username}
         onChange={(e) => setUsername(e.currentTarget.value)}
         name="username"
         autoFocus
       />
       <TextField
+        id="password"
         variant="outlined"
         margin="normal"
         required
         fullWidth
+        value={password}
         name="password"
         label="Password"
         type="password"
-        id="password"
         onChange={(e) => setPassword(e.currentTarget.value)}
         autoComplete="current-password"
       />
