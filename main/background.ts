@@ -37,10 +37,6 @@ ipcMain.on('message', async (event, arg) => {
   event.reply('message', `${arg} World!`)
 })
 
-ipcMain.on(
-  'authenticate',
-  async (_event, arg: { username: string; password: string }) => {
-    // console.log(arg.username)
-    // console.log(arg.password)
-  },
-)
+// ipcMain.on('authenticate', async (event, arg) => {
+//   event.reply('authenticate', 'error')
+// })

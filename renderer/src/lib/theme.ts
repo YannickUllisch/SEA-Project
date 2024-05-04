@@ -1,9 +1,10 @@
 import { Roboto } from 'next/font/google'
 import { createTheme } from '@mui/material/styles'
 import { red } from '@mui/material/colors'
+import { Cabin } from 'next/font/google'
 
-export const roboto = Roboto({
-  weight: ['300', '400', '500', '700'],
+export const roboto = Cabin({
+  weight: ['400', '500', '600', '700'],
   subsets: ['latin'],
   display: 'swap',
 })
@@ -12,10 +13,14 @@ export const roboto = Roboto({
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#556cd6',
+      main: '#916DD5',
+      light: '#C7ADFF',
+      dark: '#7151A9',
     },
     secondary: {
-      main: '#19857b',
+      main: '#4C2C96',
+      dark: '#412681',
+      light: '#8c6cd4',
     },
     error: {
       main: red.A400,

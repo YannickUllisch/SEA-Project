@@ -5,9 +5,6 @@ import Link from 'next/link'
 const NextPage = () => {
   return (
     <>
-      <Head>
-        <title>Next - Nextron (basic-lang-typescript)</title>
-      </Head>
       <div>
         <p>
           ⚡ Electron + Next.js ⚡ -<Link href="/">Go to home page</Link>

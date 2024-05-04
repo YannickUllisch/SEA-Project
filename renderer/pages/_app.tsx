@@ -9,6 +9,8 @@ import { Box } from '@mui/material'
 import SessionProvider from '@renderer/src/components/SessionProvider'
 import Rerouter from '@renderer/src/components/Rerouter'
 import Head from 'next/head'
+import { Toaster } from 'sonner'
+import Footer from '@renderer/src/components/Footer'
 
 export default function MyApp(props: AppProps) {
   const { Component, pageProps } = props
@@ -23,11 +25,13 @@ export default function MyApp(props: AppProps) {
             </Head>
             <Box
               sx={{
-                minHeight: 'calc(90vh - 90px)',
+                minHeight: 'calc(100vh - 70px)',
               }}
             >
               <Component {...pageProps} />
             </Box>
+            <Footer />
+            <Toaster closeButton theme={'light'} />
           </Rerouter>
         </ThemeProvider>
       </SessionProvider>
