@@ -24,3 +24,29 @@ model User {
 model Experiment {
   id        String @default(uuid()) @id
 }
+
+model ParticipantTotalAnswer {
+  id              String @id @default(uuid())
+
+  demographics    Demographics?
+  answers         ParticipantQuestionAnswer[]
+
+}
+
+model Demographics {
+  id               String @id @default(uuid())
+  gender           String
+  age              Int
+  country          String
+
+  totalAnswerId    String @unique
+  totalAnswer      ParticipantTotalAnswer @relation(fields: [totalAnswerId], references: [id])
+}
+
+model ParticipantQuestionAnswer {
+  id              String @id @default(uuid())
+
+  totalAnswerId   String 
+  totalAnswer     ParticipantTotalAnswer @relation(fields: [totalAnswerId], references: [id], onDelete: Cascade)
+  
+}
