@@ -3,6 +3,7 @@ import React from 'react'
 import theme from '../lib/theme'
 import { useRouter } from 'next/router'
 import { useSession } from './SessionProvider'
+import { logout } from '@renderer/src/lib/logout'
 
 interface Page {
   name: string
@@ -85,6 +86,7 @@ const Header = () => {
               gap: 0.5,
             }}
             variant="text"
+            onClick={logout}
           >
             Logout
           </Button>

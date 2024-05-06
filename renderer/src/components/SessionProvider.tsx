@@ -8,7 +8,7 @@ import {
   useEffect,
 } from 'react'
 
-interface Session {
+export interface Session {
   user: User
 }
 
@@ -24,6 +24,9 @@ const SessionProvider: FC<PropsWithChildren> = ({ children }) => {
   useEffect(() => {
     window.ipc.on('authenticated', (session: Session) => {
       setSession(session)
+    })
+    window.ipc.on('resetSession', () => {
+      setSession(null)
     })
   }, [])
 

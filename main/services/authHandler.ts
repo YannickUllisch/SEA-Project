@@ -1,5 +1,6 @@
 import { ipcMain } from 'electron'
 import { db } from '@main/helpers/db'
+import type { User } from '@prisma/client'
 
 // Authenticate
 ipcMain.on(
@@ -33,4 +34,6 @@ ipcMain.on(
 )
 
 // Unauthenticate
-ipcMain.on('unauthenticate', async (_event, _arg: { userId: string }) => {})
+ipcMain.on('logout', async (event) => {
+  event.reply('resetSession')
+})
