@@ -11,6 +11,7 @@ import Head from 'next/head'
 import { Toaster } from 'sonner'
 import Footer from '@renderer/src/components/Footer'
 import AuthRerouter from '@renderer/src/components/AuthRerouter'
+import Header from '@renderer/src/components/Header'
 
 export default function MyApp(props: AppProps) {
   const { Component, pageProps } = props
@@ -23,6 +24,7 @@ export default function MyApp(props: AppProps) {
             <Head>
               <title>Survey System</title>
             </Head>
+            <Header />
             <Box
               sx={{
                 minHeight: 'calc(100vh - 70px)',

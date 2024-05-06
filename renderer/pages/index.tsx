@@ -27,33 +27,6 @@ const HomePage = () => {
       >
         <Box
           sx={{
-            height: '70px',
-            width: '98%',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
-          <Typography variant="h4" fontWeight={'bolder'}>
-            A/B Testing System
-          </Typography>
-          <Button
-            sx={{
-              color: theme.palette.text.secondary,
-              '&:hover': {
-                backgroundColor: 'inherit',
-                textDecoration: 'underline',
-              },
-              gap: 0.5,
-            }}
-            variant="text"
-            onClick={() => router.push('/auth/login')}
-          >
-            Login
-          </Button>
-        </Box>
-        <Box
-          sx={{
             backgroundColor: 'white',
             padding: 5,
             marginTop: 10,

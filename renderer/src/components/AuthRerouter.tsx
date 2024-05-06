@@ -12,7 +12,7 @@ const AuthRerouter: FC<PropsWithChildren> = ({ children }) => {
     if (!session && !publicRoutes.includes(router.pathname)) {
       router.push('/')
     }
-    if (session && publicRoutes.includes(router.pathname)) {
+    if (session && router.pathname === '/auth/login') {
       router.push('/admin')
     }
   }, [session, router.pathname, router.push])

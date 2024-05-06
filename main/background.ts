@@ -2,7 +2,11 @@ import path from 'node:path'
 import { app, ipcMain } from 'electron'
 import serve from 'electron-serve'
 import { createWindow } from './helpers'
+import { join } from 'node:path'
+import fs from 'node:fs'
 import { PrismaClient } from '@prisma/client'
+import { main } from './main'
+
 const isProd = process.env.NODE_ENV === 'production'
 
 if (isProd) {
@@ -10,6 +14,26 @@ if (isProd) {
 } else {
   app.setPath('userData', `${app.getPath('userData')} (development)`)
 }
+const dbPath = !isProd
+  ? join(__dirname, '../prisma/database.db')
+  : join(process.resourcesPath, 'prisma/database.db')
+
+if (isProd) {
+  // database file does not exist, need to create
+  fs.copyFileSync(
+    join(process.resourcesPath, 'prisma/database.db'),
+    dbPath,
+    fs.constants.COPYFILE_EXCL,
+  )
+}
+
+const prisma = new PrismaClient({
+  datasources: {
+    db: {
+      url: `file:${dbPath}`,
+    },
+  },
+})
 ;(async () => {
   await app.whenReady()
 
@@ -30,11 +54,12 @@ if (isProd) {
   }
 })()
 
-const prisma = new PrismaClient()
-
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit()
 })
+
+// Entry point for the main process
+main()
 
 ipcMain.on('message', async (event, arg) => {
   event.reply('message', `${arg} World!`)
