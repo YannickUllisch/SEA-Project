@@ -6,7 +6,8 @@
     "**/*.tsx",
     "_app..tsx",
     "./src/**/*",
-    "./pages/**/*"
+    "./pages/**/*",
+    "../main/**/*"
   ],
   "exclude": ["node_modules"]
 }

@@ -3,6 +3,7 @@ import { Box, Button, Typography } from '@mui/material'
 import { useRouter } from 'next/router'
 import theme from '@renderer/src/lib/theme'
 import { useSession } from '@renderer/src/components/SessionProvider'
+import { Experiment } from '@main/models/Experiment/Experiment'
 
 const HomePage = () => {
   const [message, setMessage] = React.useState('No message found')
@@ -14,6 +15,8 @@ const HomePage = () => {
       setMessage(message)
     })
   }, [])
+
+  const _test = new Experiment() // This is an object defined in the backend models
 
   return (
     <>

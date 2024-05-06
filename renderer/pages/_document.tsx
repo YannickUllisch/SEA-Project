@@ -13,7 +13,6 @@ import {
   documentGetInitialProps,
 } from '@mui/material-nextjs/v14-pagesRouter'
 import theme, { roboto } from '../src/lib/theme'
-import Footer from '@renderer/src/components/Footer'
 export default function MyDocument(
   props: DocumentProps & DocumentHeadTagsProps,
 ) {
