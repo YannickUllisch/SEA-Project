@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client'
-import { join } from 'node:path'
+import path, { join } from 'node:path'
 import fs from 'node:fs'
-import { isWeakMap } from 'node:util/types'
+import { app } from 'electron'
 
 declare global {
   var prisma: PrismaClient | undefined
@@ -11,13 +11,13 @@ const isProd = process.env.NODE_ENV === 'production'
 
 const dbPath = !isProd
   ? join(__dirname, '../prisma/database.db')
-  : join(process.resourcesPath, 'prisma/database.db')
+  : path.join(app.getPath('userData'), 'database.db')
 
 if (isProd) {
   try {
     // database file does not exist, need to create
     fs.copyFileSync(
-      join(process.resourcesPath, 'prisma/dev.db'),
+      join(process.resourcesPath, 'prisma/database.db'),
       dbPath,
       fs.constants.COPYFILE_EXCL,
     )
