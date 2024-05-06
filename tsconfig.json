@@ -18,8 +18,10 @@
     "paths": {
       "@renderer/*": ["renderer/*"],
       "@main/*": ["main/*"],
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@models/*": ["main/models/*"]
     }
   },
-  "exclude": ["node_modules", "renderer/next.config.js", "app", "dist"]
+  "include": ["main/**/*"],
+  "exclude": ["node_modules", "next.config.js", "app", "dist"]
 }

@@ -1,5 +1,6 @@
 // Fetch by Id and Create function for Admins
-import { db } from './dbClient'
+
+import { db } from '@main/helpers/db'
 
 /**
  *

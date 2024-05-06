@@ -41,6 +41,7 @@ const Header = () => {
         {session
           ? adminPages.map((page) => (
               <Button
+                key={page.name}
                 sx={{
                   color: theme.palette.text.secondary,
                   '&:hover': {
