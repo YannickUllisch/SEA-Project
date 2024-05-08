@@ -14,18 +14,28 @@ datasource db {
 }
 
 model User {
-  id        String @default(uuid()) @id
-  name      String
-  password  String
-  role      Int
-  assistant Boolean @default(false)
+  id            String @default(uuid()) @id
+  name          String
+  password      String
+
+  // We give the default user Admin role -> Set to 1 for assistant
+  role          Int       @default(0)
+  experiment    Experiment[]
 }
 
 
 
-// Main Survey Model. Includes a question array and demographics.
-model Survey {
+// Main Experiment Model. Includes a question array and demographics.
+// NOTE: We are still missing a way to copy a experiment / a different variant.
+//  This could be done by adding a variant table which includes a Question[] and experiment then includes a variant[] instead
+// Or we simply call the new version a whole new experiment and copy the entire experiment. 
+model Experiment {
   id                     String      @id @default(uuid())
+
+  // Linking it to a user 
+  user                   User   @relation(fields: [userId], references: [id])
+  userId                 String
+
   title                  String
   description            String?
 
@@ -36,8 +46,8 @@ model Survey {
 // Define the Question model
 model Question {
   id                    String       @id @default(uuid())
-  survey                Survey   @relation(fields: [surveyId], references: [id])
-  surveyId              String
+  experiment            Experiment   @relation(fields: [experimentId], references: [id])
+  experimentId          String
 
   questionText          String
   questionImage         String? // Probably needs to be a different type dont know how to store Images currently 
@@ -48,7 +58,7 @@ model Question {
 }
 
 
-// Define the Option model
+// Define the Option model - still needs to be worked on
 model Option {
   id                  String      @id @default(uuid())
   question            Question @relation(fields: [questionId], references: [id])
@@ -60,6 +70,19 @@ model Option {
 
 
 
+
+
+// Table which models exactly what we need to output to .csv
+model TotalAnswer {
+  id                  String  @id @default(uuid())
+  experiment          Experiment  @relation(fields: [experimentId], references: [id])
+  experimentId        String
+
+  demographics        Demographics?
+  demographicsId      String
+  questionAnswers     QuestionAnswer[]
+
+}
 
 // Demographics needed for the total Answer
 model Demographics {
@@ -73,7 +96,7 @@ model Demographics {
 }
 
 
-// This is an answer to a specific question in the survey - probably needs to be restructured based on what we implement
+// This is an answer to a specific question in the experiment - probably needs to be restructured based on what we implement
 model QuestionAnswer {
   id                  String       @id @default(uuid())
   question            Question  @relation(fields: [questionId], references: [id])
@@ -82,17 +105,9 @@ model QuestionAnswer {
   completeAnswer      TotalAnswer  @relation(fields: [completeAnswerId], references: [id])
   completeAnswerId    String
 
+  // We would have to manually set these on the frontend based on where the participant inputs stuff.
+  // We can do this by having a direct link to a specific question, which has access to all options. 
+  optionType          String
+  optionText          String    
   response            String
-}
-
-
-// Table which models exactly what we need to output to .csv
-model TotalAnswer {
-  id                  String  @id @default(uuid())
-  survey              Survey  @relation(fields: [surveyId], references: [id])
-  surveyId            String
-
-  demographics        Demographics?
-  questionAnswers     QuestionAnswer[]
-
 }

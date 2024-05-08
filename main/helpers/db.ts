@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, type User } from '@prisma/client'
 import path, { join } from 'node:path'
 import fs from 'node:fs'
 import { app } from 'electron'

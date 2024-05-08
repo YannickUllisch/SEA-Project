@@ -1,6 +1,6 @@
 import { ipcMain } from 'electron'
 import { db } from '@main/helpers/db'
-import type { User } from '@prisma/client'
+import { Session } from '@main/models/Session'
 
 // Authenticate
 ipcMain.on(
@@ -27,7 +27,10 @@ ipcMain.on(
     }
 
     if (existingUser.password === arg.password) {
-      // We authenticate the user
+      // We authenticate the user by both initializing the backend Session (which starts all of the backend logic)
+      Session.initSession(existingUser)
+
+      // And also send authenticated status to the frontend
       event.reply('authenticated', { existingUser })
     }
   },
