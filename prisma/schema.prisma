@@ -18,35 +18,81 @@ model User {
   name      String
   password  String
   role      Int
-  //assistant Boolean @default(false)
+  assistant Boolean @default(false)
 }
 
-model Experiment {
-  id        String @default(uuid()) @id
+
+
+// Main Survey Model. Includes a question array and demographics.
+model Survey {
+  id                     String      @id @default(uuid())
+  title                  String
+  description            String?
+
+  questions              Question[]
+  participantAnswers     TotalAnswer[]
 }
 
-model ParticipantTotalAnswer {
-  id              String @id @default(uuid())
+// Define the Question model
+model Question {
+  id                    String       @id @default(uuid())
+  survey                Survey   @relation(fields: [surveyId], references: [id])
+  surveyId              String
 
-  demographics    Demographics?
-  answers         ParticipantQuestionAnswer[]
+  questionText          String
+  questionImage         String? // Probably needs to be a different type dont know how to store Images currently 
 
+  // Establish a one-to-many relationship with the Option and QuestionAnswer model
+  options               Option[]
+  questionAnswers       QuestionAnswer[]
 }
 
+
+// Define the Option model
+model Option {
+  id                  String      @id @default(uuid())
+  question            Question @relation(fields: [questionId], references: [id])
+  questionId          String 
+
+  optionType          String // If its a dropdown, text-field, checkbox - one way we can keep track of what and where to save answer data
+  optionText          String
+}
+
+
+
+
+// Demographics needed for the total Answer
 model Demographics {
-  id               String @id @default(uuid())
-  gender           String
-  age              Int
-  country          String
+  id                  String @id @default(uuid())
+  gender              String
+  age                 Int
+  country             String
 
-  totalAnswerId    String @unique
-  totalAnswer      ParticipantTotalAnswer @relation(fields: [totalAnswerId], references: [id])
+  completeAnswerId    String @unique
+  completeAnswer      TotalAnswer @relation(fields: [completeAnswerId], references: [id])
 }
 
-model ParticipantQuestionAnswer {
-  id              String @id @default(uuid())
 
-  totalAnswerId   String 
-  totalAnswer     ParticipantTotalAnswer @relation(fields: [totalAnswerId], references: [id], onDelete: Cascade)
-  
+// This is an answer to a specific question in the survey - probably needs to be restructured based on what we implement
+model QuestionAnswer {
+  id                  String       @id @default(uuid())
+  question            Question  @relation(fields: [questionId], references: [id])
+  questionId          String
+
+  completeAnswer      TotalAnswer  @relation(fields: [completeAnswerId], references: [id])
+  completeAnswerId    String
+
+  response            String
+}
+
+
+// Table which models exactly what we need to output to .csv
+model TotalAnswer {
+  id                  String  @id @default(uuid())
+  survey              Survey  @relation(fields: [surveyId], references: [id])
+  surveyId            String
+
+  demographics        Demographics?
+  questionAnswers     QuestionAnswer[]
+
 }
