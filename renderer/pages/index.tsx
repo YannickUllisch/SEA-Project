@@ -1,11 +1,13 @@
 import React, { useEffect } from 'react'
-import Head from 'next/head'
-import Link from 'next/link'
-import Image from 'next/image'
-import { Box } from '@mui/material'
+import { Box, Button, Typography } from '@mui/material'
+import { useRouter } from 'next/router'
+import theme from '@renderer/src/lib/theme'
+import { useSession } from '@renderer/src/components/SessionProvider'
 
 const HomePage = () => {
   const [message, setMessage] = React.useState('No message found')
+  const router = useRouter()
+  const session = useSession()
 
   useEffect(() => {
     window.ipc.on('message', (message: string) => {
@@ -14,35 +16,63 @@ const HomePage = () => {
   }, [])
 
   return (
-    <Box>
-      <Head>
-        <title className="text-blue-700 p-5">
-          Home - Nextron (basic-lang-typescript)
-        </title>
-      </Head>
-      <div>
-        <p className="bg-red-500">
-          ⚡ Electron + Next.js ⚡ -<Link href="/survey">Go to next page</Link>
-        </p>
-        <Image
-          src="/images/logo.png"
-          alt="Logo image"
-          width={256}
-          height={256}
-        />
-      </div>
-      <div>
-        <button
-          type="submit"
-          onClick={() => {
-            window.ipc.send('message', 'Hello')
+    <>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          flexDirection: 'column',
+        }}
+      >
+        <Box
+          sx={{
+            backgroundColor: 'white',
+            padding: 5,
+            marginTop: 10,
+            minWidth: '500px',
+            textAlign: 'center',
+            borderRadius: 4,
           }}
         >
-          Test IPC
-        </button>
-        <p>{message}</p>
-      </div>
-    </Box>
+          <Box sx={{ marginBottom: 3 }}>
+            <Typography variant="h4" fontWeight={'bold'}>
+              Questionnaire
+            </Typography>
+            <Typography color={theme.palette.text.secondary} variant="body2">
+              Start your questionnaire below!
+            </Typography>
+          </Box>
+
+          <Button
+            variant="contained"
+            sx={{
+              backgroundImage: `linear-gradient(to right, ${theme.palette.primary.dark}, ${theme.palette.secondary.light})`,
+              color: 'white', // Text color
+              '&:hover': {
+                backgroundImage: `linear-gradient(to right, ${theme.palette.primary.dark}, ${theme.palette.secondary.main})`,
+              },
+            }}
+            onClick={() => router.push('/survey')}
+          >
+            Start Questionnaire
+          </Button>
+          <Box sx={{ mt: 5 }}>
+            <Button
+              type="submit"
+              sx={{ color: 'black' }}
+              onClick={() => {
+                window.ipc.send('message', 'Hello')
+              }}
+            >
+              Test IPC
+            </Button>
+            <p>{message}</p>
+            <Button onClick={() => console.log(session)}>Test Session </Button>
+          </Box>
+        </Box>
+      </Box>
+    </>
   )
 }
 

@@ -13,7 +13,6 @@ import {
   documentGetInitialProps,
 } from '@mui/material-nextjs/v14-pagesRouter'
 import theme, { roboto } from '../src/lib/theme'
-
 export default function MyDocument(
   props: DocumentProps & DocumentHeadTagsProps,
 ) {
@@ -25,7 +24,7 @@ export default function MyDocument(
         <meta name="emotion-insertion-point" content="" />
         <DocumentHeadTags {...props} />
       </Head>
-      <body>
+      <body style={{ backgroundColor: '#f5f5f5' }}>
         <Main />
         <NextScript />
       </body>

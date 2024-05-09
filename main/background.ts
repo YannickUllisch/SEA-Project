@@ -1,39 +1,16 @@
-import path from 'node:path'
-import { app, ipcMain } from 'electron'
-import serve from 'electron-serve'
-import { createWindow } from './helpers'
+import '@main/services/authHandler'
+import '@main/services/messageHandler'
+import '@main/services/appServices'
+import { ElectronApp } from '@main/models/ElectronApp'
+import { Session } from './models/Session'
 
-const isProd = process.env.NODE_ENV === 'production'
+const main = async () => {
+  // Initializing App Window
+  new ElectronApp()
 
-if (isProd) {
-  serve({ directory: 'app' })
-} else {
-  app.setPath('userData', `${app.getPath('userData')} (development)`)
+  // We think of making the session a global singleton, such that when authenticated we initialize a session
+  // Which then is the entry point to everything in the backend. (Check out session.ts file)
+  const _session = Session.getSession()
 }
-;(async () => {
-  await app.whenReady()
 
-  const mainWindow = createWindow('main', {
-    width: 1000,
-    height: 600,
-    webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
-    },
-  })
-
-  if (isProd) {
-    await mainWindow.loadURL('app://./')
-  } else {
-    const port = process.argv[2]
-    await mainWindow.loadURL(`http://localhost:${port}/`)
-    mainWindow.webContents.openDevTools()
-  }
-})()
-
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') app.quit()
-})
-
-ipcMain.on('message', async (event, arg) => {
-  event.reply('message', `${arg} World!`)
-})
+main()
