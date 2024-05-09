@@ -1,10 +1,10 @@
 import { db } from '@main/helpers/db'
-import type { iExperiment } from '@models/Experiment/iExperiment'
+import type { iQuestionnaireQuestion } from '@main/models/Experiment/iQuestionnaireQuestion'
 import { Experiment } from './Experiment'
 import type { User } from '@prisma/client'
 
 export class ExperimentManager {
-  private experiments: iExperiment[]
+  private experiments: iQuestionnaireQuestion[]
 
   constructor(loggedInUser: User) {
     this.setExperiments(loggedInUser.id)
