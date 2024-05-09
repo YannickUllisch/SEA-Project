@@ -1,0 +1,49 @@
+<fieldset [class]="model.getSelectBaseRootCss()" #contentElement 
+  [attr.role]="model.a11y_input_ariaRole"
+  [attr.aria-required]="model.a11y_input_ariaRequired"
+  [attr.aria-label]="model.a11y_input_ariaLabel"
+  [attr.aria-labelledby]="model.a11y_input_ariaLabelledBy"
+  [attr.aria-describedby]="model.a11y_input_ariaDescribedBy"
+  [attr.aria-invalid]="model.a11y_input_ariaInvalid"
+  [attr.aria-errormessage]="model.a11y_input_ariaErrormessage"
+>
+  <legend *ngIf="showLegend" class="sv-hidden">{{model.locTitle.renderedHtml}}</legend>
+  <ng-container *ngIf="model.hasHeadItems">
+    <ng-container *ngFor="let item of model.headItems; trackBy: trackItemBy">
+      <ng-template [component]="{ name: getItemValueComponentName(item), data: getItemValueComponentData(item) }"></ng-template>
+    </ng-container>
+  </ng-container>
+  <ng-container *ngIf="!model.hasColumns && !model.blockedRow">
+    <ng-container *ngFor="let item of model.bodyItems; trackBy: trackItemBy" >
+      <ng-template [component]="{ name: getItemValueComponentName(item), data: getItemValueComponentData(item) }"></ng-template>
+    </ng-container>
+  </ng-container>
+  <div [class]="model.cssClasses.rootRow" *ngIf="!model.hasColumns && model.blockedRow">
+    <ng-container *ngFor="let item of model.dataChoices; trackBy: trackItemBy">
+      <ng-template [component]="{ name: getItemValueComponentName(item), data: getItemValueComponentData(item) }"></ng-template>
+    </ng-container>
+  </div>
+  <ng-container *ngIf="model.hasColumns">
+    <div [class]="model.cssClasses.rootMultiColumn">
+      <div [class]="model.getColumnClass()" *ngFor="let column of model.columns; trackBy: trackColumnBy" role="presentation">
+        <ng-container *ngFor="let item of column; trackBy: trackItemBy">
+          <ng-template [component]="{ name: getItemValueComponentName(item), data: getItemValueComponentData(item) }"></ng-template>
+        </ng-container>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="model.hasFootItems">
+    <ng-container *ngFor="let item of model.footItems; trackBy: trackItemBy">
+      <ng-template [component]="{ name: getItemValueComponentName(item), data: getItemValueComponentData(item) }"></ng-template>
+    </ng-container>
+  </ng-container>
+  <div *ngIf="model.isOtherSelected" [class]="model.getCommentAreaCss(true)" [question]="model" sv-ng-comment-other></div>
+  <div *ngIf="model.showClearButtonInContent">
+    <input
+      type="button"
+      (click)="model.clearValue()"
+      [value]="model.clearButtonCaption"
+      [class]="model.cssClasses.clearButton"
+    />
+  </div>
+</fieldset>

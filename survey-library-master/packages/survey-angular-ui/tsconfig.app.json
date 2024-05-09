@@ -1,0 +1,27 @@
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./example/dist/angular-ui",
+    "baseUrl": ".",
+    "noImplicitAny": false,
+    "types": [
+      "node"
+    ],
+    "paths": {
+      "survey-core": [
+        "../../build/survey-core"
+      ],
+      "survey-angular-ui": [
+        "./build"
+      ]
+    }
+  },
+  "files": [
+    "./example/src/main.ts",
+    "./example/src/polyfills.ts",
+  ],
+  "include": [
+    "src/**/*.d.ts"
+  ]
+}
