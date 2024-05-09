@@ -16,83 +16,88 @@ const Header = () => {
 
   const adminPages: Page[] = [
     {
-      name: 'Home',
-      path: '/',
+      name: 'Participant',
+      path: '/participant',
     },
     {
       name: 'Admin',
       path: '/admin',
     },
   ]
+
   return (
-    <Box
-      sx={{
-        height: '70px',
-        width: '98%',
-        ml: 2,
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-      }}
-    >
-      <Typography variant="h4" fontWeight={'bolder'}>
-        A/B Testing
-      </Typography>
-      <Box>
-        {session
-          ? adminPages.map((page) => (
+    <>
+      {router.pathname !== '/' && (
+        <Box
+          sx={{
+            height: '70px',
+            width: '98%',
+            ml: 2,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <Typography variant="h4" fontWeight={'bolder'}>
+            A/B Testing
+          </Typography>
+          <Box>
+            {session
+              ? adminPages.map((page) => (
+                  <Button
+                    key={page.name}
+                    sx={{
+                      color: theme.palette.text.secondary,
+                      '&:hover': {
+                        backgroundColor: 'inherit',
+                        textDecoration: 'underline',
+                      },
+                      mr: 1,
+                    }}
+                    onClick={() => router.push(page.path)}
+                    variant="text"
+                  >
+                    {page.name}
+                  </Button>
+                ))
+              : null}
+          </Box>
+          <Box>
+            {!session ? (
               <Button
-                key={page.name}
                 sx={{
                   color: theme.palette.text.secondary,
                   '&:hover': {
                     backgroundColor: 'inherit',
                     textDecoration: 'underline',
                   },
-                  mr: 1,
+                  gap: 0.5,
                 }}
-                onClick={() => router.push(page.path)}
                 variant="text"
+                onClick={() => router.push('/auth/login')}
               >
-                {page.name}
+                Login
               </Button>
-            ))
-          : null}
-      </Box>
-      <Box>
-        {!session ? (
-          <Button
-            sx={{
-              color: theme.palette.text.secondary,
-              '&:hover': {
-                backgroundColor: 'inherit',
-                textDecoration: 'underline',
-              },
-              gap: 0.5,
-            }}
-            variant="text"
-            onClick={() => router.push('/auth/login')}
-          >
-            Login
-          </Button>
-        ) : (
-          <Button
-            sx={{
-              color: theme.palette.text.secondary,
-              '&:hover': {
-                backgroundColor: 'inherit',
-                textDecoration: 'underline',
-              },
-              gap: 0.5,
-            }}
-            variant="text"
-            onClick={logout}
-          >
-            Logout
-          </Button>
-        )}
-      </Box>
-    </Box>
+            ) : (
+              <Button
+                sx={{
+                  color: theme.palette.text.secondary,
+                  '&:hover': {
+                    backgroundColor: 'inherit',
+                    textDecoration: 'underline',
+                  },
+                  gap: 0.5,
+                }}
+                variant="text"
+                onClick={logout}
+              >
+                Logout
+              </Button>
+            )}
+          </Box>
+        </Box>
+      )}
+    </>
   )
 }
 
