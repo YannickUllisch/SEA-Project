@@ -37,7 +37,8 @@
     "react": "^18.3.1",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.51.2",
-    "sonner": "^1.4.41"
+    "sonner": "^1.4.41",
+    "survey-react-ui": "^1.10.3"
   },
   "devDependencies": {
     "@biomejs/biome": "1.6.0",
