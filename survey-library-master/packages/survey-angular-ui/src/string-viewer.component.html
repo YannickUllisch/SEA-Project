@@ -1,2 +1,0 @@
-<span *ngIf="!model.hasHtml" [class]="className">{{model.renderedHtml}}</span>
-<span *ngIf="model.hasHtml" [class]="className" [innerHtml]="model.renderedHtml | safeHtml"></span>
