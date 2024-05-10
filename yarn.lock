@@ -5415,6 +5415,21 @@ supports-preserve-symlinks-flag@^1.0.0:
   resolved "https://registry.npmjs.org/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
+survey-core@^1.10.3:
+  version "1.10.3"
+  resolved "https://registry.npmjs.org/survey-core/-/survey-core-1.10.3.tgz"
+  integrity sha512-C7erRVrcLobpPdCrVn0vuzKpjkAL+RvPR77sTQxzwdb8Zu4mzrVw6B4+Nhr+P9ckEHUhsDHtzlsyZQyGEHKDYA==
+
+survey-creator-core@^1.10.3:
+  version "1.10.3"
+  resolved "https://registry.yarnpkg.com/survey-creator-core/-/survey-creator-core-1.10.3.tgz#1c803ccb6e666d20a5e9cbf2a08e8caad98dc57d"
+  integrity sha512-dNyzdGOlz9l6cGoHpW1tePTzsKXIApuxprZmCTZ5yYpRSZH18RP0g4d7wNVHUqRiqB5u/EyRCPQUaU3QHXTBxg==
+
+survey-react-ui@^1.10.3:
+  version "1.10.3"
+  resolved "https://registry.npmjs.org/survey-react-ui/-/survey-react-ui-1.10.3.tgz"
+  integrity sha512-3otFECs2qkLouqsOvNHbQjriOihJmJYvjemR+sNMcAV0oysIgkXAg3fOPtibBvbUsJWTHeH9A5ijfHeADUkS8A==
+
 tailwindcss@^3.4.3:
   version "3.4.3"
   resolved "https://registry.npmjs.org/tailwindcss/-/tailwindcss-3.4.3.tgz"
