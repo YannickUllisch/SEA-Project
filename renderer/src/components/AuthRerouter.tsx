@@ -9,9 +9,9 @@ const AuthRerouter: FC<PropsWithChildren> = ({ children }) => {
 
   // Reroutes unauthenticated users from all non public routes
   useEffect(() => {
-    // if (!session && !publicRoutes.includes(router.pathname)) {
-    //   router.push('/')
-    // }
+    if (!session && !publicRoutes.includes(router.pathname)) {
+      router.push('/')
+    }
     if (session && router.pathname === '/') {
       router.push('/admin')
     }

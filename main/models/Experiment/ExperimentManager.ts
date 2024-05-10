@@ -16,6 +16,9 @@ export class ExperimentManager {
       where: {
         userId,
       },
+      include: {
+        questions: true,
+      },
     })
 
     for (const experiment of userExperiments) {
