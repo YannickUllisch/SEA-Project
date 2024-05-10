@@ -74,7 +74,7 @@ const Header = () => {
                   gap: 0.5,
                 }}
                 variant="text"
-                onClick={() => router.push('/auth/login')}
+                onClick={() => router.push('/')}
               >
                 Login
               </Button>

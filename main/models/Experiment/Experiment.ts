@@ -1,6 +1,4 @@
-import type { iExperiment } from './iExperiment'
-
-export class Experiment implements iExperiment {
+export class Experiment {
   name: string
 
   constructor(name: string) {
