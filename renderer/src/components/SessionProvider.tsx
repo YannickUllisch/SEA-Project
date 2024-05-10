@@ -22,8 +22,8 @@ const SessionProvider: FC<PropsWithChildren> = ({ children }) => {
 
   // In here wait for the backend to send a session back, which only happens on authentication success
   useEffect(() => {
-    window.ipc.on('authenticated', (session: Session) => {
-      setSession(session)
+    window.ipc.on('authenticated', (user: User) => {
+      setSession({ user })
     })
     window.ipc.on('resetSession', () => {
       setSession(null)

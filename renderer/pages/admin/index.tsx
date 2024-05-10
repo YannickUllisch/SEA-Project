@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Card,
+  CardActionArea,
   CardContent,
   CardHeader,
   Divider,
@@ -12,31 +13,35 @@ import {
 import type { Experiment } from '@prisma/client'
 import { useSession } from '@renderer/src/components/SessionProvider'
 import { logout } from '@renderer/src/lib/logout'
+import { Role } from '@renderer/src/lib/role'
 import theme from '@renderer/src/lib/theme'
-import { Play, Settings } from 'lucide-react'
+import {
+  CirclePlay,
+  Play,
+  Settings,
+  SquarePlus,
+  UserRoundPlus,
+} from 'lucide-react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 
 const AdminPage = () => {
   const router = useRouter()
+  const session = useSession()
+
   const [experiments, setExperiments] = useState<Experiment[] | undefined>(
     undefined,
   )
 
-  // Fetching experiments from backend
-  window.ipc.send('getExperiments', '')
-
   // Waiting for backend response
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <Needed to fetch from backend>
   useEffect(() => {
+    window.ipc.send('getExperiments', '')
+
     window.ipc.on('getExperiments', (experiments: Experiment[]) => {
       setExperiments(experiments)
     })
-  }, [])
-
-  const onQuestionnaireStart = () => {
-    router.push('/participant')
-    logout()
-  }
+  }, [experiments === undefined])
 
   return (
     <Box
@@ -59,7 +64,6 @@ const AdminPage = () => {
         <Typography sx={{ fontSize: 40, fontWeight: 'bold' }}>
           Experiments
         </Typography>
-
         <Box
           sx={{
             justifyContent: 'center',
@@ -74,31 +78,69 @@ const AdminPage = () => {
                   key={experiment.title}
                   sx={{
                     boxShadow: 3,
-                    width: '20%',
+                    minWidth: '20%',
                     m: 2,
                     borderRadius: 2,
                   }}
                 >
-                  <CardHeader
-                    title={experiment.title}
-                    subheader={experiment.description}
-                  />
-                  <CardContent>
+                  <CardActionArea
+                    onClick={() =>
+                      router.push(`/admin/experiment/${experiment.id}`)
+                    }
+                    sx={{
+                      cursor: 'pointer',
+                      height: '120px',
+                    }}
+                  >
+                    <CardHeader
+                      title={experiment.title}
+                      subheader={experiment.description}
+                    />
+                  </CardActionArea>
+                  <CardContent sx={{ padding: 0, height: '40px' }}>
                     <Divider />
                     <Box
                       sx={{
                         display: 'flex',
+                        marginTop: 1,
                         justifyContent: 'center',
-                        mt: 1,
+                        gap: 3,
                       }}
                     >
-                      <Tooltip title={'Edit'}>
-                        <Settings
-                          style={{ color: theme.palette.text.secondary }}
-                        />
-                      </Tooltip>
+                      {session
+                        ? session.user.role === Role.ADMIN && (
+                            <>
+                              <Tooltip title={'Add Questionnaire'}>
+                                <SquarePlus
+                                  style={{
+                                    color: theme.palette.text.secondary,
+                                    cursor: 'pointer',
+                                    strokeWidth: '1.5px',
+                                  }}
+                                />
+                              </Tooltip>
+                              <Tooltip title={'Add Assistant'}>
+                                <UserRoundPlus
+                                  style={{
+                                    color: theme.palette.text.secondary,
+                                    cursor: 'pointer',
+                                    strokeWidth: '1.5px',
+                                  }}
+                                />
+                              </Tooltip>
+                            </>
+                          )
+                        : null}
+
                       <Tooltip title={'Start Experiment'}>
-                        <Play style={{ color: 'green' }} />
+                        <Play
+                          onClick={() => router.push('/participant')}
+                          style={{
+                            color: 'green',
+                            cursor: 'pointer',
+                            strokeWidth: '1.5px',
+                          }}
+                        />
                       </Tooltip>
                     </Box>
                   </CardContent>
@@ -106,9 +148,6 @@ const AdminPage = () => {
               ))
             : undefined}
         </Box>
-        <Button onClick={onQuestionnaireStart} variant="contained">
-          Execute Questionnaire Test
-        </Button>
       </Box>
     </Box>
   )

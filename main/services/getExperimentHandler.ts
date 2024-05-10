@@ -10,8 +10,6 @@ ipcMain.on('getExperiments', async (event, _arg) => {
     },
   })
 
-  Session.getSession().getExperimentManager().getExperiments()[0].name
-
   if (!experiments) {
     event.reply('getExperiments', 'Error occurred!')
     return

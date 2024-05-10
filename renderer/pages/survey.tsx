@@ -1,6 +1,6 @@
 import React from 'react'
 import Head from 'next/head'
-import { Box } from '@mui/material'
+import { Box, Button } from '@mui/material'
 import 'survey-core/defaultV2.min.css'
 import { Model } from 'survey-core'
 import { Survey } from 'survey-react-ui'
@@ -22,6 +22,9 @@ const NextPage = () => {
   }
 
   const survey = new Model(surveyJson)
+  survey.addNavigationItem({
+    title: 'Exit',
+  })
 
   return (
     <Box

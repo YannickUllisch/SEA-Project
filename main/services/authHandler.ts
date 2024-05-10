@@ -29,9 +29,10 @@ ipcMain.on(
     if (existingUser.password === arg.password) {
       // We authenticate the user by both initializing the backend Session (which starts all of the backend logic)
       Session.initSession(existingUser)
-
+      console.log(existingUser)
       // And also send authenticated status to the frontend
-      event.reply('authenticated', { existingUser })
+      event.reply('authenticated', existingUser)
+      return
     }
   },
 )
@@ -40,4 +41,5 @@ ipcMain.on(
 ipcMain.on('logout', async (event) => {
   Session.clearSession()
   event.reply('resetSession')
+  return
 })

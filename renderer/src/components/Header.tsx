@@ -5,25 +5,9 @@ import { useRouter } from 'next/router'
 import { useSession } from './SessionProvider'
 import { logout } from '@renderer/src/lib/logout'
 
-interface Page {
-  name: string
-  path: string
-}
-
 const Header = () => {
   const router = useRouter()
   const session = useSession()
-
-  const adminPages: Page[] = [
-    {
-      name: 'Participant',
-      path: '/participant',
-    },
-    {
-      name: 'Admin',
-      path: '/admin',
-    },
-  ]
 
   return (
     <>
@@ -41,27 +25,6 @@ const Header = () => {
           <Typography variant="h4" fontWeight={'bolder'}>
             A/B Testing
           </Typography>
-          <Box>
-            {session
-              ? adminPages.map((page) => (
-                  <Button
-                    key={page.name}
-                    sx={{
-                      color: theme.palette.text.secondary,
-                      '&:hover': {
-                        backgroundColor: 'inherit',
-                        textDecoration: 'underline',
-                      },
-                      mr: 1,
-                    }}
-                    onClick={() => router.push(page.path)}
-                    variant="text"
-                  >
-                    {page.name}
-                  </Button>
-                ))
-              : null}
-          </Box>
           <Box>
             {!session ? (
               <Button

@@ -3,11 +3,18 @@ import { Box, Button, Typography } from '@mui/material'
 import { useRouter } from 'next/router'
 import theme from '@renderer/src/lib/theme'
 import { useSession } from '@renderer/src/components/SessionProvider'
+import { logout } from '@renderer/src/lib/logout'
 
 const ParticipantHomePage = () => {
   const [message, setMessage] = React.useState('No message found')
   const router = useRouter()
   const session = useSession()
+
+  useEffect(() => {
+    if (session) {
+      logout()
+    }
+  }, [session])
 
   useEffect(() => {
     window.ipc.on('message', (message: string) => {
