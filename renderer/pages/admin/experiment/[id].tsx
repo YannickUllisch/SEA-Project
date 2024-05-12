@@ -71,6 +71,7 @@ const ExperimentPage = () => {
           <Tabs centered value={tab} onChange={handleTabChange}>
             {experimentTabs.map(
               (tabConfig) =>
+                session &&
                 tabConfig.roles.includes(session.user.role) && (
                   <Tab
                     key={`${tabConfig.id}-tab`}
@@ -83,6 +84,7 @@ const ExperimentPage = () => {
         </Box>
         {experimentTabs.map(
           (tabConfig) =>
+            session &&
             tabConfig.roles.includes(session.user.role) && (
               <CustomTabPanel
                 key={`${tabConfig.id}-tab-panel`}
