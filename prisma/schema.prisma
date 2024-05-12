@@ -20,23 +20,8 @@ model User {
   password      String
   role          Int
 
-  //assistants    Assistant[]
   experiment    Experiment[]
 }
-
-// model Assistant {
-//   id            String  @default(uuid()) @id
-//   name          String
-//   password      String
-
-//   admin         Admin   @relation(fields: [adminId], references: [id])
-//   adminId       String
-
-//   experiment    Experiment  @relation(fields: [experimentId], references: [id])
-//   experimentId  String @unique
-// }
-
-
 
 model Experiment {
   id                     String      @id @default(uuid())

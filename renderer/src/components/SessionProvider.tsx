@@ -13,12 +13,12 @@ export interface Session {
 }
 
 // Define a context for your session
-const SessionContext = createContext<Session | null>(null)
+const SessionContext = createContext<Session>(null)
 
 // Custom Provider component
 const SessionProvider: FC<PropsWithChildren> = ({ children }) => {
   // Define state to hold the session object
-  const [session, setSession] = useState<Session | null>(null)
+  const [session, setSession] = useState<Session>(null)
 
   // In here wait for the backend to send a session back, which only happens on authentication success
   useEffect(() => {
