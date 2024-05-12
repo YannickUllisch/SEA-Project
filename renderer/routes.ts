@@ -3,7 +3,7 @@
  * These routes do not require authentication
  * @type {string[]}
  */
-export const publicRoutes = ['/', '/survey', '/auth/login']
+export const publicRoutes = ['/participant', '/survey', '/']
 
 /**
  * DEFAULT redirect path for admins after logging in

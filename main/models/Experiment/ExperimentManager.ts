@@ -1,10 +1,9 @@
 import { db } from '@main/helpers/db'
-import type { iQuestionnaireQuestion } from '@main/models/Experiment/iQuestionnaireQuestion'
 import { Experiment } from './Experiment'
 import type { User } from '@prisma/client'
 
 export class ExperimentManager {
-  private experiments: iQuestionnaireQuestion[]
+  private experiments: Experiment[]
 
   constructor(loggedInUser: User) {
     this.setExperiments(loggedInUser.id)
@@ -13,9 +12,12 @@ export class ExperimentManager {
   // Once a user logs in we should set this to all the user specific experiments from the db.
   // We transform the entries from the DB table to Experiment Class objects.
   private async setExperiments(userId: string) {
-    const userExperiments = await db.survey.findMany({
+    const userExperiments = await db.experiment.findMany({
       where: {
         userId,
+      },
+      include: {
+        questions: true,
       },
     })
 
