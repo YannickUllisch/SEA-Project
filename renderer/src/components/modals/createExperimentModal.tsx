@@ -1,5 +1,6 @@
-import React, { FC, useState } from "react";
-import Dialog from "@mui/material/Dialog";
+import type React from 'react'
+import { type FC, useState } from 'react'
+import Dialog from '@mui/material/Dialog'
 import {
   DialogTitle,
   DialogContent,
@@ -8,30 +9,30 @@ import {
   Button,
   TextField,
   Box,
-} from "@mui/material";
+} from '@mui/material'
 
 interface CreateExperimentModalProps {
-  open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  open: boolean
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const CreateExperimentModal: FC<CreateExperimentModalProps> = ({
   open,
   setOpen,
 }) => {
-  const [title, setTitle] = useState(""); // State for experiment title
-  const [description, setDescription] = useState(""); // State for experiment description
+  const [title, setTitle] = useState('') // State for experiment title
+  const [description, setDescription] = useState('') // State for experiment description
 
   const handleClose = () => {
-    setOpen(false);
-    setTitle(""); // Reset title state on close
-    setDescription(""); // Reset description state on close
-  };
+    setOpen(false)
+    setTitle('') // Reset title state on close
+    setDescription('') // Reset description state on close
+  }
 
   const handleCreate = () => {
-    window.ipc.send("createExperiment", { title, description });
-    handleClose(); // Close the dialog after creating the experiment
-  };
+    window.ipc.send('createExperiment', { title, description })
+    handleClose() // Close the dialog after creating the experiment
+  }
 
   return (
     <Dialog open={open} onClose={handleClose}>
@@ -52,7 +53,7 @@ const CreateExperimentModal: FC<CreateExperimentModalProps> = ({
         <Box
           component="form"
           sx={{
-            "& .MuiTextField-root": { mt: 3, width: "30ch" },
+            '& .MuiTextField-root': { mt: 3, width: '30ch' },
           }}
           noValidate
           autoComplete="off"
@@ -76,7 +77,7 @@ const CreateExperimentModal: FC<CreateExperimentModalProps> = ({
         </Button>
       </DialogActions>
     </Dialog>
-  );
-};
+  )
+}
 
-export default CreateExperimentModal;
+export default CreateExperimentModal
