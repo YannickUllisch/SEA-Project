@@ -133,6 +133,11 @@ const AdminPage = () => {
                                         cursor: 'pointer',
                                         strokeWidth: '1.5px',
                                       }}
+                                      onClick={() =>
+                                        router.push(
+                                          `/admin/experiment/${experiment.id}?tab=delete`,
+                                        )
+                                      }
                                     />
                                   </Tooltip>
                                   <Tooltip title={'Add Assistant'}>

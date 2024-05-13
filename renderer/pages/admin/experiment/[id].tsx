@@ -1,4 +1,5 @@
 import { Box, Button, Divider, Tab, Tabs, Typography } from '@mui/material'
+import DownloadResults from '@renderer/src/components/DownloadResults'
 import AnalyticsTab from '@renderer/src/components/ExperimentTabs/AnalyticsTab'
 import AssistantsTab from '@renderer/src/components/ExperimentTabs/AssistantsTab'
 import CustomTabPanel from '@renderer/src/components/ExperimentTabs/CustomTabPanel'
@@ -96,6 +97,7 @@ const ExperimentPage = () => {
             ),
         )}
       </Box>
+      <DownloadResults />
     </Box>
   )
 }
