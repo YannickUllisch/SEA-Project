@@ -20,7 +20,7 @@ ipcMain.on(
       data: {
         title: arg.title,
         description: arg.description,
-        userId: Session.getSession().getUser().id,
+        user: { connect: Session.getSession().getUser() },
       },
     })
 
