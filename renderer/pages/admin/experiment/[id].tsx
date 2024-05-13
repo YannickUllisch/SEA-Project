@@ -15,22 +15,22 @@ const experimentTabs: {
   component: JSX.Element
 }[] = [
   {
-    roles: [Role.ADMIN, Role.ASSISTANT],
+    roles: [Role.ADMIN, Role.ASSISTANT, Role.OWNER],
     id: 'general',
     component: <GeneralTab />,
   },
   {
-    roles: [Role.ADMIN, Role.ASSISTANT],
+    roles: [Role.ADMIN, Role.ASSISTANT, Role.OWNER],
     id: 'analytics',
     component: <AnalyticsTab />,
   },
   {
-    roles: [Role.ADMIN],
+    roles: [Role.ADMIN, Role.OWNER],
     id: 'assistants',
     component: <AssistantsTab />,
   },
   {
-    roles: [Role.ADMIN],
+    roles: [Role.ADMIN, Role.OWNER],
     id: 'delete',
     component: <DeleteTab />,
   },

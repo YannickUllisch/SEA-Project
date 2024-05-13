@@ -11,16 +11,22 @@ ipcMain.on(
       return
     }
 
-    if (Session.getSession().getUser().role === 1) {
+    if (Session.getSession().getUser().role > 1) {
       event.reply('failCreateExperiment', 'You do not have permission for this')
       return
     }
 
-    await db.experiment.create({
+    const associatedUser = await db.dbUser.findUnique({
+      where: {
+        id: Session.getSession().getUser().id,
+      },
+    })
+
+    await db.dbExperiment.create({
       data: {
         title: arg.title,
         description: arg.description,
-        user: { connect: Session.getSession().getUser() },
+        user: { connect: associatedUser },
       },
     })
 

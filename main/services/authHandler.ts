@@ -16,9 +16,12 @@ ipcMain.on(
     }
 
     try {
-      const existingUser = await db.user.findFirst({
+      const existingUser = await db.dbUser.findFirst({
         where: {
           name: arg.username,
+        },
+        include: {
+          experiments: { include: { questionnaires: true } },
         },
       })
 

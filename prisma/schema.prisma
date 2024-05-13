@@ -14,30 +14,30 @@ datasource db {
   url      = "file:./database.db"
 }
 
-model User {
+model dbUser {
   id            String @default(uuid()) @id
   name          String
   password      String
   role          Int
 
-  experiment    Experiment[]
+  experiments    dbExperiment[]
 }
 
-model Experiment {
+model dbExperiment {
   id                     String      @id @default(uuid())
-  user                   User[]
+  user                   dbUser[]
 
   title                  String
   description            String?
 
-  questionnaires              Questionnaire[]
+  questionnaires              dbQuestionnaire[]
 }
 
 // Define the Question model
-model Questionnaire {
+model dbQuestionnaire {
   id                    String       @id @default(uuid())
   // Every questionnaires belongs to some specific 
-  experiment            Experiment   @relation(fields: [experimentId], references: [id])
+  experiment            dbExperiment   @relation(fields: [experimentId], references: [id])
   experimentId          String
 
   version               String

@@ -1,5 +1,5 @@
 import type React from 'react'
-import { type FC, useState } from 'react'
+import type { FC } from 'react'
 import Dialog from '@mui/material/Dialog'
 import {
   DialogTitle,
@@ -7,8 +7,6 @@ import {
   DialogContentText,
   DialogActions,
   Button,
-  TextField,
-  Box,
 } from '@mui/material'
 
 interface DeleteExperimentModalProps {
