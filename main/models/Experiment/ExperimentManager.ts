@@ -14,10 +14,7 @@ export class ExperimentManager {
   private async setExperiments(userId: string) {
     const userExperiments = await db.experiment.findMany({
       where: {
-        userId,
-      },
-      include: {
-        questions: true,
+        user: { some: { id: userId } },
       },
     })
 

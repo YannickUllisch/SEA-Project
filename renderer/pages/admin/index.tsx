@@ -42,6 +42,7 @@ const AdminPage = () => {
   useEffect(() => {
     window.ipc.on('createdExperiment', (message: string) => {
       toast.success(message)
+      window.ipc.send('getExperiments', '')
     })
 
     window.ipc.on('failCreateExperiment', (message: string) => {

@@ -3,7 +3,7 @@ import { db } from '@main/helpers/db'
 import { Session } from '@main/models/Session'
 
 ipcMain.on('deleteExperiment', async (event, arg: { id: string }) => {
-  if (Session.getSession().getUser().role === 1) {
+  if (Session.getSession().getUser().role !== 0) {
     event.reply(
       'failDeleteExperiment',
       'You do not have permission to delete this',
