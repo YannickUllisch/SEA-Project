@@ -1,29 +1,29 @@
-import { Box, Button, Tooltip, Typography } from '@mui/material'
-import React from 'react'
-import theme from '../lib/theme'
-import { useRouter } from 'next/router'
-import { useSession } from './SessionProvider'
-import { logout } from '@renderer/src/lib/logout'
-import { HomeIcon } from 'lucide-react'
-import Image from 'next/image'
-import logo from '@renderer/public/images/logo.png'
+import { Box, Button, Tooltip, Typography } from "@mui/material";
+import React from "react";
+import theme from "../lib/theme";
+import { useRouter } from "next/router";
+import { useSession } from "./SessionProvider";
+import { logout } from "@renderer/src/lib/logout";
+import { HomeIcon, Settings, LogOut } from "lucide-react";
+import Image from "next/image";
+import logo from "@renderer/public/images/logo.png";
 
 const Header = () => {
-  const router = useRouter()
-  const session = useSession()
+  const router = useRouter();
+  const session = useSession();
 
   return (
     <>
-      {router.pathname !== '/' && (
+      {router.pathname !== "/" && (
         <Box
           sx={{
-            height: '70px',
-            width: '100%',
-            display: 'flex',
-            backgroundColor: 'white',
-            margin: '0 auto',
-            justifyContent: 'space-between',
-            alignItems: 'center',
+            height: "70px",
+            width: "100%",
+            display: "flex",
+            backgroundColor: "white",
+            margin: "0 auto",
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
           <Box sx={{ ml: 3, mt: 1 }}>
@@ -32,13 +32,13 @@ const Header = () => {
           {session && (
             <Box>
               <Button
-                onClick={() => router.push('/admin')}
+                onClick={() => router.push("/admin")}
                 sx={{ color: theme.palette.text.secondary }}
               >
                 Home
               </Button>
               <Button
-                onClick={() => router.push('/admin/surveycreation')}
+                onClick={() => router.push("/admin/surveycreation")}
                 sx={{ color: theme.palette.text.secondary }}
               >
                 Creator
@@ -46,18 +46,31 @@ const Header = () => {
             </Box>
           )}
           <Box>
+            <Button
+              sx={{
+                color: theme.palette.text.secondary,
+                "&:hover": {
+                  backgroundColor: "inherit",
+                  textDecoration: "underline",
+                },
+              }}
+              variant="text"
+              onClick={() => router.push("/settings")}
+            >
+              <Settings />
+            </Button>
             {!session ? (
               <Button
                 sx={{
                   color: theme.palette.text.secondary,
-                  '&:hover': {
-                    backgroundColor: 'inherit',
-                    textDecoration: 'underline',
+                  "&:hover": {
+                    backgroundColor: "inherit",
+                    textDecoration: "underline",
                   },
                   gap: 0.5,
                 }}
                 variant="text"
-                onClick={() => router.push('/')}
+                onClick={() => router.push("/")}
               >
                 Login
               </Button>
@@ -65,24 +78,24 @@ const Header = () => {
               <Button
                 sx={{
                   color: theme.palette.text.secondary,
-                  '&:hover': {
-                    backgroundColor: 'inherit',
-                    textDecoration: 'underline',
+                  "&:hover": {
+                    backgroundColor: "inherit",
+                    textDecoration: "underline",
                   },
-                  gap: 0.5,
+                  ml: -2,
                   mr: 2,
                 }}
                 variant="text"
                 onClick={logout}
               >
-                Logout
+                <LogOut />
               </Button>
             )}
           </Box>
         </Box>
       )}
     </>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;
