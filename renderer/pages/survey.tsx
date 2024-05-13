@@ -7,16 +7,24 @@ import { Survey } from 'survey-react-ui'
 
 const NextPage = () => {
   const surveyJson = {
-    elements: [
+    title: 'Yehaw Trest',
+    description: 'Yehaw telelelele',
+    logoPosition: 'right',
+    pages: [
       {
-        name: 'FirstName',
-        title: 'Enter your first name:',
-        type: 'text',
-      },
-      {
-        name: 'LastName',
-        title: 'Enter your last name:',
-        type: 'text',
+        name: 'page1',
+        elements: [
+          {
+            type: 'rating',
+            name: 'question1',
+            title: 'How cool is my mus',
+          },
+          {
+            type: 'text',
+            name: 'question2',
+            title: 'Er hun den bedste',
+          },
+        ],
       },
     ],
   }

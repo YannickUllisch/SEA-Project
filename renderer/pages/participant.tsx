@@ -6,7 +6,6 @@ import { useSession } from '@renderer/src/components/SessionProvider'
 import { logout } from '@renderer/src/lib/logout'
 
 const ParticipantHomePage = () => {
-  const [message, setMessage] = React.useState('No message found')
   const router = useRouter()
   const session = useSession()
 
@@ -15,12 +14,6 @@ const ParticipantHomePage = () => {
       logout()
     }
   }, [session])
-
-  useEffect(() => {
-    window.ipc.on('message', (message: string) => {
-      setMessage(message)
-    })
-  }, [])
 
   return (
     <Box
@@ -63,19 +56,6 @@ const ParticipantHomePage = () => {
         >
           Start Questionnaire
         </Button>
-        <Box sx={{ mt: 5 }}>
-          <Button
-            type="submit"
-            sx={{ color: 'black' }}
-            onClick={() => {
-              window.ipc.send('message', 'Hello')
-            }}
-          >
-            Test IPC
-          </Button>
-          <p>{message}</p>
-          <Button onClick={() => console.log(session)}>Test Session </Button>
-        </Box>
       </Box>
     </Box>
   )
