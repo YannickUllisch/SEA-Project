@@ -9,4 +9,9 @@ files:
     filter:
       - package.json
       - app
+extraResources:
+  - from: resources/icon.png
+    to: .
+asarUnpack:
+  - "icon.png"
 publish: null
