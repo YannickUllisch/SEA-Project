@@ -46,19 +46,21 @@ const Header = () => {
             </Box>
           )}
           <Box>
-            <Button
-              sx={{
-                color: theme.palette.text.secondary,
-                "&:hover": {
-                  backgroundColor: "inherit",
-                  textDecoration: "underline",
-                },
-              }}
-              variant="text"
-              onClick={() => router.push("/settings")}
-            >
-              <Settings />
-            </Button>
+            <Tooltip title={"Settings"}>
+              <Button
+                sx={{
+                  color: theme.palette.text.secondary,
+                  "&:hover": {
+                    backgroundColor: "inherit",
+                    textDecoration: "underline",
+                  },
+                }}
+                variant="text"
+                onClick={() => router.push("/settings")}
+              >
+                <Settings />
+              </Button>
+            </Tooltip>
             {!session ? (
               <Button
                 sx={{
@@ -75,21 +77,23 @@ const Header = () => {
                 Login
               </Button>
             ) : (
-              <Button
-                sx={{
-                  color: theme.palette.text.secondary,
-                  "&:hover": {
-                    backgroundColor: "inherit",
-                    textDecoration: "underline",
-                  },
-                  ml: -2,
-                  mr: 2,
-                }}
-                variant="text"
-                onClick={logout}
-              >
-                <LogOut />
-              </Button>
+              <Tooltip title={"Logout"}>
+                <Button
+                  sx={{
+                    color: theme.palette.text.secondary,
+                    "&:hover": {
+                      backgroundColor: "inherit",
+                      textDecoration: "underline",
+                    },
+                    ml: -2,
+                    mr: 2,
+                  }}
+                  variant="text"
+                  onClick={logout}
+                >
+                  <LogOut />
+                </Button>
+              </Tooltip>
             )}
           </Box>
         </Box>
