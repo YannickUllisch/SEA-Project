@@ -3679,6 +3679,11 @@ kind-of@^6.0.2:
   resolved "https://registry.npmjs.org/kind-of/-/kind-of-6.0.3.tgz"
   integrity sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==
 
+knockout@^3.5.0, knockout@^3.5.1:
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/knockout/-/knockout-3.5.1.tgz#62c81e81843bea2008fd23c575edd9ca978e75cf"
+  integrity sha512-wRJ9I4az0QcsH7A4v4l0enUpkS++MBx0BnL/68KaLzJg7x1qmbjSlwEoCNol7KTYZ+pmtI7Eh2J0Nu6/2Z5J/Q==
+
 lazy-val@^1.0.4, lazy-val@^1.0.5:
   version "1.0.5"
   resolved "https://registry.npmjs.org/lazy-val/-/lazy-val-1.0.5.tgz"
@@ -5109,6 +5114,21 @@ survey-creator-react@^1.10.3:
   version "1.10.3"
   resolved "https://registry.npmjs.org/survey-creator-react/-/survey-creator-react-1.10.3.tgz"
   integrity sha512-L7C6mBNU69xZqYO0Zm0wGn9/r2W8yhbHvW7LVF+0I9HU9N7IGvXSlpNWdkp7RbaSJd9tvauxlezIlGMRJ8lsRw==
+
+survey-creator@^1.10.3:
+  version "1.10.3"
+  resolved "https://registry.yarnpkg.com/survey-creator/-/survey-creator-1.10.3.tgz#50bfd2c2955cbe56ca1f6cf0e8c7a1001363b4d8"
+  integrity sha512-8A6qIbQBWWlvODot1UBjtgJDLLCQbUjmQNAtd2KMHsnFzcBG62kDgqOeeeSEj+Oj30Cw28OA8leKMjPdDSZ0dw==
+  dependencies:
+    knockout "^3.5.0"
+    survey-knockout "^1.10.3"
+
+survey-knockout@^1.10.3:
+  version "1.10.3"
+  resolved "https://registry.yarnpkg.com/survey-knockout/-/survey-knockout-1.10.3.tgz#fc44f48b72ad6ea8ddd1c01a1355c98071a6a9d4"
+  integrity sha512-5bX3tGKW8R4CGOvXAXALnAHlRcOmwNUGsdknFv3AhbgCEt8x/0jr/xqVmzsmm2zWRX1fFKZ85XJoLm79iFgzJQ==
+  dependencies:
+    knockout "^3.5.1"
 
 survey-react-ui@^1.10.3:
   version "1.10.3"

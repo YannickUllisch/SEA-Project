@@ -41,6 +41,7 @@
     "react-survey-builder": "^1.0.76",
     "sonner": "^1.4.41",
     "survey-core": "^1.10.3",
+    "survey-creator": "^1.10.3",
     "survey-creator-core": "^1.10.3",
     "survey-creator-react": "^1.10.3",
     "survey-react": "^1.10.3",
