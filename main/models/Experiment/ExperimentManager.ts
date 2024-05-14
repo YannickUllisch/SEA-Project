@@ -17,15 +17,16 @@ export class ExperimentManager {
         user: { some: { id: userId } },
       },
     })
-
     for (const experiment of userExperiments) {
-      this.experiments.push(
+      const experimentArray = []
+      experimentArray.push(
         new Experiment(experiment.title, experiment.description, experiment.id),
       )
+      this.experiments = experimentArray
     }
   }
 
-  public getExperiments() {
+  public async getExperiments() {
     return this.experiments
   }
 

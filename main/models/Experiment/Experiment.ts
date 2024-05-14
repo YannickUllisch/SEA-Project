@@ -28,4 +28,12 @@ export class Experiment {
   public getExperimentId() {
     return this.id
   }
+
+  public getExperimentTitle() {
+    return this.title
+  }
+
+  public getExperimentDesc() {
+    return this.description
+  }
 }

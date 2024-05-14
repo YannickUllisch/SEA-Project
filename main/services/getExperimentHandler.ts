@@ -4,15 +4,23 @@ import { ipcMain } from 'electron'
 
 ipcMain.on('getExperiments', async (event, _arg) => {
   // Fetching experiments for currently logged in user
-  const experiments = await db.dbExperiment.findMany({
-    where: {
-      user: {
-        some: {
-          id: Session.getSession().getUser().id,
-        },
-      },
-    },
-  })
+  const experiments = await Session.getSession()
+    .getExperimentManager()
+    .getExperiments()
+
+  const frontEndExperiments: {
+    id: string
+    title: string
+    description: string
+  }[] = []
+
+  for (const experiment of experiments) {
+    frontEndExperiments.push({
+      id: experiment.getExperimentId(),
+      title: experiment.getExperimentTitle(),
+      description: experiment.getExperimentDesc(),
+    })
+  }
 
   if (!experiments) {
     event.reply('getExperiments', 'Error occurred!')
