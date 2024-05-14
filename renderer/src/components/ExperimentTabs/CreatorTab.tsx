@@ -12,6 +12,9 @@ const SurveyComponent = dynamic(
 
 const CreatorTab = () => {
   const router = useRouter()
+
+  // This fetches the current experimentId, which the editor is rendered for. Needed to push questionnaire data
+  // to the right experiment in backend
   const currExperimentId = router.query.id as string
 
   const [surveyJson, setSurveyJson] = useState<object | null>(null)

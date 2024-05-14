@@ -1,5 +1,6 @@
 import { db } from '@main/helpers/db'
 import { Experiment } from './Experiment'
+import type { dbUser } from '@prisma/client'
 
 export class ExperimentManager {
   private experiments: Experiment[]
@@ -28,7 +29,24 @@ export class ExperimentManager {
     return this.experiments
   }
 
-  public getExperimentById() {
-    return 0
+  public getExperimentById(experimentId: string) {
+    for (const experiment of this.experiments)
+      if (experiment.getExperimentId() === experimentId) {
+        return experiment
+      }
+  }
+
+  public async createExperiment(
+    user: dbUser,
+    title: string,
+    description: string,
+  ) {
+    await db.dbExperiment.create({
+      data: {
+        title,
+        description,
+        user: { connect: user },
+      },
+    })
   }
 }
