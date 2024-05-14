@@ -136,7 +136,7 @@ const AdminPage = () => {
                                       }}
                                       onClick={() =>
                                         router.push(
-                                          `/admin/experiment/${experiment.id}?tab=delete`,
+                                          `/admin/experiment/${experiment.id}`,
                                         )
                                       }
                                     />

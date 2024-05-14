@@ -1,111 +1,153 @@
-import { Box, Divider, Tooltip, Typography } from "@mui/material";
-import { useSession } from "@renderer/src/components/SessionProvider";
-import AddUserDialog from "@renderer/src/components/modals/addUserDialog";
-import { Role } from "@renderer/src/lib/role";
-import { UserRoundPlus, UserRoundX } from "lucide-react";
-import type React from "react";
-import { useState } from "react";
-import { DataGrid } from "@mui/x-data-grid";
+import { Box, Tooltip, Typography, ButtonBase } from '@mui/material'
+import AddUserDialog from '@renderer/src/components/modals/addUserDialog'
+import { UserRoundPlus, UserRoundX } from 'lucide-react'
+import type React from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import {
+  DataGrid,
+  GridActionsCellItem,
+  type GridColDef,
+} from '@mui/x-data-grid'
+import type { dbUser } from '@prisma/client'
+import { useRouter } from 'next/router'
+
+interface AssistantTableRow {
+  id: string
+  name: string
+}
 
 const AssistantsTab = () => {
-  const session = useSession();
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const router = useRouter()
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+
+  const [assistants, setAssistants] = useState<dbUser[] | undefined>(undefined)
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <needed for items to be fetched>
+  useEffect(() => {
+    window.ipc.send('getAssistants', router.query.id)
+    window.ipc.on('getAssistants', (assistants: dbUser[]) => {
+      setAssistants(assistants)
+    })
+  }, [assistants === undefined])
+
+  const columns: GridColDef<AssistantTableRow>[] = [
+    {
+      field: 'id',
+      headerName: 'ID',
+      hideable: true,
+      valueFormatter: () => {
+        return '#'
+      },
+    },
+    {
+      field: 'name',
+      headerName: 'Name',
+      width: 150,
+      editable: false,
+      flex: 1,
+    },
+    {
+      field: 'action',
+      headerName: 'Action',
+      type: 'actions',
+      getActions: (params) => [
+        <GridActionsCellItem
+          label="delete"
+          icon={
+            <Tooltip title={'Remove Assistant'}>
+              <UserRoundX color="red" />
+            </Tooltip>
+          }
+          onClick={() => onDelete(params.row.id)}
+        />,
+      ],
+      width: 110,
+      editable: false,
+      flex: 1,
+    },
+  ]
+
+  const tableData: AssistantTableRow[] = useMemo(() => {
+    const data: AssistantTableRow[] = []
+
+    if (assistants) {
+      for (const assistant of assistants) {
+        data.push({ id: assistant.id, name: assistant.name })
+      }
+    }
+
+    return data
+  }, [assistants])
+
+  const onDelete = (userID: string) => {
+    window.ipc.send('deleteAssistant', { userID })
+
+    window.ipc.send('getAssistants', router.query.id)
+  }
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        flexDirection: "column",
-      }}
-    >
+    <>
+      <AddUserDialog
+        open={isDialogOpen}
+        roleToAdd={10}
+        setOpen={setIsDialogOpen}
+        experimentId={router.query.id as string}
+      />
       <Box
         sx={{
-          backgroundColor: "white",
-          padding: 5,
-          minWidth: "95%",
-          minHeight: "500px",
-          borderRadius: 4,
+          display: 'flex',
+          alignItems: 'center',
+          transition: 'transform 0.2s', // Adding transition for smooth effect
+          '&:hover': {
+            // Defining styles for hover state
+            transform: 'scale(1.025)', // Increase size on hover
+          },
         }}
       >
-        <AddUserDialog
-          open={isDialogOpen}
-          roleToAdd={10}
-          setOpen={setIsDialogOpen}
-        />
-        <div>Assistant page </div>
-        {session &&
-          (session.user.role === Role.ADMIN ||
-            session.user.role === Role.OWNER) && (
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              <Box
-                sx={{
-                  minWidth: "20%",
-                  m: 2,
-                  borderRadius: 2,
-                  height: 150,
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  transition: "transform 0.2s", // Adding transition for smooth effect
-                  "&:hover": {
-                    // Defining styles for hover state
-                    transform: "scale(1.1)", // Increase size on hover
-                  },
-                }}
-              >
-                <Tooltip title={"Add Assistant"}>
-                  <UserRoundPlus
-                    style={{
-                      height: 50,
-                      width: 50,
-                      color: "green",
-                      cursor: "pointer",
-                      strokeWidth: "1.5px",
-                    }}
-                    onClick={() => setIsDialogOpen(true)}
-                  />
-                </Tooltip>
-              </Box>
-              <Box
-                sx={{
-                  minWidth: "20%",
-                  m: 2,
-                  borderRadius: 2,
-                  height: 150,
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  transition: "transform 0.2s", // Adding transition for smooth effect
-                  "&:hover": {
-                    transform: "scale(1.1)", // Increase size on hover
-                  },
-                }}
-              >
-                <Tooltip title={"Remove Assistant"}>
-                  <UserRoundX
-                    style={{
-                      height: 50,
-                      width: 50,
-                      color: "red",
-                      cursor: "pointer",
-                      strokeWidth: "1.5px",
-                    }}
-                    //onClick={() => }
-                  />
-                </Tooltip>
-              </Box>
-            </Box>
-          )}
+        <ButtonBase onClick={() => setIsDialogOpen(true)}>
+          <Typography
+            variant="body1"
+            sx={{
+              cursor: 'pointer', // Optional: to make it look clickable
+              marginLeft: 1, // Adjust as needed for spacing between the button and text
+            }}
+          >
+            Add Assistant
+          </Typography>
+        </ButtonBase>
+        <Tooltip title="Add Assistant">
+          <UserRoundPlus
+            style={{
+              height: 35,
+              width: 35,
+              color: 'green',
+              cursor: 'pointer',
+              strokeWidth: '1.5px',
+            }}
+            onClick={() => setIsDialogOpen(true)}
+          />
+        </Tooltip>
       </Box>
-    </Box>
-  );
-};
+      <Box
+        sx={{
+          height: '100%',
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          overflow: 'auto',
+        }}
+      >
+        <DataGrid
+          rows={tableData}
+          columns={columns}
+          autoHeight
+          disableColumnResize={true}
+          disableColumnMenu={true}
+        />
+      </Box>
+    </>
+  )
+}
 
-export default AssistantsTab;
+export default AssistantsTab

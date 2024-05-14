@@ -31,10 +31,11 @@ export class ExperimentManager {
   }
 
   public getExperimentById(experimentId: string) {
-    for (const experiment of this.experiments)
-      if (experiment.getExperimentId() === experimentId) {
+    for (const experiment of this.experiments) {
+      if (experiment.getExperimentInfo().id === experimentId) {
         return experiment
       }
+    }
   }
 
   public async createExperiment(

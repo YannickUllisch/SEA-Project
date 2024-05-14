@@ -4,6 +4,8 @@ import '@main/services/createExperimentHandler'
 import '@main/services/deleteExperimentHandler'
 import '@main/services/appServices'
 import '@main/services/addUserHandler'
+import '@main/services/getAssistantsHandler'
+import '@main/services/deleteAssistantHandler'
 import { ElectronApp } from '@main/models/ElectronApp'
 
 const main = async () => {

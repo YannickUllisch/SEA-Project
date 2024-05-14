@@ -15,11 +15,7 @@ ipcMain.on('getExperiments', async (event, _arg) => {
   }[] = []
 
   for (const experiment of experiments) {
-    frontEndExperiments.push({
-      id: experiment.getExperimentId(),
-      title: experiment.getExperimentTitle(),
-      description: experiment.getExperimentDesc(),
-    })
+    frontEndExperiments.push(experiment.getExperimentInfo())
   }
 
   if (!experiments) {

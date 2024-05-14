@@ -12,6 +12,7 @@ const DeleteTab = () => {
     window.ipc.on('failDeleteExperiment', (message: string) => {
       toast.error(message)
     })
+
     window.ipc.on('deletedExperiment', (message: string) => {
       toast.success(message)
       router.push('/admin')
