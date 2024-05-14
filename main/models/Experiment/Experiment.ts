@@ -1,7 +1,31 @@
-export class Experiment {
-  name: string
+import { db } from '@main/helpers/db'
+import { Questionnaire } from '../Questionnaire/Questionnaire'
 
-  constructor(name: string) {
-    this.name = name
+export class Experiment {
+  private title: string
+  private description: string
+  private id: string
+
+  constructor(title: string, description: string, id: string) {
+    this.title = title
+    this.description = description
+    this.setQuestionnaires(id)
+  }
+
+  private async setQuestionnaires(experimentId: string) {
+    const _experimentQuestionnaires = await db.dbQuestionnaire.findMany({
+      where: {
+        experimentId,
+      },
+    })
+    const _test = new Questionnaire(experimentId)
+  }
+
+  public getQuestionnaires() {
+    return 0
+  }
+
+  public getExperimentId() {
+    return this.id
   }
 }

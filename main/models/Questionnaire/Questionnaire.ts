@@ -1,3 +1,7 @@
 export class Questionnaire {
-  name: string
+  private experimentId: string
+
+  constructor(experimentId: string) {
+    this.experimentId = experimentId
+  }
 }
