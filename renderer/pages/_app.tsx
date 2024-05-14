@@ -27,7 +27,6 @@ export default function MyApp(props: AppProps) {
             <Box
               sx={{
                 minHeight: 'calc(100vh - 70px)',
-                marginTop: 3,
               }}
             >
               <Component {...pageProps} />

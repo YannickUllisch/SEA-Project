@@ -1,6 +1,5 @@
 import { db } from '@main/helpers/db'
 import { Experiment } from './Experiment'
-import type { dbExperiment, dbUser } from '@prisma/client'
 
 export class ExperimentManager {
   private experiments: Experiment[]
@@ -19,11 +18,17 @@ export class ExperimentManager {
     })
 
     for (const experiment of userExperiments) {
-      this.experiments.push(new Experiment(experiment.title))
+      this.experiments.push(
+        new Experiment(experiment.title, experiment.description, experiment.id),
+      )
     }
   }
 
   public getExperiments() {
     return this.experiments
+  }
+
+  public getExperimentById() {
+    return 0
   }
 }

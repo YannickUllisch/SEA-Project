@@ -2,6 +2,7 @@ import { Box, Button, Divider, Tab, Tabs, Typography } from '@mui/material'
 import DownloadResults from '@renderer/src/components/DownloadResults'
 import AnalyticsTab from '@renderer/src/components/ExperimentTabs/AnalyticsTab'
 import AssistantsTab from '@renderer/src/components/ExperimentTabs/AssistantsTab'
+import CreatorTab from '@renderer/src/components/ExperimentTabs/CreatorTab'
 import CustomTabPanel from '@renderer/src/components/ExperimentTabs/CustomTabPanel'
 import DeleteTab from '@renderer/src/components/ExperimentTabs/DeleteTab'
 import GeneralTab from '@renderer/src/components/ExperimentTabs/GeneralTab'
@@ -35,6 +36,11 @@ const experimentTabs: {
     id: 'delete',
     component: <DeleteTab />,
   },
+  {
+    roles: [Role.ADMIN, Role.OWNER],
+    id: 'creator',
+    component: <CreatorTab />,
+  },
 ]
 
 const ExperimentPage = () => {
@@ -53,6 +59,7 @@ const ExperimentPage = () => {
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'column',
+        marginTop: 3,
       }}
     >
       <Box

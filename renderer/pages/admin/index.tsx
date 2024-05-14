@@ -57,6 +57,7 @@ const AdminPage = () => {
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'column',
+        marginTop: 3,
       }}
     >
       <Box
