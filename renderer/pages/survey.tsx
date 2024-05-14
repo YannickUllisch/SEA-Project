@@ -17,12 +17,12 @@ const NextPage = () => {
           {
             type: 'rating',
             name: 'question1',
-            title: 'How cool is my mus',
+            title: 'yo',
           },
           {
             type: 'text',
             name: 'question2',
-            title: 'Er hun den bedste',
+            title: 'yo2',
           },
         ],
       },

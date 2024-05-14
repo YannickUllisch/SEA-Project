@@ -25,13 +25,6 @@ ipcMain.on(
     Session.getSession()
       .getExperimentManager()
       .createExperiment(associatedUser, arg.title, arg.description)
-    // await db.dbExperiment.create({
-    //   data: {
-    //     title: arg.title,
-    //     description: arg.description,
-    //     user: { connect: associatedUser },
-    //   },
-    // })
 
     event.reply('createdExperiment', 'Experiment Created')
     return
