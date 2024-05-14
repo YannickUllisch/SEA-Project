@@ -15,23 +15,28 @@ ipcMain.on(
       return
     }
 
-    const existingUser = await db.user.findFirst({
-      where: {
-        name: arg.username,
-      },
-    })
+    try {
+      const existingUser = await db.user.findFirst({
+        where: {
+          name: arg.username,
+        },
+      })
 
-    if (!existingUser) {
-      event.reply('authenticate', 'Invalid credentials!')
+      if (!existingUser) {
+        event.reply('authenticate', 'Invalid credentials!')
+        return
+      }
+
+      if (existingUser.password === arg.password) {
+        // We authenticate the user by both initializing the backend Session (which starts all of the backend logic)
+        Session.initSession(existingUser)
+        // And also send authenticated status to the frontend
+        event.reply('authenticated', existingUser)
+        return
+      }
+    } catch (err) {
+      event.reply('authenticate', (err as string).toString())
       return
-    }
-
-    if (existingUser.password === arg.password) {
-      // We authenticate the user by both initializing the backend Session (which starts all of the backend logic)
-      Session.initSession(existingUser)
-
-      // And also send authenticated status to the frontend
-      event.reply('authenticated', { existingUser })
     }
   },
 )
@@ -40,4 +45,5 @@ ipcMain.on(
 ipcMain.on('logout', async (event) => {
   Session.clearSession()
   event.reply('resetSession')
+  return
 })

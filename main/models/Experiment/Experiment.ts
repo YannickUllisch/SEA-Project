@@ -1,6 +1,4 @@
-import type { iQuestionnaireQuestion } from '@main/models/Experiment/iQuestionnaireQuestion'
-
-export class Experiment implements iQuestionnaireQuestion {
+export class Experiment {
   name: string
 
   constructor(name: string) {
