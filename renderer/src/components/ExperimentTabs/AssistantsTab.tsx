@@ -81,8 +81,7 @@ const AssistantsTab = () => {
 
   const onDelete = (userID: string) => {
     window.ipc.send('deleteAssistant', { userID })
-
-    window.ipc.send('getAssistants', router.query.id)
+    setAssistants(undefined)
   }
 
   return (
