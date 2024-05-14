@@ -49,4 +49,12 @@ export class ExperimentManager {
       },
     })
   }
+
+  public async deleteExperiment(experimentId: string) {
+    await db.dbExperiment.delete({
+      where: {
+        id: experimentId,
+      },
+    })
+  }
 }

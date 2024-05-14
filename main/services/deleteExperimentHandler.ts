@@ -11,11 +11,7 @@ ipcMain.on('deleteExperiment', async (event, arg: { id: string }) => {
     return
   }
 
-  await db.dbExperiment.delete({
-    where: {
-      id: arg.id,
-    },
-  })
+  Session.getSession().getExperimentManager().deleteExperiment(arg.id)
 
   event.reply('deletedExperiment', 'Experiment Deleted')
   return
