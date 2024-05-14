@@ -30,7 +30,6 @@ const NextPage = () => {
         >
           Start Questionnaire
         </Button>
-        <SurveyCreatorWidget />
       </div>
     </>
   );
