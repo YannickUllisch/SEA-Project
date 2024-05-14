@@ -4,9 +4,13 @@ import { ipcMain } from 'electron'
 
 ipcMain.on('getExperiments', async (event, _arg) => {
   // Fetching experiments for currently logged in user
-  const experiments = await db.experiment.findMany({
+  const experiments = await db.dbExperiment.findMany({
     where: {
-      userId: Session.getSession().getUser().id,
+      user: {
+        some: {
+          id: Session.getSession().getUser().id,
+        },
+      },
     },
   })
 

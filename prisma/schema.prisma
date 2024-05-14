@@ -14,52 +14,33 @@ datasource db {
   url      = "file:./database.db"
 }
 
-model User {
+model dbUser {
   id            String @default(uuid()) @id
   name          String
   password      String
   role          Int
 
-  experiment    Experiment[]
+  experiments    dbExperiment[]
 }
 
-model Experiment {
+model dbExperiment {
   id                     String      @id @default(uuid())
-
-  // Linking it to a user 
-  user                   User   @relation(fields: [userId], references: [id])
-  userId                 String
-
-//  assistant               Assistant?
+  user                   dbUser[]
 
   title                  String
   description            String?
 
-  questions              Question[]
+  questionnaires              dbQuestionnaire[]
 }
 
 // Define the Question model
-model Question {
+model dbQuestionnaire {
   id                    String       @id @default(uuid())
-  experiment            Experiment   @relation(fields: [experimentId], references: [id])
+  // Every questionnaires belongs to some specific 
+  experiment            dbExperiment   @relation(fields: [experimentId], references: [id])
   experimentId          String
 
-  questionText          String
-  questionImage         String? // Probably needs to be a different type dont know how to store Images currently 
-
-  // Establish a one-to-many relationship with the Option and QuestionAnswer model
-  options               Option[]
+  version               String
+  form                  String
 }
-
-
-// Define the Option model - still needs to be worked on
-model Option {
-  id                  String      @id @default(uuid())
-  question            Question @relation(fields: [questionId], references: [id])
-  questionId          String 
-
-  optionType          String // If its a dropdown, text-field, checkbox - one way we can keep track of what and where to save answer data
-  optionText          String
-}
-
 

@@ -1,6 +1,8 @@
 import { Box, Button, Divider, Tab, Tabs, Typography } from '@mui/material'
+import DownloadResults from '@renderer/src/components/DownloadResults'
 import AnalyticsTab from '@renderer/src/components/ExperimentTabs/AnalyticsTab'
 import AssistantsTab from '@renderer/src/components/ExperimentTabs/AssistantsTab'
+import CreatorTab from '@renderer/src/components/ExperimentTabs/CreatorTab'
 import CustomTabPanel from '@renderer/src/components/ExperimentTabs/CustomTabPanel'
 import DeleteTab from '@renderer/src/components/ExperimentTabs/DeleteTab'
 import GeneralTab from '@renderer/src/components/ExperimentTabs/GeneralTab'
@@ -15,24 +17,29 @@ const experimentTabs: {
   component: JSX.Element
 }[] = [
   {
-    roles: [Role.ADMIN, Role.ASSISTANT],
+    roles: [Role.ADMIN, Role.ASSISTANT, Role.OWNER],
     id: 'general',
     component: <GeneralTab />,
   },
   {
-    roles: [Role.ADMIN, Role.ASSISTANT],
+    roles: [Role.ADMIN, Role.ASSISTANT, Role.OWNER],
     id: 'analytics',
     component: <AnalyticsTab />,
   },
   {
-    roles: [Role.ADMIN],
+    roles: [Role.ADMIN, Role.OWNER],
     id: 'assistants',
     component: <AssistantsTab />,
   },
   {
-    roles: [Role.ADMIN],
+    roles: [Role.ADMIN, Role.OWNER],
     id: 'delete',
     component: <DeleteTab />,
+  },
+  {
+    roles: [Role.ADMIN, Role.OWNER],
+    id: 'creator',
+    component: <CreatorTab />,
   },
 ]
 
@@ -52,6 +59,7 @@ const ExperimentPage = () => {
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'column',
+        marginTop: 3,
       }}
     >
       <Box
@@ -96,6 +104,7 @@ const ExperimentPage = () => {
             ),
         )}
       </Box>
+      <DownloadResults />
     </Box>
   )
 }

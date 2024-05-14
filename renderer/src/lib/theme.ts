@@ -13,9 +13,9 @@ export const roboto = Cabin({
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#916DD5',
-      light: '#C7ADFF',
-      dark: '#7151A9',
+      main: 'rgb(27, 179, 148)',
+      light: 'rgb(62, 226, 193)',
+      dark: 'rgb(20, 164, 139)',
     },
     secondary: {
       main: '#4C2C96',

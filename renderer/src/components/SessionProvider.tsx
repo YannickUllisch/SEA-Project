@@ -1,4 +1,4 @@
-import type { User } from '@prisma/client'
+import type { dbUser } from '@prisma/client'
 import {
   createContext,
   useState,
@@ -9,7 +9,7 @@ import {
 } from 'react'
 
 export interface Session {
-  user: User
+  user: dbUser
 }
 
 // Define a context for your session
@@ -22,7 +22,7 @@ const SessionProvider: FC<PropsWithChildren> = ({ children }) => {
 
   // In here wait for the backend to send a session back, which only happens on authentication success
   useEffect(() => {
-    window.ipc.on('authenticated', (user: User) => {
+    window.ipc.on('authenticated', (user: dbUser) => {
       setSession({ user })
     })
     window.ipc.on('resetSession', () => {
