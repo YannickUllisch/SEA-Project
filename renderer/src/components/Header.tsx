@@ -7,6 +7,7 @@ import { logout } from "@renderer/src/lib/logout";
 import { HomeIcon, Settings, LogOut } from "lucide-react";
 import Image from "next/image";
 import logo from "@renderer/public/images/logo.png";
+import { Role } from "@renderer/src/lib/role";
 
 const Header = () => {
   const router = useRouter();
@@ -46,21 +47,25 @@ const Header = () => {
             </Box>
           )}
           <Box>
-            <Tooltip title={"Settings"}>
-              <Button
-                sx={{
-                  color: theme.palette.text.secondary,
-                  "&:hover": {
-                    backgroundColor: "inherit",
-                    textDecoration: "underline",
-                  },
-                }}
-                variant="text"
-                onClick={() => router.push("/settings")}
-              >
-                <Settings />
-              </Button>
-            </Tooltip>
+            {session
+              ? session.user.role === Role.OWNER && (
+                  <Tooltip title={"Settings"}>
+                    <Button
+                      sx={{
+                        color: theme.palette.text.secondary,
+                        "&:hover": {
+                          backgroundColor: "inherit",
+                          textDecoration: "underline",
+                        },
+                      }}
+                      variant="text"
+                      onClick={() => router.push("/settings")}
+                    >
+                      <Settings />
+                    </Button>
+                  </Tooltip>
+                )
+              : undefined}
             {!session ? (
               <Button
                 sx={{

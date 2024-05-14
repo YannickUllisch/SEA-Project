@@ -36,7 +36,7 @@ const settingsPage = () => {
           Settings
         </Typography>
         <Divider />
-        text...
+        Settings Page
         {session
           ? session.user.role === Role.OWNER && (
               <Box
