@@ -48,7 +48,7 @@ const DeleteExperimentModal: FC<DeleteExperimentModalProps> = ({
         <Button
           variant="contained"
           onClick={handleDelete}
-          color="secondary"
+          color="primary"
           autoFocus
         >
           Yes

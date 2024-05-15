@@ -1,6 +1,7 @@
 import { db } from '@main/helpers/db'
 import { Experiment } from './Experiment'
 import type { dbUser } from '@prisma/client'
+import { v4 } from 'uuid'
 
 export class ExperimentManager {
   private experiments: Experiment[]
@@ -43,15 +44,18 @@ export class ExperimentManager {
     title: string,
     description: string,
   ) {
+    // We need to create our new ID manually to create a corresponding object aswell
+    const newId = v4()
     await db.dbExperiment.create({
       data: {
+        id: newId,
         title,
         description,
         user: { connect: user },
       },
     })
 
-    // We need to add a new object to this.experiments for it to show up in frontend
+    this.experiments.push(new Experiment(title, description, newId))
   }
 
   public async deleteExperiment(experimentId: string) {
@@ -60,12 +64,8 @@ export class ExperimentManager {
         id: experimentId,
       },
     })
-
-    // Find a better method to remove the experiment object on delete
-    this.experiments = this.experiments.filter((experiment) => {
-      if (experiment.getExperimentInfo().id !== experimentId) {
-        return experiment
-      }
-    })
+    this.experiments = this.experiments.filter(
+      (experiment) => experiment.getExperimentInfo().id !== experimentId,
+    )
   }
 }
