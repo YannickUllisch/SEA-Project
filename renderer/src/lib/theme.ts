@@ -23,7 +23,7 @@ const theme = createTheme({
       light: '#8c6cd4',
     },
     error: {
-      main: red.A400,
+      main: red.A400, // 'rgb(227,148,187)',
     },
   },
   typography: {

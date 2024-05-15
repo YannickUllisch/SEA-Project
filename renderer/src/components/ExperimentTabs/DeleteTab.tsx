@@ -20,9 +20,19 @@ const DeleteTab = () => {
   }, [router])
 
   return (
-    <Box>
+    <Box
+      sx={{
+        minWidth: '20%',
+        m: 2,
+        borderRadius: 2,
+        height: 150,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
       <Button
-        variant="outlined"
+        variant="contained"
         color="error"
         onClick={() => setModalOpen(true)}
       >
