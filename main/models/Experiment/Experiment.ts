@@ -23,7 +23,7 @@ export class Experiment {
   }
 
   public getQuestionnaires() {
-    return 0
+    return [new Questionnaire('')]
   }
 
   public getExperimentInfo() {

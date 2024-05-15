@@ -1,4 +1,10 @@
-export class Questionnaire {
+import type { iQuestionnaire } from './iQuestionnaire'
+
+export class Questionnaire implements iQuestionnaire {
+  private id: string
+  private name: string
+  private description: string
+  private form: string
   private experimentId: string
 
   constructor(experimentId: string) {
@@ -11,10 +17,8 @@ export class Questionnaire {
   }
 
   public getQuestionnaireId() {
-    return 0
+    return '0'
   }
-
-  public getQuestionnaireTitle() {}
 
   public updateQuestionnaireForm() {}
 }
