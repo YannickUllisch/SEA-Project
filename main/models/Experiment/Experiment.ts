@@ -7,25 +7,36 @@ export class Experiment {
   private id: string
 
   constructor(title: string, description: string, id: string) {
+    this.id = id
     this.title = title
     this.description = description
-    this.setQuestionnaires(id)
+    this.setQuestionnaires()
   }
 
-  private async setQuestionnaires(experimentId: string) {
+  private async setQuestionnaires() {
     const _experimentQuestionnaires = await db.dbQuestionnaire.findMany({
       where: {
-        experimentId,
+        experimentId: this.id,
       },
     })
-    const _test = new Questionnaire(experimentId)
+    const _test = new Questionnaire(this.id)
   }
 
   public getQuestionnaires() {
     return 0
   }
 
-  public getExperimentId() {
-    return this.id
+  public getExperimentInfo() {
+    return { id: this.id, title: this.title, description: this.description }
+  }
+
+  public async getExperimentAssistants() {
+    const experimentAssistants = await db.dbUser.findMany({
+      where: {
+        experiments: { some: { id: this.id } },
+        role: 10,
+      },
+    })
+    return experimentAssistants
   }
 }

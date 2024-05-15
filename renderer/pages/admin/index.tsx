@@ -42,7 +42,7 @@ const AdminPage = () => {
   useEffect(() => {
     window.ipc.on('createdExperiment', (message: string) => {
       toast.success(message)
-      window.ipc.send('getExperiments', '')
+      setExperiments(undefined)
     })
 
     window.ipc.on('failCreateExperiment', (message: string) => {
@@ -136,7 +136,7 @@ const AdminPage = () => {
                                       }}
                                       onClick={() =>
                                         router.push(
-                                          `/admin/experiment/${experiment.id}?tab=delete`,
+                                          `/admin/experiment/${experiment.id}`,
                                         )
                                       }
                                     />

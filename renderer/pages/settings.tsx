@@ -1,4 +1,4 @@
-import { Box, Divider, Tooltip, Typography } from '@mui/material'
+import { Box, ButtonBase, Divider, Tooltip, Typography } from '@mui/material'
 import { useSession } from '@renderer/src/components/SessionProvider'
 import AddUserDialog from '@renderer/src/components/modals/addUserDialog'
 import { Role } from '@renderer/src/lib/role'
@@ -37,7 +37,6 @@ const settingsPage = () => {
           Settings
         </Typography>
         <Divider />
-        Settings Page
         {session
           ? session.user.role === Role.OWNER && (
               <Box
@@ -56,6 +55,17 @@ const settingsPage = () => {
                   },
                 }}
               >
+                <ButtonBase onClick={() => setIsDialogOpen(true)}>
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      cursor: 'pointer', // Optional: to make it look clickable
+                      marginLeft: 1, // Adjust as needed for spacing between the button and text
+                    }}
+                  >
+                    Add Admin
+                  </Typography>
+                </ButtonBase>
                 <Tooltip title={'Add Admin'}>
                   <UserRoundPlus
                     style={{

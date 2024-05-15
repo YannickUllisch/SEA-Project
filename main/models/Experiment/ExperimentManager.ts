@@ -17,23 +17,25 @@ export class ExperimentManager {
         user: { some: { id: userId } },
       },
     })
-
+    const experimentArray = []
     for (const experiment of userExperiments) {
-      this.experiments.push(
+      experimentArray.push(
         new Experiment(experiment.title, experiment.description, experiment.id),
       )
     }
+    this.experiments = experimentArray
   }
 
-  public getExperiments() {
+  public async getExperiments() {
     return this.experiments
   }
 
   public getExperimentById(experimentId: string) {
-    for (const experiment of this.experiments)
-      if (experiment.getExperimentId() === experimentId) {
+    for (const experiment of this.experiments) {
+      if (experiment.getExperimentInfo().id === experimentId) {
         return experiment
       }
+    }
   }
 
   public async createExperiment(
@@ -48,6 +50,8 @@ export class ExperimentManager {
         user: { connect: user },
       },
     })
+
+    // We need to add a new object to this.experiments for it to show up in frontend
   }
 
   public async deleteExperiment(experimentId: string) {
@@ -55,6 +59,13 @@ export class ExperimentManager {
       where: {
         id: experimentId,
       },
+    })
+
+    // Find a better method to remove the experiment object on delete
+    this.experiments = this.experiments.filter((experiment) => {
+      if (experiment.getExperimentInfo().id !== experimentId) {
+        return experiment
+      }
     })
   }
 }

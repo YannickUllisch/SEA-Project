@@ -12,6 +12,7 @@ const DeleteTab = () => {
     window.ipc.on('failDeleteExperiment', (message: string) => {
       toast.error(message)
     })
+
     window.ipc.on('deletedExperiment', (message: string) => {
       toast.success(message)
       router.push('/admin')
@@ -19,9 +20,19 @@ const DeleteTab = () => {
   }, [router])
 
   return (
-    <Box>
+    <Box
+      sx={{
+        minWidth: '20%',
+        m: 2,
+        borderRadius: 2,
+        height: 150,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
       <Button
-        variant="outlined"
+        variant="contained"
         color="error"
         onClick={() => setModalOpen(true)}
       >
