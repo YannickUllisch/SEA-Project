@@ -64,7 +64,6 @@ export class ExperimentManager {
         id: experimentId,
       },
     })
-
     this.experiments = this.experiments.filter(
       (experiment) => experiment.getExperimentInfo().id !== experimentId,
     )
