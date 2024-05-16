@@ -6,7 +6,6 @@ import { useSession } from "@renderer/src/components/SessionProvider";
 import { logout } from "@renderer/src/lib/logout";
 
 const ParticipantHomePage = () => {
-  const [message, setMessage] = React.useState("No message found");
   const router = useRouter();
   const session = useSession();
 
@@ -15,12 +14,6 @@ const ParticipantHomePage = () => {
       logout();
     }
   }, [session]);
-
-  useEffect(() => {
-    window.ipc.on("message", (message: string) => {
-      setMessage(message);
-    });
-  }, []);
 
   return (
     <Box

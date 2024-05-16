@@ -1,32 +1,71 @@
 import { db } from '@main/helpers/db'
 import { Experiment } from './Experiment'
-import type { User } from '@prisma/client'
+import type { dbUser } from '@prisma/client'
+import { v4 } from 'uuid'
 
 export class ExperimentManager {
   private experiments: Experiment[]
 
-  constructor(loggedInUser: User) {
-    this.setExperiments(loggedInUser.id)
+  constructor(userId: string) {
+    this.setExperiments(userId)
   }
 
   // Once a user logs in we should set this to all the user specific experiments from the db.
   // We transform the entries from the DB table to Experiment Class objects.
   private async setExperiments(userId: string) {
-    const userExperiments = await db.experiment.findMany({
+    const userExperiments = await db.dbExperiment.findMany({
       where: {
-        userId,
-      },
-      include: {
-        questions: true,
+        user: { some: { id: userId } },
       },
     })
-
+    const experimentArray = []
     for (const experiment of userExperiments) {
-      this.experiments.push(new Experiment(experiment.title))
+      experimentArray.push(
+        new Experiment(experiment.title, experiment.description, experiment.id),
+      )
+    }
+    this.experiments = experimentArray
+  }
+
+  public async getExperiments() {
+    return this.experiments
+  }
+
+  public getExperimentById(experimentId: string) {
+    for (const experiment of this.experiments) {
+      if (experiment.getExperimentInfo().id === experimentId) {
+        return experiment
+      }
     }
   }
 
-  public getExperiments() {
-    return this.experiments
+  public async createExperiment(
+    user: dbUser,
+    title: string,
+    description: string,
+  ) {
+    // We need to create our new ID manually to create a corresponding object aswell
+    const newId = v4()
+    await db.dbExperiment.create({
+      data: {
+        id: newId,
+        title,
+        description,
+        user: { connect: user },
+      },
+    })
+
+    this.experiments.push(new Experiment(title, description, newId))
+  }
+
+  public async deleteExperiment(experimentId: string) {
+    await db.dbExperiment.delete({
+      where: {
+        id: experimentId,
+      },
+    })
+    this.experiments = this.experiments.filter(
+      (experiment) => experiment.getExperimentInfo().id !== experimentId,
+    )
   }
 }

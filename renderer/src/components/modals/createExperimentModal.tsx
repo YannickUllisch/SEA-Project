@@ -1,4 +1,5 @@
-import React, { FC, useState } from "react";
+import type React from "react";
+import { type FC, useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import {
   DialogTitle,
@@ -49,25 +50,18 @@ const CreateExperimentModal: FC<CreateExperimentModalProps> = ({
           variant="standard"
           onChange={(e) => setTitle(e.currentTarget.value)} // Update the state on change
         />
-        <Box
-          component="form"
-          sx={{
-            "& .MuiTextField-root": { mt: 3, width: "30ch" },
-          }}
-          noValidate
-          autoComplete="off"
-        >
-          <div>
-            <TextField
-              id="description-multiline-flexible"
-              label="Description"
-              value={description} // Bind the value to the state
-              multiline
-              maxRows={4}
-              onChange={(e) => setDescription(e.currentTarget.value)} // Update the state on change
-            />
-          </div>
-        </Box>
+        <TextField
+          autoFocus
+          margin="dense"
+          id="Description"
+          name="Description"
+          label="Description"
+          value={description}
+          type="Description"
+          fullWidth
+          variant="standard"
+          onChange={(e) => setDescription(e.currentTarget.value)} // Update the state on change
+        />
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>

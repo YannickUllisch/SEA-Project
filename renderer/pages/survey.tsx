@@ -9,7 +9,26 @@ import { Box, Button, Typography } from "@mui/material";
 import theme from "@renderer/src/lib/theme";
 
 const NextPage = () => {
-  const router = useRouter();
+  const surveyJson = {
+    elements: [
+      {
+        name: "FirstName",
+        title: "Enter your first name:",
+        type: "text",
+      },
+      {
+        name: "LastName",
+        title: "Enter your last name:",
+        type: "text",
+      },
+    ],
+  };
+
+  const survey = new Model(surveyJson);
+  survey.addNavigationItem({
+    title: "Exit",
+  });
+
   return (
     <>
       <div>

@@ -9,7 +9,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material'
-import type { Experiment } from '@prisma/client'
+import type { dbExperiment } from '@prisma/client'
 import { useSession } from '@renderer/src/components/SessionProvider'
 import CreateExperimentModal from '@renderer/src/components/modals/createExperimentModal'
 import { Role } from '@renderer/src/lib/role'
@@ -25,7 +25,7 @@ const AdminPage = () => {
 
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
-  const [experiments, setExperiments] = useState<Experiment[] | undefined>(
+  const [experiments, setExperiments] = useState<dbExperiment[] | undefined>(
     undefined,
   )
 
@@ -34,7 +34,7 @@ const AdminPage = () => {
   useEffect(() => {
     window.ipc.send('getExperiments', '')
 
-    window.ipc.on('getExperiments', (experiments: Experiment[]) => {
+    window.ipc.on('getExperiments', (experiments: dbExperiment[]) => {
       setExperiments(experiments)
     })
   }, [experiments === undefined])
@@ -42,6 +42,7 @@ const AdminPage = () => {
   useEffect(() => {
     window.ipc.on('createdExperiment', (message: string) => {
       toast.success(message)
+      setExperiments(undefined)
     })
 
     window.ipc.on('failCreateExperiment', (message: string) => {
@@ -56,6 +57,7 @@ const AdminPage = () => {
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'column',
+        marginTop: 3,
       }}
     >
       <Box
@@ -123,7 +125,7 @@ const AdminPage = () => {
                           }}
                         >
                           {session
-                            ? session.user.role === Role.ADMIN && (
+                            ? session.user.role <= Role.ADMIN && (
                                 <>
                                   <Tooltip title={'Add Questionnaire'}>
                                     <SquarePlus
@@ -132,6 +134,11 @@ const AdminPage = () => {
                                         cursor: 'pointer',
                                         strokeWidth: '1.5px',
                                       }}
+                                      onClick={() =>
+                                        router.push(
+                                          `/admin/experiment/${experiment.id}`,
+                                        )
+                                      }
                                     />
                                   </Tooltip>
                                   <Tooltip title={'Add Assistant'}>
@@ -165,7 +172,7 @@ const AdminPage = () => {
               : undefined}
             <Grid item xs={2} sm={4} md={4}>
               {session
-                ? session.user.role === 0 && (
+                ? session.user.role <= Role.ADMIN && (
                     <Box
                       sx={{
                         minWidth: '20%',
