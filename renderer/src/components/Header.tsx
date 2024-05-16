@@ -10,21 +10,21 @@ import logo from "@renderer/public/images/logo.png";
 import { Role } from "@renderer/src/lib/role";
 
 const Header = () => {
-  const router = useRouter()
-  const session = useSession()
+  const router = useRouter();
+  const session = useSession();
 
   return (
     <>
-      {router.pathname !== '/' && (
+      {router.pathname !== "/" && (
         <Box
           sx={{
-            height: '70px',
-            width: '100%',
-            display: 'flex',
-            backgroundColor: 'white',
-            margin: '0 auto',
-            justifyContent: 'space-between',
-            alignItems: 'center',
+            height: "70px",
+            width: "100%",
+            display: "flex",
+            backgroundColor: "white",
+            margin: "0 auto",
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
           <Box sx={{ ml: 3, mt: 1 }}>
@@ -33,13 +33,13 @@ const Header = () => {
           {session && (
             <Box>
               <Button
-                onClick={() => router.push('/admin')}
+                onClick={() => router.push("/admin")}
                 sx={{ color: theme.palette.text.secondary }}
               >
                 Home
               </Button>
               <Button
-                onClick={() => router.push('/admin/experiment/surveycreation')}
+                onClick={() => router.push("/admin/experiment/surveycreation")}
                 sx={{ color: theme.palette.text.secondary }}
               >
                 Creator
@@ -70,25 +70,25 @@ const Header = () => {
               <Button
                 sx={{
                   color: theme.palette.text.secondary,
-                  '&:hover': {
-                    backgroundColor: 'inherit',
-                    textDecoration: 'underline',
+                  "&:hover": {
+                    backgroundColor: "inherit",
+                    textDecoration: "underline",
                   },
                   gap: 0.5,
                 }}
                 variant="text"
-                onClick={() => router.push('/')}
+                onClick={() => router.push("/")}
               >
                 Login
               </Button>
             ) : (
-              <Tooltip title={'Logout'}>
+              <Tooltip title={"Logout"}>
                 <Button
                   sx={{
                     color: theme.palette.text.secondary,
-                    '&:hover': {
-                      backgroundColor: 'inherit',
-                      textDecoration: 'underline',
+                    "&:hover": {
+                      backgroundColor: "inherit",
+                      textDecoration: "underline",
                     },
                     ml: -2,
                     mr: 2,
@@ -104,7 +104,7 @@ const Header = () => {
         </Box>
       )}
     </>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;

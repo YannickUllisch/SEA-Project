@@ -56,19 +56,6 @@ const ParticipantHomePage = () => {
         >
           Start Questionnaire
         </Button>
-        <Box sx={{ mt: 5 }}>
-          <Button
-            type="submit"
-            sx={{ color: "black" }}
-            onClick={() => {
-              window.ipc.send("message", "Hello");
-            }}
-          >
-            Test IPC
-          </Button>
-          <p>{message}</p>
-          <Button onClick={() => console.log(session)}>Test Session </Button>
-        </Box>
       </Box>
     </Box>
   );

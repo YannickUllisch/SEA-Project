@@ -3,7 +3,6 @@ import dynamic from "next/dynamic";
 import "survey-core/defaultV2.min.css";
 import "survey-creator-core/survey-creator-core.min.css";
 import { setLicenseKey } from "survey-core";
-import { crash } from "process";
 
 // Set the license key
 setLicenseKey(

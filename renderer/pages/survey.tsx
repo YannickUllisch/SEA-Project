@@ -1,25 +1,30 @@
 import React from "react";
 import Head from "next/head";
-import Link from "next/link";
+import { Box, Button } from "@mui/material";
 import "survey-core/defaultV2.min.css";
 import { Model } from "survey-core";
 import { Survey } from "survey-react-ui";
-import { useRouter } from "next/router";
-import { Box, Button, Typography } from "@mui/material";
-import theme from "@renderer/src/lib/theme";
 
 const NextPage = () => {
   const surveyJson = {
-    elements: [
+    title: "Yehaw Trest",
+    description: "Yehaw telelelele",
+    logoPosition: "right",
+    pages: [
       {
-        name: "FirstName",
-        title: "Enter your first name:",
-        type: "text",
-      },
-      {
-        name: "LastName",
-        title: "Enter your last name:",
-        type: "text",
+        name: "page1",
+        elements: [
+          {
+            type: "rating",
+            name: "question1",
+            title: "yo",
+          },
+          {
+            type: "text",
+            name: "question2",
+            title: "yo2",
+          },
+        ],
       },
     ],
   };
@@ -30,40 +35,11 @@ const NextPage = () => {
   });
 
   return (
-    <>
-      <div>
-        <p>
-          ⚡ Electron + Next.js ⚡ -<Link href="/">Go to home page</Link>
-        </p>
-        <Button
-          variant="contained"
-          sx={{
-            backgroundImage: `linear-gradient(to right, ${theme.palette.primary.dark}, ${theme.palette.secondary.light})`,
-            color: "white", // Text color
-            "&:hover": {
-              backgroundImage: `linear-gradient(to right, ${theme.palette.primary.dark}, ${theme.palette.secondary.main})`,
-            },
-          }}
-          onClick={() => router.push("/survey_builder")}
-        >
-          Start Questionnaire
-        </Button>
-
-        <Button
-          variant="contained"
-          sx={{
-            backgroundImage: `linear-gradient(to right, ${theme.palette.primary.dark}, ${theme.palette.secondary.light})`,
-            color: "white", // Text color
-            "&:hover": {
-              backgroundImage: `linear-gradient(to right, ${theme.palette.primary.dark}, ${theme.palette.secondary.main})`,
-            },
-          }}
-          onClick={() => router.push("/survey_creator")}
-        >
-          Start Questionnaire Creator
-        </Button>
-      </div>
-    </>
+    <Box
+      sx={{ display: "flex", justifyContent: "center", alignContent: "center" }}
+    >
+      <Survey model={survey} />
+    </Box>
   );
 };
 
