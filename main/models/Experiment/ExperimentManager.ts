@@ -15,13 +15,17 @@ export class ExperimentManager {
   private async setExperiments(userId: string) {
     const userExperiments = await db.dbExperiment.findMany({
       where: {
-        user: { some: { id: userId } },
+        users: { some: { id: userId } },
       },
     })
     const experimentArray = []
     for (const experiment of userExperiments) {
       experimentArray.push(
-        new Experiment(experiment.title, experiment.description, experiment.id),
+        new Experiment(
+          experiment.title,
+          experiment.description,
+          experiment.experimentID,
+        ),
       )
     }
     this.experiments = experimentArray
@@ -48,10 +52,10 @@ export class ExperimentManager {
     const newId = v4()
     await db.dbExperiment.create({
       data: {
-        id: newId,
+        experimentID: newId,
         title,
         description,
-        user: { connect: user },
+        users: { connect: user },
       },
     })
 
@@ -61,7 +65,7 @@ export class ExperimentManager {
   public async deleteExperiment(experimentId: string) {
     await db.dbExperiment.delete({
       where: {
-        id: experimentId,
+        experimentID: experimentId,
       },
     })
     this.experiments = this.experiments.filter(

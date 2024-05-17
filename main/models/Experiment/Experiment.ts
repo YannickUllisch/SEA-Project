@@ -33,7 +33,7 @@ export class Experiment {
   public async getExperimentAssistants() {
     const experimentAssistants = await db.dbUser.findMany({
       where: {
-        experiments: { some: { id: this.id } },
+        experiments: { some: { experimentID: this.id } },
         role: 10,
       },
     })

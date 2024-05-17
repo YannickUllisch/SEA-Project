@@ -9,7 +9,7 @@ ipcMain.on('getAssistants', async (event, arg: { experimentID: string }) => {
 
   const experimentAssistants = await db.dbUser.findMany({
     where: {
-      experiments: { some: { id: arg.experimentID } },
+      experiments: { some: { experimentID: arg.experimentID } },
       role: 10,
     },
   })

@@ -102,7 +102,9 @@ const AdminPage = () => {
                     >
                       <CardActionArea
                         onClick={() =>
-                          router.push(`/admin/experiment/${experiment.id}`)
+                          router.push(
+                            `/admin/experiment/${experiment.experimentID}`,
+                          )
                         }
                         sx={{
                           cursor: 'pointer',
@@ -136,7 +138,7 @@ const AdminPage = () => {
                                       }}
                                       onClick={() =>
                                         router.push(
-                                          `/admin/experiment/${experiment.id}`,
+                                          `/admin/experiment/${experiment.experimentID}`,
                                         )
                                       }
                                     />
