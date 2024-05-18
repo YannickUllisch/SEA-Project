@@ -28,18 +28,27 @@ ipcMain.on(
       return
     }
 
-    await db.dbUser.create({
-      data: {
-        name: arg.username,
-        password: arg.hashedPassword,
-        role: arg.roleToAdd,
-        experiments: arg.experimentId
-          ? { connect: { id: arg.experimentId } }
-          : undefined,
-      },
-    })
+    try {
+      await db.dbUser.create({
+        data: {
+          name: arg.username,
+          password: arg.hashedPassword,
+          role: arg.roleToAdd,
+          experiments: arg.experimentId
+            ? { connect: { id: arg.experimentId } }
+            : undefined,
+        },
+      })
 
-    event.reply('addedUser', 'User added')
-    return
+      // Determine if an assistant is being added or a regular user
+      if (arg.roleToAdd === 10) {
+        event.reply('addedAssistant', 'Assistant Added')
+      } else {
+        event.reply('addedAdmin', 'Admin added')
+      }
+    } catch (error) {
+      console.error(error)
+      event.reply('failAddUser', 'Failed to add user')
+    }
   },
 )

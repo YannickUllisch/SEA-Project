@@ -18,12 +18,25 @@ import { Play, SquarePlus, UserRoundPlus, CirclePlus } from 'lucide-react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
+import AddUserDialog from '@renderer/src/components/modals/addUserDialog'
+import type { dbUser } from '@prisma/client'
 
 const AdminPage = () => {
   const router = useRouter()
   const session = useSession()
 
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+
+  const [isAssistantDialogOpen, setIsAssistantDialogOpen] = useState(false)
+  const [assistants, setAssistants] = useState<dbUser[] | undefined>(undefined)
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <needed for items to be fetched>
+  useEffect(() => {
+    window.ipc.send('getAssistants', router.query.id)
+    window.ipc.on('getAssistants', (assistants: dbUser[]) => {
+      setAssistants(assistants)
+    })
+  }, [assistants === undefined])
 
   const [experiments, setExperiments] = useState<dbExperiment[] | undefined>(
     undefined,
@@ -46,6 +59,14 @@ const AdminPage = () => {
     })
 
     window.ipc.on('failCreateExperiment', (message: string) => {
+      toast.error(message)
+    })
+
+    window.ipc.on('addedAssistant', (message: string) => {
+      toast.success(message)
+      setAssistants(undefined)
+    })
+    window.ipc.on('failAddUser', (message: string) => {
       toast.error(message)
     })
   }, [])
@@ -127,20 +148,12 @@ const AdminPage = () => {
                           {session
                             ? session.user.role <= Role.ADMIN && (
                                 <>
-                                  <Tooltip title={'Add Questionnaire'}>
-                                    <SquarePlus
-                                      style={{
-                                        color: theme.palette.text.secondary,
-                                        cursor: 'pointer',
-                                        strokeWidth: '1.5px',
-                                      }}
-                                      onClick={() =>
-                                        router.push(
-                                          `/admin/experiment/${experiment.id}`,
-                                        )
-                                      }
-                                    />
-                                  </Tooltip>
+                                  <AddUserDialog
+                                    open={isAssistantDialogOpen}
+                                    roleToAdd={10}
+                                    setOpen={setIsAssistantDialogOpen}
+                                    experimentId={experiment.id}
+                                  />
                                   <Tooltip title={'Add Assistant'}>
                                     <UserRoundPlus
                                       style={{
@@ -148,6 +161,9 @@ const AdminPage = () => {
                                         cursor: 'pointer',
                                         strokeWidth: '1.5px',
                                       }}
+                                      onClick={() =>
+                                        setIsAssistantDialogOpen(true)
+                                      }
                                     />
                                   </Tooltip>
                                 </>

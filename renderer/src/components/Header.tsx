@@ -1,17 +1,24 @@
-import { Box, Button, Tooltip, Typography } from "@mui/material";
-import React from "react";
-import theme from "../lib/theme";
-import { useRouter } from "next/router";
-import { useSession } from "./SessionProvider";
-import { logout } from "@renderer/src/lib/logout";
-import { HomeIcon, Settings, LogOut } from "lucide-react";
-import Image from "next/image";
-import logo from "@renderer/public/images/logo.png";
-import { Role } from "@renderer/src/lib/role";
+import { Box, Button, Tooltip, Typography } from '@mui/material'
+import React, { useEffect } from 'react'
+import theme from '../lib/theme'
+import { useRouter } from 'next/router'
+import { useSession } from './SessionProvider'
+import { logout } from '@renderer/src/lib/logout'
+import { HomeIcon, Settings, LogOut } from 'lucide-react'
+import Image from 'next/image'
+import logo from '@renderer/public/images/logo.png'
+import { Role } from '@renderer/src/lib/role'
+import { toast } from 'sonner'
 
 const Header = () => {
   const router = useRouter()
   const session = useSession()
+
+  useEffect(() => {
+    window.ipc.on('addedAdmin', (message: string) => {
+      toast.success(message)
+    })
+  }, [])
 
   return (
     <>
@@ -49,17 +56,17 @@ const Header = () => {
           <Box>
             {session
               ? session.user.role === Role.OWNER && (
-                  <Tooltip title={"Settings"}>
+                  <Tooltip title={'Settings'}>
                     <Button
                       sx={{
                         color: theme.palette.text.secondary,
-                        "&:hover": {
-                          backgroundColor: "inherit",
-                          textDecoration: "underline",
+                        '&:hover': {
+                          backgroundColor: 'inherit',
+                          textDecoration: 'underline',
                         },
                       }}
                       variant="text"
-                      onClick={() => router.push("/settings")}
+                      onClick={() => router.push('/settings')}
                     >
                       <Settings />
                     </Button>
