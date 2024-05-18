@@ -30,6 +30,15 @@ export class Experiment {
     return { id: this.id, title: this.title, description: this.description }
   }
 
+  public async createQuestionnaire(questionnaireData: JSON) {
+    await db.dbQuestionnaire.create({
+      data: {
+        experimentId: this.id,
+        form: JSON.stringify(questionnaireData),
+      },
+    })
+  }
+
   public async getExperimentAssistants() {
     const experimentAssistants = await db.dbUser.findMany({
       where: {

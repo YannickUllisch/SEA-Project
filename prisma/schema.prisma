@@ -38,7 +38,7 @@ model dbQuestionnaire {
   experiment            dbExperiment   @relation(fields: [experimentId], references: [experimentID])
   experimentId          String
   questionnaireAnswersID  dbQuestionnaireAnswers[]
-  version               String
+  version               String?
   form                  String
 }
 
