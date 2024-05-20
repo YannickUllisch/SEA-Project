@@ -21,11 +21,7 @@ export class ExperimentManager {
     const experimentArray = []
     for (const experiment of userExperiments) {
       experimentArray.push(
-        new Experiment(
-          experiment.title,
-          experiment.description,
-          experiment.experimentID,
-        ),
+        new Experiment(experiment.title, experiment.description, experiment.id),
       )
     }
     this.experiments = experimentArray
@@ -52,7 +48,7 @@ export class ExperimentManager {
     const newId = v4()
     await db.dbExperiment.create({
       data: {
-        experimentID: newId,
+        id: newId,
         title,
         description,
         users: { connect: user },
@@ -65,7 +61,7 @@ export class ExperimentManager {
   public async deleteExperiment(experimentId: string) {
     await db.dbExperiment.delete({
       where: {
-        experimentID: experimentId,
+        id: experimentId,
       },
     })
     this.experiments = this.experiments.filter(

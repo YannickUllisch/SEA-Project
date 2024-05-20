@@ -34,7 +34,7 @@ ipcMain.on(
         password: arg.hashedPassword,
         role: arg.roleToAdd,
         experiments: arg.experimentId
-          ? { connect: { experimentID: arg.experimentId } }
+          ? { connect: { id: arg.experimentId } }
           : undefined,
       },
     })

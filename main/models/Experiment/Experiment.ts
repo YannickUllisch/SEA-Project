@@ -31,18 +31,24 @@ export class Experiment {
   }
 
   public async createQuestionnaire(questionnaireData: JSON) {
-    await db.dbQuestionnaire.create({
-      data: {
-        experimentId: this.id,
-        form: JSON.stringify(questionnaireData),
-      },
-    })
+    try {
+      await db.dbQuestionnaire.create({
+        data: {
+          experimentId: this.id,
+          form: JSON.stringify(questionnaireData),
+        },
+      })
+    } catch (error) {
+      console.error('Failed to create questionnaire:', error)
+      // Optionally, you can throw the error to be handled by the caller
+      throw error
+    }
   }
 
   public async getExperimentAssistants() {
     const experimentAssistants = await db.dbUser.findMany({
       where: {
-        experiments: { some: { experimentID: this.id } },
+        experiments: { some: { id: this.id } },
         role: 10,
       },
     })

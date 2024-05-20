@@ -24,7 +24,7 @@ model dbUser {
 }
 
 model dbExperiment {
-  experimentID                     String      @id @default(uuid())
+  id                     String      @id @default(uuid())
   title                  String
   questionnaireID        dbQuestionnaire[]
   users                  dbUser[]
@@ -33,9 +33,9 @@ model dbExperiment {
 
 // Define the Question model
 model dbQuestionnaire {
-  questionnaireID                    String       @id @default(uuid())
+  id                    String       @id @default(uuid())
   // Every questionnaires belongs to some specific 
-  experiment            dbExperiment   @relation(fields: [experimentId], references: [experimentID])
+  experiment            dbExperiment   @relation(fields: [experimentId], references: [id])
   experimentId          String
   questionnaireAnswersID  dbQuestionnaireAnswers[]
   version               String?
@@ -45,7 +45,7 @@ model dbQuestionnaire {
 model dbQuestionnaireAnswers {
   questionnaireAnswersID                    String       @id @default(uuid())
   // Every questionnaires belongs to some specific 
-  questionnaire            dbQuestionnaire   @relation(fields: [questionnaireId], references: [questionnaireID])
+  questionnaire            dbQuestionnaire   @relation(fields: [questionnaireId], references: [id])
   questionnaireId          String
   answers                  String
 }
