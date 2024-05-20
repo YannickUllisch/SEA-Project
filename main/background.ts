@@ -6,6 +6,8 @@ import '@main/services/appServices'
 import '@main/services/addUserHandler'
 import '@main/services/getAssistantsHandler'
 import '@main/services/deleteAssistantHandler'
+import '@main/services/getAdminsHandler'
+import '@main/services/deleteAdminsHandler'
 import { ElectronApp } from '@main/models/ElectronApp'
 
 const main = async () => {

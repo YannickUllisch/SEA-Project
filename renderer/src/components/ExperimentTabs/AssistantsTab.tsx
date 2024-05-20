@@ -104,6 +104,7 @@ const AssistantsTab = () => {
           display: 'flex',
           alignItems: 'center',
           transition: 'transform 0.2s', // Adding transition for smooth effect
+          width: '25%',
           '&:hover': {
             // Defining styles for hover state
             transform: 'scale(1.025)', // Increase size on hover
