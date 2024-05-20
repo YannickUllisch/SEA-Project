@@ -10,13 +10,15 @@ ipcMain.on('deleteAssistant', async (event, arg: { userID: string }) => {
     )
     return
   }
-
-  await db.dbUser.delete({
-    where: {
-      id: arg.userID,
-    },
-  })
-
-  event.reply('deletedAssistant', 'Assistant Deleted')
-  return
+  try {
+    await db.dbUser.delete({
+      where: {
+        id: arg.userID,
+      },
+    })
+    event.reply('deletedAssistant', 'Assistant Deleted')
+  } catch (error) {
+    console.error(error)
+    event.reply('failDeleteAssistant', 'Failed to delete assistant')
+  }
 })
