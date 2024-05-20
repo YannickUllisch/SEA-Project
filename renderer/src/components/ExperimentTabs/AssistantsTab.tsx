@@ -10,6 +10,7 @@ import {
 } from '@mui/x-data-grid'
 import type { dbUser } from '@prisma/client'
 import { useRouter } from 'next/router'
+import { toast } from 'sonner'
 
 interface AssistantTableRow {
   id: string
@@ -29,6 +30,12 @@ const AssistantsTab = () => {
       setAssistants(assistants)
     })
   }, [assistants === undefined])
+
+  useEffect(() => {
+    window.ipc.on('deletedAssistant', (message: string) => {
+      toast.error(message)
+    })
+  }, [])
 
   const columns: GridColDef<AssistantTableRow>[] = [
     {
