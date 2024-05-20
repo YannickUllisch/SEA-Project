@@ -28,21 +28,11 @@ const AdminPage = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const [isAssistantDialogOpen, setIsAssistantDialogOpen] = useState(false)
-  const [assistants, setAssistants] = useState<dbUser[] | undefined>(undefined)
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <needed for items to be fetched>
-  useEffect(() => {
-    window.ipc.send('getAssistants', router.query.id)
-    window.ipc.on('getAssistants', (assistants: dbUser[]) => {
-      setAssistants(assistants)
-    })
-  }, [assistants === undefined])
 
   const [experiments, setExperiments] = useState<dbExperiment[] | undefined>(
     undefined,
   )
 
-  // Waiting for backend response
   // biome-ignore lint/correctness/useExhaustiveDependencies: <Needed to fetch from backend>
   useEffect(() => {
     window.ipc.send('getExperiments', '')
@@ -64,7 +54,6 @@ const AdminPage = () => {
 
     window.ipc.on('addedAssistant', (message: string) => {
       toast.success(message)
-      setAssistants(undefined)
     })
     window.ipc.on('failAddUser', (message: string) => {
       toast.error(message)

@@ -43,7 +43,7 @@ model dbQuestionnaire {
 }
 
 model dbQuestionnaireAnswers {
-  questionnaireAnswersID                    String       @id @default(uuid())
+  id                       String       @id @default(uuid())
   // Every questionnaires belongs to some specific 
   questionnaire            dbQuestionnaire   @relation(fields: [questionnaireId], references: [id])
   questionnaireId          String

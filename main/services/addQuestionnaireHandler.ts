@@ -17,19 +17,13 @@ ipcMain.on(
       return
     }
 
-    // const associatedUser = await db.dbUser.findUnique({
-    //   where: {
-    //     id: Session.getSession().getUser().id,
-    //   },
-    // })
-
     const Experiment = Session.getSession()
       .getExperimentManager()
       .getExperimentById(arg.experimentID)
 
     Experiment.createQuestionnaire(arg.experimentStructureData)
 
-    event.reply('createdExperiment', 'Experiment Created')
+    event.reply('createdQuestionnaire', 'Questionnaire Added')
     return
   },
 )

@@ -1,10 +1,14 @@
 import { db } from '@main/helpers/db'
+import type { iQuestionnaire } from '../Questionnaire/iQuestionnaire'
 import { Questionnaire } from '../Questionnaire/Questionnaire'
+import { v4 } from 'uuid'
 
 export class Experiment {
   private title: string
   private description: string
   private id: string
+
+  private questionnaires: iQuestionnaire[]
 
   constructor(title: string, description: string, id: string) {
     this.id = id
@@ -14,16 +18,23 @@ export class Experiment {
   }
 
   private async setQuestionnaires() {
-    const _experimentQuestionnaires = await db.dbQuestionnaire.findMany({
+    const experimentQuestionnaires = await db.dbQuestionnaire.findMany({
       where: {
         experimentId: this.id,
       },
     })
-    const _test = new Questionnaire(this.id)
+
+    const questionnaireArray = []
+    for (const questionnaire of experimentQuestionnaires) {
+      questionnaireArray.push(
+        new Questionnaire(questionnaire.id, questionnaire.form),
+      )
+    }
+    this.questionnaires = questionnaireArray
   }
 
   public getQuestionnaires() {
-    return [new Questionnaire('')]
+    return this.questionnaires
   }
 
   public getExperimentInfo() {
@@ -32,16 +43,35 @@ export class Experiment {
 
   public async createQuestionnaire(questionnaireData: JSON) {
     try {
+      const experiment = await db.dbExperiment.findUnique({
+        where: {
+          id: this.id,
+        },
+      })
+
+      const newId = v4()
       await db.dbQuestionnaire.create({
         data: {
-          experimentId: this.id,
+          experiment: { connect: experiment },
+          version: (this.questionnaires.length + 1).toString(),
           form: JSON.stringify(questionnaireData),
         },
       })
+      this.questionnaires.push(
+        new Questionnaire(newId, JSON.stringify(questionnaireData)),
+      )
     } catch (error) {
       console.error('Failed to create questionnaire:', error)
       // Optionally, you can throw the error to be handled by the caller
       throw error
+    }
+  }
+
+  public getQuestionnaireById(questionnaireId: string) {
+    for (const questionnaire of this.questionnaires) {
+      if (questionnaire.getQuestionnaireId() === questionnaireId) {
+        return questionnaire
+      }
     }
   }
 
