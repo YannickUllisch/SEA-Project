@@ -25,12 +25,10 @@ model dbUser {
 
 model dbExperiment {
   id                     String      @id @default(uuid())
-  user                   dbUser[]
-
   title                  String
-  description            String?
-
-  questionnaires              dbQuestionnaire[]
+  questionnaireID        dbQuestionnaire[]
+  users                  dbUser[]
+  description            String
 }
 
 // Define the Question model
@@ -39,8 +37,16 @@ model dbQuestionnaire {
   // Every questionnaires belongs to some specific 
   experiment            dbExperiment   @relation(fields: [experimentId], references: [id])
   experimentId          String
-
-  version               String
+  questionnaireAnswersID  dbQuestionnaireAnswers[]
+  version               String?
   form                  String
+}
+
+model dbQuestionnaireAnswers {
+  questionnaireAnswersID                    String       @id @default(uuid())
+  // Every questionnaires belongs to some specific 
+  questionnaire            dbQuestionnaire   @relation(fields: [questionnaireId], references: [id])
+  questionnaireId          String
+  answers                  String
 }
 

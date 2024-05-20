@@ -4,11 +4,19 @@ import AddUserDialog from '@renderer/src/components/modals/addUserDialog'
 import { Role } from '@renderer/src/lib/role'
 import { UserRoundPlus } from 'lucide-react'
 import type React from 'react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 
 const settingsPage = () => {
   const session = useSession()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+
+  useEffect(() => {
+    window.ipc.on('addedAdmin', (message: string) => {
+      toast.success(message)
+    })
+  }, [])
+
   return (
     <Box
       sx={{
