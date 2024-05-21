@@ -1,4 +1,4 @@
 export interface iQuestionnaire {
-  getQuestionnaireId(): string
+  getQuestionnaireInfo(): { id: string; form: string; version: string }
   updateQuestionnaireForm(newJSON: JSON): void
 }

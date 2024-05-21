@@ -9,8 +9,9 @@ import '@main/services/deleteAssistantHandler'
 import '@main/services/getAdminsHandler'
 import '@main/services/deleteAdminsHandler'
 import '@main/services/addQuestionnaireHandler'
-import '@main/services/getQuestionnaireHandler'
+import '@main/services/getQuestionnairesHandler'
 import '@main/services/dataExportHandler'
+import '@main/services/initRandomQuestionnaire'
 import { ElectronApp } from '@main/models/ElectronApp'
 
 const main = async () => {

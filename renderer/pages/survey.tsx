@@ -51,10 +51,33 @@ import 'survey-core/defaultV2.min.css'
 import { Model } from 'survey-core'
 import { Survey } from 'survey-react-ui'
 import { useRouter } from 'next/router'
-import Restart from './restart'
+import Restart from '../src/components/restart'
+import type { FrontendQuestionnaire } from '@renderer/src/lib/types'
+import type { dbQuestionnaire } from '@prisma/client'
 
-const NextPage = () => {
+const SurveyPage = () => {
   const router = useRouter()
+  const [currQuestionnaire, setCurrQuestionnaire] = useState<
+    FrontendQuestionnaire | undefined
+  >(undefined)
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <Needed to fetch from backend>
+  useEffect(() => {
+    // This will return us a random questionnaire based on the experiment found using the executedExperiment ID given as a query parameter.
+    window.ipc.send(
+      'initRandomQuestionnaire',
+      router.query.executedExperiment as string,
+    )
+
+    // The response we get is a randomized questionnaire from the executed experiment.
+    // TODO: Somehow find a way to parse the JSON and input it correctly into the model and then rendering the model
+    window.ipc.on(
+      'initRandomQuestionnaire',
+      (questionnaire: FrontendQuestionnaire) => {
+        setCurrQuestionnaire(questionnaire)
+      },
+    )
+  }, [currQuestionnaire === undefined])
 
   const surveyJson = {
     title: 'Yehaw Trest',
@@ -79,19 +102,22 @@ const NextPage = () => {
     ],
   }
 
-  const [surveyModel] = useState(new Model(surveyJson))
+  const [surveyModel, _setSurveyModel] = useState<Model>(new Model(surveyJson))
+
   //used to check if questionnaire is completed
   const [isCompleted, setIsCompleted] = useState(false)
 
   // Use useEffect to add a navigation item once the survey model is set up
   useEffect(() => {
-    surveyModel.addNavigationItem({
-      title: 'Exit',
-    })
+    if (surveyModel) {
+      surveyModel.addNavigationItem({
+        title: 'Exit',
+      })
 
-    surveyModel.onComplete.add(() => {
-      setIsCompleted(true)
-    })
+      surveyModel.onComplete.add(() => {
+        setIsCompleted(true)
+      })
+    }
   }, [surveyModel])
 
   const redirectToHomePage = () => {
@@ -102,10 +128,11 @@ const NextPage = () => {
     <Box
       sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
     >
-      <Survey model={surveyModel} />
+      {surveyJson ? <Survey model={surveyModel} /> : null}
+
       {isCompleted && <Restart redirectToHomePage={redirectToHomePage} />}
     </Box>
   )
 }
 
-export default NextPage
+export default SurveyPage

@@ -7,7 +7,6 @@ export class Experiment {
   private title: string
   private description: string
   private id: string
-
   private questionnaires: iQuestionnaire[]
 
   constructor(title: string, description: string, id: string) {
@@ -24,10 +23,15 @@ export class Experiment {
       },
     })
 
+    // Setting the objects questionnaires equal to the imported db questionnaires
     const questionnaireArray = []
     for (const questionnaire of experimentQuestionnaires) {
       questionnaireArray.push(
-        new Questionnaire(questionnaire.id, questionnaire.form),
+        new Questionnaire(
+          questionnaire.id,
+          questionnaire.form,
+          questionnaire.version,
+        ),
       )
     }
     this.questionnaires = questionnaireArray
@@ -67,21 +71,39 @@ export class Experiment {
     }
   }
 
+  public async deleteQuestionnaire(questionnaireId: string) {
+    await db.dbExperiment.delete({
+      where: {
+        id: questionnaireId,
+      },
+    })
+    this.questionnaires = this.questionnaires.filter(
+      (questionnaire) =>
+        questionnaire.getQuestionnaireInfo().id !== questionnaireId,
+    )
+  }
+
   public getQuestionnaireById(questionnaireId: string) {
     for (const questionnaire of this.questionnaires) {
-      if (questionnaire.getQuestionnaireId() === questionnaireId) {
+      if (questionnaire.getQuestionnaireInfo().id === questionnaireId) {
         return questionnaire
       }
     }
   }
 
   public async getExperimentAssistants() {
-    const experimentAssistants = await db.dbUser.findMany({
-      where: {
-        experiments: { some: { id: this.id } },
-        role: 10,
-      },
-    })
-    return experimentAssistants
+    // Finds all users with rank assistant = 10, that is associated with this objects id.
+    try {
+      const experimentAssistants = await db.dbUser.findMany({
+        where: {
+          experiments: { some: { id: this.id } },
+          role: 10,
+        },
+      })
+      return experimentAssistants
+    } catch (err: any) {
+      console.error('Failed to fetch experiment assistants', err)
+      throw err
+    }
   }
 }

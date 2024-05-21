@@ -4,18 +4,16 @@ import type { iQuestionnaire } from './iQuestionnaire'
 export class Questionnaire implements iQuestionnaire {
   private id: string
   private form: string // string form of the JSON, we can always convert it back later
+  private version: string
 
-  constructor(questionnaireId: string, form: string) {
+  constructor(questionnaireId: string, form: string, version?: string) {
     this.id = questionnaireId
     this.form = form
+    this.version = version
   }
 
-  public getQuestionnaireId() {
-    return this.id
-  }
-
-  public getQuestionnaireForm() {
-    return this.form
+  public getQuestionnaireInfo() {
+    return { id: this.id, form: this.form, version: this.version }
   }
 
   public async updateQuestionnaireForm(newJSON: JSON) {

@@ -1,14 +1,11 @@
-import { PrismaClient } from '@prisma/client'
 import { ipcMain } from 'electron'
-import * as fs from 'fs'
-import * as path from 'path'
+import * as path from 'node:path'
 import * as csvWriter from 'csv-writer'
 import * as XLSX from 'xlsx'
-
-const prisma = new PrismaClient()
+import { db } from '@main/helpers/db'
 
 const getData = async () => {
-  return await prisma.dbQuestionnaireAnswers.findMany()
+  return await db.dbQuestionnaireAnswers.findMany()
 }
 
 const generateCSV = async (data: any[]) => {

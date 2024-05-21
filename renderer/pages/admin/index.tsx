@@ -20,6 +20,7 @@ import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import AddUserDialog from '@renderer/src/components/modals/addUserDialog'
 import type { dbUser } from '@prisma/client'
+import type { FrontendExperiment } from '@renderer/src/lib/types'
 
 const AdminPage = () => {
   const router = useRouter()
@@ -29,15 +30,15 @@ const AdminPage = () => {
 
   const [isAssistantDialogOpen, setIsAssistantDialogOpen] = useState(false)
 
-  const [experiments, setExperiments] = useState<dbExperiment[] | undefined>(
-    undefined,
-  )
+  const [experiments, setExperiments] = useState<
+    FrontendExperiment[] | undefined
+  >(undefined)
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <Needed to fetch from backend>
   useEffect(() => {
     window.ipc.send('getExperiments', '')
 
-    window.ipc.on('getExperiments', (experiments: dbExperiment[]) => {
+    window.ipc.on('getExperiments', (experiments: FrontendExperiment[]) => {
       setExperiments(experiments)
     })
   }, [experiments === undefined])
@@ -161,7 +162,12 @@ const AdminPage = () => {
 
                           <Tooltip title={'Start Experiment'}>
                             <Play
-                              onClick={() => router.push('/participant')}
+                              onClick={() =>
+                                router.push({
+                                  pathname: '/participant',
+                                  query: { executedExperiment: experiment.id },
+                                })
+                              }
                               style={{
                                 color: 'green',
                                 cursor: 'pointer',

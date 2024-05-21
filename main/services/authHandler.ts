@@ -2,6 +2,7 @@ import { ipcMain } from 'electron'
 import { db } from '@main/helpers/db'
 import { Session } from '@main/models/Session'
 import bcrypt from 'bcryptjs'
+import { UserHandler } from '@main/models/User/UserHandler'
 
 // Authenticate
 ipcMain.on(
@@ -17,26 +18,16 @@ ipcMain.on(
     }
 
     try {
-      const existingUser = await db.dbUser.findFirst({
-        where: {
-          name: arg.username,
-        },
-        include: {
-          experiments: { include: { questionnaireID: true } },
-        },
-      })
+      // We create a userHandler Obj to help us authenticate
+      const authenticateUser = await new UserHandler().authenticate(
+        arg.username,
+        arg.password,
+      )
 
-      if (!existingUser) {
+      if (authenticateUser) {
+        event.reply('authenticated', authenticateUser)
+      } else {
         event.reply('authenticate', 'Invalid credentials!')
-        return
-      }
-
-      if (await bcrypt.compare(arg.password, existingUser.password)) {
-        // We authenticate the user by both initializing the backend Session (which starts all of the backend logic)
-        Session.initSession(existingUser)
-        // And also send authenticated status to the frontend
-        event.reply('authenticated', existingUser)
-        return
       }
     } catch (err) {
       event.reply('authenticate', (err as string).toString())
