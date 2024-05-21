@@ -10,6 +10,7 @@ import '@main/services/getAdminsHandler'
 import '@main/services/deleteAdminsHandler'
 import '@main/services/addQuestionnaireHandler'
 import '@main/services/getQuestionnaireHandler'
+import '@main/services/dataExportHandler'
 import { ElectronApp } from '@main/models/ElectronApp'
 
 const main = async () => {
