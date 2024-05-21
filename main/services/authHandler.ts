@@ -1,8 +1,5 @@
 import { ipcMain } from 'electron'
-import { db } from '@main/helpers/db'
 import { Session } from '@main/models/Session'
-import bcrypt from 'bcryptjs'
-import { UserHandler } from '@main/models/User/UserHandler'
 
 // Authenticate
 ipcMain.on(
@@ -19,13 +16,13 @@ ipcMain.on(
 
     try {
       // We create a userHandler Obj to help us authenticate
-      const authenticateUser = await new UserHandler().authenticate(
+      const authenticatedUser = await Session.authenticate(
         arg.username,
         arg.password,
       )
 
-      if (authenticateUser) {
-        event.reply('authenticated', authenticateUser)
+      if (authenticatedUser) {
+        event.reply('authenticated', authenticatedUser)
       } else {
         event.reply('authenticate', 'Invalid credentials!')
       }

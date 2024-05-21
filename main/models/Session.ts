@@ -1,5 +1,7 @@
-import type { dbExperiment, dbUser } from '@prisma/client'
+import type { dbUser } from '@prisma/client'
 import { ExperimentManager } from './Experiment/ExperimentManager'
+import { db } from '@main/helpers/db'
+import bcrypt from 'bcryptjs'
 
 // We make Session a singleton
 
@@ -17,11 +19,28 @@ export class Session {
     return Session.instance
   }
 
-  public static initSession(user: dbUser): void {
-    if (!Session.instance) {
-      Session.instance = new Session()
-      Session.instance.user = user
-      Session.instance.experimentManager = new ExperimentManager(user.id)
+  public static async authenticate(username: string, password: string) {
+    const existingUser = await db.dbUser.findFirst({
+      where: {
+        name: username,
+      },
+    })
+
+    if (!existingUser) {
+      return null
+    }
+
+    if (await bcrypt.compare(password, existingUser.password)) {
+      // We authenticate the user by both initializing the backend Session (which starts all of the backend logic)
+      if (!Session.instance) {
+        Session.instance = new Session()
+        Session.instance.user = existingUser
+        Session.instance.experimentManager = new ExperimentManager(
+          existingUser.id,
+        )
+        // And also send authenticated status to the frontend
+        return existingUser
+      }
     } else {
       throw new Error('Session already initialized')
     }
