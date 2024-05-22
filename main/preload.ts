@@ -13,6 +13,9 @@ const handler = {
       ipcRenderer.removeListener(channel, subscription)
     }
   },
+  removeAllListeners(channel: string) {
+    ipcRenderer.removeAllListeners(channel)
+  },
 }
 
 contextBridge.exposeInMainWorld('ipc', handler)

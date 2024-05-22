@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
-    binaryTargets = ["native", "darwin-arm64", "darwin"]
+  binaryTargets = ["native", "darwin-arm64", "darwin"]
 }
 
 datasource db {
@@ -25,22 +25,24 @@ model dbUser {
 
 model dbExperiment {
   id                     String      @id @default(uuid())
-  user                   dbUser[]
-
   title                  String
-  description            String?
-
-  questionnaires              dbQuestionnaire[]
+  description            String
+  questionnaireID        dbQuestionnaire[]
+  users                  dbUser[]
 }
 
-// Define the Question model
 model dbQuestionnaire {
   id                    String       @id @default(uuid())
-  // Every questionnaires belongs to some specific 
-  experiment            dbExperiment   @relation(fields: [experimentId], references: [id])
   experimentId          String
-
-  version               String
+  experiment            dbExperiment   @relation(fields: [experimentId], references: [id])
+  questionnaireAnswersID  dbQuestionnaireAnswers[]
+  version               String?
   form                  String
 }
 
+model dbQuestionnaireAnswers {
+  id              String        @id @default(uuid())
+  questionnaireId String
+  questionnaire   dbQuestionnaire @relation(fields: [questionnaireId], references: [id])
+  answers         String
+}

@@ -18,6 +18,9 @@ import { Play, SquarePlus, UserRoundPlus, CirclePlus } from 'lucide-react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
+import AddUserDialog from '@renderer/src/components/modals/addUserDialog'
+import type { dbUser } from '@prisma/client'
+import type { FrontendExperiment } from '@renderer/src/lib/types'
 
 const AdminPage = () => {
   const router = useRouter()
@@ -25,16 +28,17 @@ const AdminPage = () => {
 
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
-  const [experiments, setExperiments] = useState<dbExperiment[] | undefined>(
-    undefined,
-  )
+  const [isAssistantDialogOpen, setIsAssistantDialogOpen] = useState(false)
 
-  // Waiting for backend response
+  const [experiments, setExperiments] = useState<
+    FrontendExperiment[] | undefined
+  >(undefined)
+
   // biome-ignore lint/correctness/useExhaustiveDependencies: <Needed to fetch from backend>
   useEffect(() => {
     window.ipc.send('getExperiments', '')
 
-    window.ipc.on('getExperiments', (experiments: dbExperiment[]) => {
+    window.ipc.on('getExperiments', (experiments: FrontendExperiment[]) => {
       setExperiments(experiments)
     })
   }, [experiments === undefined])
@@ -46,6 +50,13 @@ const AdminPage = () => {
     })
 
     window.ipc.on('failCreateExperiment', (message: string) => {
+      toast.error(message)
+    })
+
+    window.ipc.on('addedAssistant', (message: string) => {
+      toast.success(message)
+    })
+    window.ipc.on('failAddUser', (message: string) => {
       toast.error(message)
     })
   }, [])
@@ -127,20 +138,12 @@ const AdminPage = () => {
                           {session
                             ? session.user.role <= Role.ADMIN && (
                                 <>
-                                  <Tooltip title={'Add Questionnaire'}>
-                                    <SquarePlus
-                                      style={{
-                                        color: theme.palette.text.secondary,
-                                        cursor: 'pointer',
-                                        strokeWidth: '1.5px',
-                                      }}
-                                      onClick={() =>
-                                        router.push(
-                                          `/admin/experiment/${experiment.id}`,
-                                        )
-                                      }
-                                    />
-                                  </Tooltip>
+                                  <AddUserDialog
+                                    open={isAssistantDialogOpen}
+                                    roleToAdd={10}
+                                    setOpen={setIsAssistantDialogOpen}
+                                    experimentId={experiment.id}
+                                  />
                                   <Tooltip title={'Add Assistant'}>
                                     <UserRoundPlus
                                       style={{
@@ -148,6 +151,9 @@ const AdminPage = () => {
                                         cursor: 'pointer',
                                         strokeWidth: '1.5px',
                                       }}
+                                      onClick={() =>
+                                        setIsAssistantDialogOpen(true)
+                                      }
                                     />
                                   </Tooltip>
                                 </>
@@ -156,7 +162,12 @@ const AdminPage = () => {
 
                           <Tooltip title={'Start Experiment'}>
                             <Play
-                              onClick={() => router.push('/participant')}
+                              onClick={() =>
+                                router.push({
+                                  pathname: '/participant',
+                                  query: { executedExperiment: experiment.id },
+                                })
+                              }
                               style={{
                                 color: 'green',
                                 cursor: 'pointer',

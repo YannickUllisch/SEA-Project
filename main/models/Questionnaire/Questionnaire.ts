@@ -1,24 +1,30 @@
-import type { iQuestionnaire } from './iQuestionnaire'
+import { db } from '@main/helpers/db'
 
-export class Questionnaire implements iQuestionnaire {
+export class Questionnaire {
   private id: string
-  private name: string
-  private description: string
-  private form: string
-  private experimentId: string
+  private form: string // string form of the JSON, we can always convert it back later
+  private version: string
 
-  constructor(experimentId: string) {
-    this.experimentId = experimentId
-    this.setQuestionnaires()
+  constructor(questionnaireId: string, form: string, version?: string) {
+    this.id = questionnaireId
+    this.form = form
+    this.version = version
   }
 
-  private async setQuestionnaires() {
-    return 0
+  public getQuestionnaireInfo() {
+    return { id: this.id, form: this.form, version: this.version }
   }
 
-  public getQuestionnaireId() {
-    return '0'
-  }
+  public async updateQuestionnaireForm(newJSON: JSON) {
+    this.form = JSON.stringify(newJSON)
 
-  public updateQuestionnaireForm() {}
+    await db.dbQuestionnaire.update({
+      where: {
+        id: this.id,
+      },
+      data: {
+        form: JSON.stringify(newJSON),
+      },
+    })
+  }
 }

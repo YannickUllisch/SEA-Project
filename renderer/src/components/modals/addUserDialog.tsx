@@ -1,7 +1,7 @@
-import type React from "react";
-import { type FC, useState } from "react";
-import Dialog from "@mui/material/Dialog";
-import bcrypt from "bcryptjs";
+import type React from 'react'
+import { type FC, useState } from 'react'
+import Dialog from '@mui/material/Dialog'
+import bcrypt from 'bcryptjs'
 import {
   DialogTitle,
   DialogContent,
@@ -9,12 +9,12 @@ import {
   Button,
   TextField,
   Box,
-} from "@mui/material";
+} from '@mui/material'
 
 interface AddUserDialogProps {
-  open: boolean;
-  roleToAdd: number;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  open: boolean
+  roleToAdd: number
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const AddUserDialog: FC<AddUserDialogProps> = ({
@@ -22,20 +22,20 @@ const AddUserDialog: FC<AddUserDialogProps> = ({
   setOpen,
   roleToAdd,
 }) => {
-  const [username, setUsername] = useState(""); // State for experiment title
-  const [password, setPassword] = useState(""); // State for experiment description
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
   const handleClose = () => {
-    setOpen(false);
-    setUsername(""); // Reset title state on close
-    setPassword(""); // Reset description state on close
-  };
+    setOpen(false)
+    setUsername('') // Reset title state on close
+    setPassword('') // Reset description state on close
+  }
 
   const handleCreate = async () => {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    window.ipc.send("addUser", { username, hashedPassword, roleToAdd });
-    handleClose();
-  };
+    const hashedPassword = await bcrypt.hash(password, 10)
+    window.ipc.send('addUser', { username, hashedPassword, roleToAdd })
+    handleClose()
+  }
 
   return (
     <Dialog open={open} onClose={handleClose}>
@@ -73,7 +73,7 @@ const AddUserDialog: FC<AddUserDialogProps> = ({
         </Button>
       </DialogActions>
     </Dialog>
-  );
-};
+  )
+}
 
-export default AddUserDialog;
+export default AddUserDialog

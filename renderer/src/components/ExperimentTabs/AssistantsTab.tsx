@@ -10,6 +10,7 @@ import {
 } from '@mui/x-data-grid'
 import type { dbUser } from '@prisma/client'
 import { useRouter } from 'next/router'
+import { toast } from 'sonner'
 
 interface AssistantTableRow {
   id: string
@@ -24,11 +25,23 @@ const AssistantsTab = () => {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <needed for items to be fetched>
   useEffect(() => {
-    window.ipc.send('getAssistants', router.query.id)
+    window.ipc.send('getAssistants', { experimentID: router.query.id })
     window.ipc.on('getAssistants', (assistants: dbUser[]) => {
       setAssistants(assistants)
     })
   }, [assistants === undefined])
+
+  useEffect(() => {
+    window.ipc.on('deletedAssistant', (message: string) => {
+      toast.error(message)
+    })
+  }, [])
+
+  useEffect(() => {
+    window.ipc.on('addedAssistant', () => {
+      setAssistants(undefined)
+    })
+  }, [])
 
   const columns: GridColDef<AssistantTableRow>[] = [
     {
@@ -97,6 +110,7 @@ const AssistantsTab = () => {
           display: 'flex',
           alignItems: 'center',
           transition: 'transform 0.2s', // Adding transition for smooth effect
+          width: '25%',
           '&:hover': {
             // Defining styles for hover state
             transform: 'scale(1.025)', // Increase size on hover

@@ -15,7 +15,7 @@ export class ExperimentManager {
   private async setExperiments(userId: string) {
     const userExperiments = await db.dbExperiment.findMany({
       where: {
-        user: { some: { id: userId } },
+        users: { some: { id: userId } },
       },
     })
     const experimentArray = []
@@ -51,7 +51,7 @@ export class ExperimentManager {
         id: newId,
         title,
         description,
-        user: { connect: user },
+        users: { connect: user },
       },
     })
 

@@ -13,7 +13,10 @@ const ParticipantHomePage = () => {
     if (session) {
       logout()
     }
-  }, [session])
+
+    // Testing if the correct ID is sent here based on launch button
+    console.log(router.query.executedExperiment as string)
+  }, [session, router])
 
   return (
     <Box
@@ -52,7 +55,14 @@ const ParticipantHomePage = () => {
               backgroundImage: `linear-gradient(to right, ${theme.palette.primary.dark}, ${theme.palette.secondary.main})`,
             },
           }}
-          onClick={() => router.push('/survey')}
+          onClick={() =>
+            router.push({
+              pathname: '/survey',
+              query: {
+                executedExperiment: router.query.executedExperiment as string,
+              },
+            })
+          }
         >
           Start Questionnaire
         </Button>
