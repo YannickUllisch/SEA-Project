@@ -5,6 +5,7 @@ import { ipcMain } from 'electron'
 ipcMain.on('getExperiments', async (event, _arg) => {
   // Fetching experiments for currently logged in user
   const experiments = await Session.getSession()
+    .getUser()
     .getExperimentManager()
     .getExperiments()
 

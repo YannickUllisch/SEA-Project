@@ -1,7 +1,5 @@
 import { useState } from 'react'
 import { Box, Button, TextField, Typography } from '@mui/material'
-import { toast } from 'sonner'
-import bcryptjs from 'bcryptjs'
 import { FormError } from './LoginError'
 
 const LoginForm = () => {
@@ -12,12 +10,22 @@ const LoginForm = () => {
   const onSubmit = async () => {
     setError('') // We send the login request to the backend where is is verified.
     window.ipc.send('authenticate', { username, password })
-    setUsername('')
     setPassword('')
+
     // IMPLEMENT: Channel should return error on auth failure!
     window.ipc.on('authenticate', (message: string) => {
       setError(message)
     })
+    window.ipc.on('authenticated', (_message: string) => {
+      setUsername('')
+      setPassword('')
+    })
+  }
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      onSubmit()
+    }
   }
 
   return (
@@ -36,6 +44,7 @@ const LoginForm = () => {
         onChange={(e) => setUsername(e.currentTarget.value)}
         name="username"
         autoFocus
+        onKeyDown={handleKeyDown}
       />
       <TextField
         id="password"
@@ -49,6 +58,7 @@ const LoginForm = () => {
         type="password"
         onChange={(e) => setPassword(e.currentTarget.value)}
         autoComplete="current-password"
+        onKeyDown={handleKeyDown}
       />
       <FormError message={error} />
       <Button

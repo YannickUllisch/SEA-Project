@@ -7,9 +7,10 @@ import {
   type PropsWithChildren,
   useEffect,
 } from 'react'
+import type { FrontendUser } from '../lib/types'
 
 export interface Session {
-  user: dbUser
+  user: FrontendUser
 }
 
 // Define a context for your session
@@ -22,7 +23,7 @@ const SessionProvider: FC<PropsWithChildren> = ({ children }) => {
 
   // In here wait for the backend to send a session back, which only happens on authentication success
   useEffect(() => {
-    window.ipc.on('authenticated', (user: dbUser) => {
+    window.ipc.on('authenticated', (user: FrontendUser) => {
       setSession({ user })
     })
     window.ipc.on('resetSession', () => {

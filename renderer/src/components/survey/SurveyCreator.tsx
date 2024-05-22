@@ -26,7 +26,7 @@ const defaultCreatorOptions: ICreatorOptions = {
 const SurveyCreatorWidget = (props: {
   json: object
   options?: ICreatorOptions
-  onSave: (json: object) => void
+  setSurveyJSON: React.Dispatch<React.SetStateAction<object>>
 }) => {
   let [creator, setCreator] = useState<SurveyCreator>()
 
@@ -44,10 +44,7 @@ const SurveyCreatorWidget = (props: {
   }
 
   const handleSave = () => {
-    const surveyJson = creator.JSON
-    if (surveyJson) {
-      props.onSave(surveyJson)
-    }
+    props.setSurveyJSON(creator.JSON)
   }
 
   return (

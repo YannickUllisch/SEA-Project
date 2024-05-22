@@ -24,8 +24,8 @@ const AddUserDialog: FC<AddUserDialogProps> = ({
   roleToAdd,
   experimentId,
 }) => {
-  const [username, setUsername] = useState('') // State for experiment title
-  const [password, setPassword] = useState('') // State for experiment description
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
   const handleClose = () => {
     setOpen(false)
