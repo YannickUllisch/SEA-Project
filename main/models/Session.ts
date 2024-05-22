@@ -45,9 +45,10 @@ export class Session {
     }
   }
 
-  public static clearSession(): void {
+  public clearSession(): void {
     if (Session.instance) {
       Session.instance = undefined
+      this.user = undefined
     } else {
       throw new Error('Session has not been initialized.')
     }

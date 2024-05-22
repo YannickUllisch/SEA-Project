@@ -35,7 +35,7 @@ ipcMain.on(
 
 // Unauthenticate
 ipcMain.on('logout', async (event) => {
-  Session.clearSession()
+  Session.getSession().clearSession()
   event.reply('resetSession')
   return
 })
