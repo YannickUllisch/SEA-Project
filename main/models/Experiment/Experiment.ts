@@ -46,16 +46,10 @@ export class Experiment {
 
   public async createQuestionnaire(questionnaireData: JSON) {
     try {
-      const experiment = await db.dbExperiment.findUnique({
-        where: {
-          id: this.id,
-        },
-      })
-
       const newId = v4()
       await db.dbQuestionnaire.create({
         data: {
-          experiment: { connect: experiment },
+          experimentId: this.id,
           version: (this.questionnaires.length + 1).toString(),
           form: JSON.stringify(questionnaireData),
         },
@@ -71,7 +65,7 @@ export class Experiment {
   }
 
   public async deleteQuestionnaire(questionnaireId: string) {
-    await db.dbExperiment.delete({
+    await db.dbQuestionnaire.delete({
       where: {
         id: questionnaireId,
       },
@@ -86,6 +80,30 @@ export class Experiment {
     for (const questionnaire of this.questionnaires) {
       if (questionnaire.getQuestionnaireInfo().id === questionnaireId) {
         return questionnaire
+      }
+    }
+  }
+
+  public async copyQuestionnaireById(questionnaireId: string) {
+    for (const questionnaire of this.questionnaires) {
+      if (questionnaire.getQuestionnaireInfo().id === questionnaireId) {
+        const uid = v4()
+        await db.dbQuestionnaire.create({
+          data: {
+            id: uid,
+            form: questionnaire.getQuestionnaireInfo().form,
+            version: `${questionnaire.getQuestionnaireInfo().version} copy`,
+            experimentId: this.id,
+          },
+        })
+
+        this.questionnaires.push(
+          new Questionnaire(
+            uid,
+            questionnaire.getQuestionnaireInfo().form,
+            `${questionnaire.getQuestionnaireInfo().version} copy`,
+          ),
+        )
       }
     }
   }

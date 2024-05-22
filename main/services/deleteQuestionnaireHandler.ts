@@ -5,7 +5,7 @@ import { Session } from '@main/models/Session'
 // Handle deleting a questionnaire
 ipcMain.on(
   'deleteQuestionnaire',
-  async (event, arg: { questionnaireID: string }) => {
+  async (event, arg: { questionnaireID: string; experimentID: string }) => {
     try {
       // Check if the user has permission to delete a questionnaire
       if (Session.getSession().getUser().getUserRole() > 1) {
@@ -16,10 +16,12 @@ ipcMain.on(
         return
       }
 
-      // Delete the questionnaire
-      await db.dbQuestionnaire.delete({
-        where: { id: arg.questionnaireID },
-      })
+      const experiment = Session.getSession()
+        .getUser()
+        .getExperimentManager()
+        .getExperimentById(arg.experimentID)
+
+      experiment.deleteQuestionnaire(arg.questionnaireID)
 
       event.reply('deletedQuestionnaire', 'Questionnaire deleted successfully')
     } catch (error) {

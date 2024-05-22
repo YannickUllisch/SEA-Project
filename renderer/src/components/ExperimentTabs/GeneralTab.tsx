@@ -5,12 +5,15 @@ import {
   CardContent,
   Typography,
   IconButton,
+  Tooltip,
+  CardActions,
 } from '@mui/material'
 import { Delete } from '@mui/icons-material'
 import type { FrontendQuestionnaire } from '@renderer/src/lib/types'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
+import theme from '@renderer/src/lib/theme'
 
 const GeneralTab = () => {
   const router = useRouter()
@@ -49,7 +52,10 @@ const GeneralTab = () => {
   }, [questionnaires, router.query.id])
 
   const handleDeleteQuestionnaire = (questionnaireID: string) => {
-    window.ipc.send('deleteQuestionnaire', { questionnaireID })
+    window.ipc.send('deleteQuestionnaire', {
+      questionnaireID,
+      experimentID: router.query.id,
+    })
 
     window.ipc.on('deletedQuestionnaire', (message: string) => {
       toast.success(message)
@@ -57,6 +63,22 @@ const GeneralTab = () => {
     })
 
     window.ipc.on('failDeleteQuestionnaire', (message: string) => {
+      toast.error(message)
+    })
+  }
+
+  const onCopyQuestionnaire = (questionnaireID: string) => {
+    window.ipc.send('copyQuestionnaire', {
+      questionnaireID,
+      experimentID: router.query.id,
+    })
+
+    window.ipc.on('copyQuestionnaire', (message: string) => {
+      toast.success(message)
+      setQuestionnaires(undefined)
+    })
+
+    window.ipc.on('failedCopy', (message: string) => {
       toast.error(message)
     })
   }
@@ -71,21 +93,34 @@ const GeneralTab = () => {
     >
       {questionnaires
         ? questionnaires.map((questionnaire) => (
-            <Card key={questionnaire.id} sx={{ margin: 2 }}>
+            <Card key={questionnaire.id} sx={{ margin: 2, boxShadow: 3 }}>
               <CardContent>
-                <Typography>
+                <Typography sx={{ mb: 1 }} variant="h5">
                   Questionnaire Version: {questionnaire.version}
                 </Typography>
-                <Typography>
+                <Typography sx={{ mb: 1.5 }} color="text.secondary">
                   Questionnaire Form: {questionnaire.form}
                 </Typography>
-                <IconButton
-                  aria-label="delete"
-                  onClick={() => handleDeleteQuestionnaire(questionnaire.id)}
-                >
-                  <Delete />
-                </IconButton>
               </CardContent>
+              <CardActions
+                disableSpacing
+                sx={{ display: 'flex', justifyContent: 'space-between' }}
+              >
+                <Button
+                  size="small"
+                  onClick={() => onCopyQuestionnaire(questionnaire.id)}
+                >
+                  Create Copy
+                </Button>
+                <Tooltip title="Delete">
+                  <IconButton
+                    aria-label="delete"
+                    onClick={() => handleDeleteQuestionnaire(questionnaire.id)}
+                  >
+                    <Delete />
+                  </IconButton>
+                </Tooltip>
+              </CardActions>
             </Card>
           ))
         : null}
