@@ -7,6 +7,7 @@ ipcMain.on(
   async (event, arg: { experimentID: string; questionnaireID: string }) => {
     if (Session.getSession().getUser().getUserRole() > 1) {
       event.reply('failedCopy', 'You do not have permission for this')
+      return
     }
 
     const experiment = Session.getSession()

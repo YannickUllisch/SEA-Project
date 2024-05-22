@@ -14,9 +14,12 @@ import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import theme from '@renderer/src/lib/theme'
+import { Role } from '@renderer/src/lib/role'
+import { useSession } from '../SessionProvider'
 
 const GeneralTab = () => {
   const router = useRouter()
+  const session = useSession()
   const [questionnaires, setQuestionnaires] = useState<
     FrontendQuestionnaire[] | undefined
   >(undefined)
@@ -102,29 +105,35 @@ const GeneralTab = () => {
                   Questionnaire Form: {questionnaire.form}
                 </Typography>
               </CardContent>
-              <CardActions
-                disableSpacing
-                sx={{ display: 'flex', justifyContent: 'space-between' }}
-              >
-                <Button
-                  size="small"
-                  onClick={() => onCopyQuestionnaire(questionnaire.id)}
-                >
-                  Create Copy
-                </Button>
-                <Tooltip title="Delete">
-                  <IconButton
-                    aria-label="delete"
-                    onClick={() => handleDeleteQuestionnaire(questionnaire.id)}
-                  >
-                    <Delete />
-                  </IconButton>
-                </Tooltip>
-              </CardActions>
+              {session
+                ? session.user.role <= Role.ADMIN && (
+                    <CardActions
+                      disableSpacing
+                      sx={{ display: 'flex', justifyContent: 'space-between' }}
+                    >
+                      <Button
+                        size="small"
+                        onClick={() => onCopyQuestionnaire(questionnaire.id)}
+                      >
+                        Create Copy
+                      </Button>
+                      <Tooltip title="Delete">
+                        <IconButton
+                          aria-label="delete"
+                          onClick={() =>
+                            handleDeleteQuestionnaire(questionnaire.id)
+                          }
+                        >
+                          <Delete />
+                        </IconButton>
+                      </Tooltip>
+                    </CardActions>
+                  )
+                : null}
             </Card>
           ))
         : null}
-
+      ;
       <Button
         variant="contained"
         sx={{ width: 'full' }}

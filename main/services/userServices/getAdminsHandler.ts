@@ -5,6 +5,7 @@ import { ipcMain } from 'electron'
 ipcMain.on('getAdmins', async (event, _arg) => {
   if (Session.getSession().getUser().getUserRole() === 0) {
     event.reply('failedGetAdmins', 'You do not have permission for this')
+    return
   }
 
   const experimentAssistants = await db.dbUser.findMany({
@@ -14,6 +15,7 @@ ipcMain.on('getAdmins', async (event, _arg) => {
   })
   if (!experimentAssistants) {
     event.reply('failedGetAdmins', 'Error Occurred')
+    return
   }
 
   event.reply('getAdmins', experimentAssistants)

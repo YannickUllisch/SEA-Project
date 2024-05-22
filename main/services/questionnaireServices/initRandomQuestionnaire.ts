@@ -15,6 +15,7 @@ ipcMain.on(
 
     if (!dbquesitonnaires) {
       event.reply('failInitRandomQuestionnaire', 'No questionnaires found')
+      return
     }
 
     const randomIndex =
