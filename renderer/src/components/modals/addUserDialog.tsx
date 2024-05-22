@@ -15,12 +15,14 @@ interface AddUserDialogProps {
   open: boolean
   roleToAdd: number
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
+  experimentId?: string
 }
 
 const AddUserDialog: FC<AddUserDialogProps> = ({
   open,
   setOpen,
   roleToAdd,
+  experimentId,
 }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -33,7 +35,12 @@ const AddUserDialog: FC<AddUserDialogProps> = ({
 
   const handleCreate = async () => {
     const hashedPassword = await bcrypt.hash(password, 10)
-    window.ipc.send('addUser', { username, hashedPassword, roleToAdd })
+    window.ipc.send('addUser', {
+      username,
+      hashedPassword,
+      roleToAdd,
+      experimentId,
+    })
     handleClose()
   }
 
