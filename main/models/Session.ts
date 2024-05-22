@@ -41,7 +41,7 @@ export class Session {
         return existingUser
       }
     } else {
-      throw new Error('Session already initialized')
+      throw new Error('Invalid credentials')
     }
   }
 
