@@ -5,21 +5,17 @@ import { ipcMain } from 'electron'
 ipcMain.on(
   'getQuestionnaires',
   async (event, arg: { experimentID: string }) => {
-    try {
-      const questionnaires = await db.dbQuestionnaire.findMany({
-        where: { experimentId: arg.experimentID },
-      })
+    const questionnaireObjects = Session.getSession()
+      .getExperimentManager()
+      .getExperimentById(arg.experimentID)
+      .getQuestionnaires()
 
-      const objToReturn = questionnaires.map((q) => ({
-        id: q.id,
-        form: q.form,
-        version: q.version,
-      }))
+    const objToReturn = []
 
-      event.reply('getQuestionnaires', objToReturn)
-    } catch (error) {
-      console.error('Error fetching questionnaires:', error)
-      event.reply('failGetQuestionnaires', 'Error fetching questionnaires')
+    for (const questionnaire of questionnaireObjects) {
+      objToReturn.push(questionnaire.getQuestionnaireInfo())
     }
+
+    event.reply('getQuestionnaires', objToReturn)
   },
 )

@@ -5,7 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider      = "prisma-client-js"
+  provider = "prisma-client-js"
   binaryTargets = ["native", "darwin-arm64", "darwin"]
 }
 
@@ -15,33 +15,33 @@ datasource db {
 }
 
 model dbUser {
-  id       String @id @default(uuid())
-  name     String
-  password String
-  role     Int
+  id            String @default(uuid()) @id
+  name          String
+  password      String
+  role          Int
 
-  experiments dbExperiment[]
+  experiments    dbExperiment[]
 }
 
 model dbExperiment {
-  id              String            @id @default(uuid())
-  title           String
-  description     String
-  questionnaireID dbQuestionnaire[]
-  users           dbUser[]
+  id                     String      @id @default(uuid())
+  title                  String
+  description            String
+  questionnaireID        dbQuestionnaire[]
+  users                  dbUser[]
 }
 
 model dbQuestionnaire {
-  id                     String                   @id @default(uuid())
-  experimentId           String
-  experiment             dbExperiment             @relation(fields: [experimentId], references: [id])
-  version                String?
-  form                   String
-  dbQuestionnaireAnswers dbQuestionnaireAnswers[]
+  id                    String       @id @default(uuid())
+  experimentId          String
+  experiment            dbExperiment   @relation(fields: [experimentId], references: [id])
+  questionnaireAnswersID  dbQuestionnaireAnswers[]
+  version               String?
+  form                  String
 }
 
 model dbQuestionnaireAnswers {
-  id              String          @id @default(uuid())
+  id              String        @id @default(uuid())
   questionnaireId String
   questionnaire   dbQuestionnaire @relation(fields: [questionnaireId], references: [id])
   answers         String

@@ -17,22 +17,11 @@ ipcMain.on(
         return
       }
 
-      const experiment = await db.dbExperiment.findUnique({
-        where: { id: arg.experimentID },
-      })
+      const Experiment = Session.getSession()
+        .getExperimentManager()
+        .getExperimentById(arg.experimentID)
 
-      if (!experiment) {
-        event.reply('failCreateQuestionnaire', 'Experiment not found')
-        return
-      }
-
-      await db.dbQuestionnaire.create({
-        data: {
-          experimentId: arg.experimentID,
-          form: JSON.stringify(arg.experimentStructureData),
-          version: 'v1', // or any default versioning you prefer
-        },
-      })
+      Experiment.createQuestionnaire(arg.experimentStructureData)
 
       event.reply('createdQuestionnaire', 'Questionnaire Added')
     } catch (error) {
