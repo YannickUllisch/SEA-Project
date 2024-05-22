@@ -7,12 +7,13 @@ ipcMain.on('getAssistants', async (event, arg: { experimentID: string }) => {
     event.reply('failedGetAssistants', 'You do not have permission for this')
   }
 
-  const experimentAssistants = await db.dbUser.findMany({
-    where: {
-      experiments: { some: { id: arg.experimentID } },
-      role: 10,
-    },
-  })
+  const experiment = Session.getSession()
+    .getUser()
+    .getExperimentManager()
+    .getExperimentById(arg.experimentID)
+
+  const experimentAssistants = await experiment.getExperimentAssistants()
+
   if (!experimentAssistants) {
     event.reply('failedGetAssistants', 'Error Occurred')
   }

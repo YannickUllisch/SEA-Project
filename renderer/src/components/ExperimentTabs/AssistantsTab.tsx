@@ -25,7 +25,7 @@ const AssistantsTab = () => {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <needed for items to be fetched>
   useEffect(() => {
-    window.ipc.send('getAssistants', router.query.id)
+    window.ipc.send('getAssistants', { experimentID: router.query.id })
     window.ipc.on('getAssistants', (assistants: dbUser[]) => {
       setAssistants(assistants)
     })
@@ -34,6 +34,12 @@ const AssistantsTab = () => {
   useEffect(() => {
     window.ipc.on('deletedAssistant', (message: string) => {
       toast.error(message)
+    })
+  }, [])
+
+  useEffect(() => {
+    window.ipc.on('addedAssistant', () => {
+      setAssistants(undefined)
     })
   }, [])
 
