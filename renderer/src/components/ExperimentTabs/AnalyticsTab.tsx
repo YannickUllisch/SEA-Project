@@ -6,7 +6,8 @@ const AnalyticsTab = () => {
   const router = useRouter()
   return (
     <div>
-      <h2>Analytics {router.query.id}</h2>
+      <h2>Analytics</h2>
+      <h3>Download questionnaire answer data below</h3>
       <ExportButton />
     </div>
   )

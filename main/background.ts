@@ -12,6 +12,7 @@ import '@main/services/addQuestionnaireHandler'
 import '@main/services/getQuestionnairesHandler'
 import '@main/services/dataExportHandler'
 import '@main/services/initRandomQuestionnaire'
+import '@main/services/deleteQuestionnaireHandler'
 import { ElectronApp } from '@main/models/ElectronApp'
 
 const main = async () => {
