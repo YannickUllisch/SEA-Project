@@ -19,11 +19,11 @@ ipcMain.on(
       return
     }
 
-    if (Session.getSession().getUser().role > 1) {
+    if (Session.getSession().getUser().getUserRole() > 1) {
       event.reply('failAddUser', 'You do not have permission for this')
       return
     }
-    if (Session.getSession().getUser().role >= arg.roleToAdd) {
+    if (Session.getSession().getUser().getUserRole() >= arg.roleToAdd) {
       event.reply('failAddUser', 'You do not have permission for this')
       return
     }

@@ -1,5 +1,4 @@
 import { db } from '@main/helpers/db'
-import type { iQuestionnaire } from '../Questionnaire/iQuestionnaire'
 import { Questionnaire } from '../Questionnaire/Questionnaire'
 import { v4 } from 'uuid'
 
@@ -7,7 +6,7 @@ export class Experiment {
   private title: string
   private description: string
   private id: string
-  private questionnaires: iQuestionnaire[]
+  private questionnaires: Questionnaire[]
 
   constructor(title: string, description: string, id: string) {
     this.id = id

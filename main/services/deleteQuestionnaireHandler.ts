@@ -8,7 +8,7 @@ ipcMain.on(
   async (event, arg: { questionnaireID: string }) => {
     try {
       // Check if the user has permission to delete a questionnaire
-      if (Session.getSession().getUser().role > 1) {
+      if (Session.getSession().getUser().getUserRole() > 1) {
         event.reply(
           'failDeleteQuestionnaire',
           'You do not have permission to delete this questionnaire',

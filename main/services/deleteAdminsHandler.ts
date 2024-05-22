@@ -3,7 +3,7 @@ import { db } from '@main/helpers/db'
 import { Session } from '@main/models/Session'
 
 ipcMain.on('deleteAdmins', async (event, arg: { userID: string }) => {
-  if (Session.getSession().getUser().role !== 0) {
+  if (Session.getSession().getUser().getUserRole() !== 0) {
     event.reply('failDeleteAdmin', 'You do not have permission to delete this')
     return
   }

@@ -9,7 +9,7 @@ ipcMain.on(
     arg: { experimentID: string; experimentStructureData: JSON },
   ) => {
     try {
-      if (Session.getSession().getUser().role > 1) {
+      if (Session.getSession().getUser().getUserRole() > 1) {
         event.reply(
           'failCreateQuestionnaire',
           'You do not have permission for this',
@@ -18,6 +18,7 @@ ipcMain.on(
       }
 
       const Experiment = Session.getSession()
+        .getUser()
         .getExperimentManager()
         .getExperimentById(arg.experimentID)
 

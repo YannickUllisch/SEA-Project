@@ -6,6 +6,7 @@ ipcMain.on(
   'getQuestionnaires',
   async (event, arg: { experimentID: string }) => {
     const questionnaireObjects = Session.getSession()
+      .getUser()
       .getExperimentManager()
       .getExperimentById(arg.experimentID)
       .getQuestionnaires()

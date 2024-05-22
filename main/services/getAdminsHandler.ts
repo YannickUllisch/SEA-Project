@@ -3,7 +3,7 @@ import { Session } from '@main/models/Session'
 import { ipcMain } from 'electron'
 
 ipcMain.on('getAdmins', async (event, _arg) => {
-  if (Session.getSession().getUser().role === 0) {
+  if (Session.getSession().getUser().getUserRole() === 0) {
     event.reply('failedGetAdmins', 'You do not have permission for this')
   }
 
