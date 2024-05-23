@@ -1,5 +1,6 @@
 import { ipcMain } from 'electron'
 import { db } from '@main/helpers/db'
+import { QuestionnaireManager } from '@main/models/Questionnaire/QuestionnaireManager'
 
 // Authenticate
 ipcMain.on(
@@ -29,5 +30,28 @@ ipcMain.on(
       version: randomIndex.version,
     })
     return
+  },
+)
+
+// Handle saving a questionnaire
+ipcMain.on(
+  'saveQuestionnaire',
+  async (
+    event,
+    arg: {
+      questionnaireID: string
+      questionnaireAnswerData: JSON
+    },
+  ) => {
+    try {
+      const questionnaireManager = new QuestionnaireManager(arg.questionnaireID)
+
+      questionnaireManager.saveQuestionnaire(arg.questionnaireAnswerData)
+
+      event.reply('saveQuestionnaire', 'Questionnaire saved successfully')
+    } catch (error) {
+      console.error('Error saving questionnaire:', error)
+      event.reply('failSaveQuestionnaire', 'Error saving questionnaire')
+    }
   },
 )
