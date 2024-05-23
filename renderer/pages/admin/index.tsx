@@ -75,8 +75,8 @@ const AdminPage = () => {
         sx={{
           backgroundColor: 'white',
           padding: 5,
-          minWidth: '95%',
-          minHeight: '500px',
+          minWidth: '100%',
+          minHeight: 'screen',
           borderRadius: 4,
         }}
       >
@@ -159,22 +159,6 @@ const AdminPage = () => {
                                 </>
                               )
                             : null}
-
-                          <Tooltip title={'Start Experiment'}>
-                            <Play
-                              onClick={() =>
-                                router.push({
-                                  pathname: '/participant',
-                                  query: { executedExperiment: experiment.id },
-                                })
-                              }
-                              style={{
-                                color: 'green',
-                                cursor: 'pointer',
-                                strokeWidth: '1.5px',
-                              }}
-                            />
-                          </Tooltip>
                         </Box>
                       </CardContent>
                     </Card>
