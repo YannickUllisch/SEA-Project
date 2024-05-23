@@ -65,8 +65,8 @@ const ExperimentPage = () => {
         sx={{
           backgroundColor: 'white',
           padding: 5,
-          minWidth: '95%',
-          minHeight: '500px',
+          minWidth: '100%',
+          minHeight: 'screen',
           borderRadius: 4,
         }}
       >

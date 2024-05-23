@@ -57,17 +57,22 @@ import type { dbQuestionnaire } from '@prisma/client'
 
 const SurveyPage = () => {
   const router = useRouter()
+
   const [currQuestionnaire, setCurrQuestionnaire] = useState<
     FrontendQuestionnaire | undefined
   >(undefined)
 
+  const [surveyModel, setSurveyModel] = useState<Model>(new Model())
+
+  //used to check if questionnaire is completed
+  const [isCompleted, setIsCompleted] = useState(false)
+
   // biome-ignore lint/correctness/useExhaustiveDependencies: <Needed to fetch from backend>
   useEffect(() => {
     // This will return us a random questionnaire based on the experiment found using the executedExperiment ID given as a query parameter.
-    window.ipc.send(
-      'initRandomQuestionnaire',
-      router.query.executedExperiment as string,
-    )
+    window.ipc.send('initRandomQuestionnaire', {
+      experimentID: router.query.executedExperiment as string,
+    })
 
     // The response we get is a randomized questionnaire from the executed experiment.
     // TODO: Somehow find a way to parse the JSON and input it correctly into the model and then rendering the model
@@ -75,37 +80,12 @@ const SurveyPage = () => {
       'initRandomQuestionnaire',
       (questionnaire: FrontendQuestionnaire) => {
         setCurrQuestionnaire(questionnaire)
+        const surveyModel = new Model(JSON.parse(questionnaire.form))
+        surveyModel.showTitle = false
+        setSurveyModel(surveyModel)
       },
     )
   }, [currQuestionnaire === undefined])
-
-  const surveyJson = {
-    title: 'Yehaw Trest',
-    description: 'Yehaw telelelele',
-    logoPosition: 'right',
-    pages: [
-      {
-        name: 'page1',
-        elements: [
-          {
-            type: 'rating',
-            name: 'question1',
-            title: 'yo',
-          },
-          {
-            type: 'text',
-            name: 'question2',
-            title: 'yo2',
-          },
-        ],
-      },
-    ],
-  }
-
-  const [surveyModel, _setSurveyModel] = useState<Model>(new Model(surveyJson))
-
-  //used to check if questionnaire is completed
-  const [isCompleted, setIsCompleted] = useState(false)
 
   // Use useEffect to add a navigation item once the survey model is set up
   useEffect(() => {
@@ -121,14 +101,17 @@ const SurveyPage = () => {
   }, [surveyModel])
 
   const redirectToHomePage = () => {
-    router.push('/participant')
+    router.push({
+      pathname: '/participant',
+      query: { executedExperiment: router.query.executedExperiment as string },
+    })
   }
 
   return (
     <Box
       sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
     >
-      {surveyJson ? <Survey model={surveyModel} /> : null}
+      <Survey model={surveyModel} />
 
       {isCompleted && <Restart redirectToHomePage={redirectToHomePage} />}
     </Box>
