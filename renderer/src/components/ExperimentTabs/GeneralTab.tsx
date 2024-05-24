@@ -17,7 +17,8 @@ import theme from '@renderer/src/lib/theme'
 import { Role } from '@renderer/src/lib/role'
 import { useSession } from '../SessionProvider'
 import PreviewQuestionnaireDialog from '../modals/previewQuestionnaireDialog'
-import { Eye } from 'lucide-react'
+import { Edit, Eye } from 'lucide-react'
+import QuestionnaireTitleDialog from '../modals/questionnaireTitleDialog'
 
 const GeneralTab = () => {
   const router = useRouter()
@@ -28,6 +29,9 @@ const GeneralTab = () => {
   const [questionnaires, setQuestionnaires] = useState<
     FrontendQuestionnaire[] | undefined
   >(undefined)
+  const [isEditDialogOpen, setEditDialogOpen] = useState(false)
+  const [editQuestionnaire, setEditQuestionnaire] =
+    useState<FrontendQuestionnaire | null>(null)
 
   useEffect(() => {
     const fetchQuestionnaires = () => {
@@ -96,12 +100,47 @@ const GeneralTab = () => {
     setPreviewOpen(true)
   }
 
+  const handleEditTitle = (questionnaire: FrontendQuestionnaire) => {
+    setEditQuestionnaire(questionnaire)
+    setEditDialogOpen(true)
+  }
+
+  const handleSaveTitle = (title: string) => {
+    if (editQuestionnaire) {
+      window.ipc.send('updateQuestionnaireTitle', {
+        questionnaireID: editQuestionnaire.id,
+        version: title,
+        experimentID: router.query.id,
+      })
+
+      window.ipc.on('updatedQuestionnaireTitle', (message: string) => {
+        toast.success(message)
+        setQuestionnaires(
+          questionnaires?.map((q) =>
+            q.id === editQuestionnaire.id ? { ...q, version: title } : q,
+          ),
+        )
+        setEditQuestionnaire(null)
+      })
+
+      window.ipc.on('failUpdateQuestionnaireTitle', (message: string) => {
+        toast.error(message)
+      })
+    }
+  }
+
   return (
     <>
       <PreviewQuestionnaireDialog
         open={isPreviewOpen}
         setOpen={setPreviewOpen}
         stringifiedJSON={selectedQuestionnaireForm}
+      />
+      <QuestionnaireTitleDialog
+        open={isEditDialogOpen}
+        setOpen={setEditDialogOpen}
+        onSave={handleSaveTitle}
+        initialTitle={editQuestionnaire?.version || ''}
       />
       <Box
         sx={{
@@ -114,9 +153,29 @@ const GeneralTab = () => {
           ? questionnaires.map((questionnaire) => (
               <Card key={questionnaire.id} sx={{ margin: 2, boxShadow: 3 }}>
                 <CardContent>
-                  <Typography sx={{ mb: 1 }} variant="h5">
-                    Questionnaire Version: {questionnaire.version}
-                  </Typography>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Typography sx={{ mb: 1 }} variant="h5">
+                      Questionnaire Version: {questionnaire.version}
+                    </Typography>
+                    {session
+                      ? session.user.role <= Role.ADMIN && (
+                          <Tooltip title="Edit title ">
+                            <IconButton
+                              aria-label="edit"
+                              sx={{ width: 35 }}
+                              onClick={() => handleEditTitle(questionnaire)}
+                            >
+                              <Edit />
+                            </IconButton>
+                          </Tooltip>
+                        )
+                      : null}
+                  </Box>
                 </CardContent>
                 {session
                   ? session.user.role <= Role.ADMIN && (

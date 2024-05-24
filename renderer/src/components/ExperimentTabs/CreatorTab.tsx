@@ -19,12 +19,14 @@ const CreatorTab = () => {
   const currExperimentId = router.query.id as string
 
   const [surveyJson, setSurveyJson] = useState<object | null>(null)
+  const [title, setTitle] = useState<string>('')
 
   useEffect(() => {
     if (surveyJson !== null) {
       window.ipc.send('createQuestionnaire', {
         experimentID: currExperimentId,
         experimentStructureData: surveyJson,
+        version: title,
       })
 
       window.ipc.on('createdQuestionnaire', (message: string) => {
@@ -40,9 +42,15 @@ const CreatorTab = () => {
       window.ipc.removeAllListeners('createdQuestionnaire')
       window.ipc.removeAllListeners('failCreateQuestionnaire')
     }
-  }, [surveyJson, currExperimentId])
+  }, [surveyJson, currExperimentId, title])
 
-  return <SurveyComponent json={{}} setSurveyJSON={setSurveyJson} />
+  return (
+    <SurveyComponent
+      json={{}}
+      setSurveyJSON={setSurveyJson}
+      setSurveyTitle={setTitle}
+    />
+  )
 }
 
 export default CreatorTab

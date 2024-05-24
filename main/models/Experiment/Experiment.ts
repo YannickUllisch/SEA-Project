@@ -44,18 +44,18 @@ export class Experiment {
     return { id: this.id, title: this.title, description: this.description }
   }
 
-  public async createQuestionnaire(questionnaireData: JSON) {
+  public async createQuestionnaire(questionnaireData: JSON, version?: string) {
     try {
       const newId = v4()
       await db.dbQuestionnaire.create({
         data: {
           experimentId: this.id,
-          version: (this.questionnaires.length + 1).toString(),
+          version: version ?? '',
           form: JSON.stringify(questionnaireData),
         },
       })
       this.questionnaires.push(
-        new Questionnaire(newId, JSON.stringify(questionnaireData)),
+        new Questionnaire(newId, JSON.stringify(questionnaireData), version),
       )
     } catch (error) {
       console.error('Failed to create questionnaire:', error)

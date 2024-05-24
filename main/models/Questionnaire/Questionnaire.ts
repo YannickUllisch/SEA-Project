@@ -15,6 +15,18 @@ export class Questionnaire {
     return { id: this.id, form: this.form, version: this.version }
   }
 
+  public async setVersion(version: string) {
+    this.version = version
+    await db.dbQuestionnaire.update({
+      where: {
+        id: this.id,
+      },
+      data: {
+        version,
+      },
+    })
+  }
+
   public async updateQuestionnaireForm(newJSON: JSON) {
     this.form = JSON.stringify(newJSON)
 
