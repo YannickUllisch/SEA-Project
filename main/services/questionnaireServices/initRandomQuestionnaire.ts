@@ -41,12 +41,21 @@ ipcMain.on(
     arg: {
       questionnaireID: string
       questionnaireAnswerData: JSON
+      age: number
+      gender: string
+      country: string
     },
   ) => {
     try {
       const questionnaireManager = new QuestionnaireManager(arg.questionnaireID)
 
-      questionnaireManager.saveQuestionnaire(arg.questionnaireAnswerData)
+      questionnaireManager.saveQuestionnaire(
+        arg.questionnaireAnswerData,
+        arg.age,
+        arg.gender,
+        arg.country,
+      )
+      console.log(arg.questionnaireAnswerData, arg.age, arg.gender, arg.country)
 
       event.reply('saveQuestionnaire', 'Questionnaire saved successfully')
     } catch (error) {

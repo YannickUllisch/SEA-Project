@@ -7,7 +7,12 @@ export class QuestionnaireManager {
     this.id = questionnaireId
   }
 
-  public async saveQuestionnaire(questionnaireData: JSON) {
+  public async saveQuestionnaire(
+    questionnaireData: JSON,
+    age: number,
+    gender: string,
+    country: string,
+  ) {
     console.log('Here at manager')
     try {
       //const newId = v4()
@@ -15,6 +20,9 @@ export class QuestionnaireManager {
         data: {
           questionnaireId: this.id,
           answers: JSON.stringify(questionnaireData),
+          age,
+          gender,
+          country,
         },
       })
     } catch (error) {

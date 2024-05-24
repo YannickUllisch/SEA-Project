@@ -45,4 +45,7 @@ model dbQuestionnaireAnswers {
   questionnaireId String
   questionnaire   dbQuestionnaire @relation(fields: [questionnaireId], references: [id])
   answers         String
+  age             Int?
+  gender          String?
+  country         String?
 }
