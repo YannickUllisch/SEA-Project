@@ -35,7 +35,11 @@ const QuestionnaireTitleDialog: FC<QuestionnaireTitleProps> = ({
   }
 
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      sx={{ '& .MuiDialog-paper': { width: '60%', maxWidth: 'none' } }}
+    >
       <DialogTitle>Set Title</DialogTitle>
       <DialogContent>
         <TextField

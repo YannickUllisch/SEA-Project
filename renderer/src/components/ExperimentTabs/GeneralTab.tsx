@@ -177,45 +177,59 @@ const GeneralTab = () => {
                       : null}
                   </Box>
                 </CardContent>
-                {session
-                  ? session.user.role <= Role.ADMIN && (
-                      <CardActions
-                        disableSpacing
-                        sx={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                        }}
-                      >
-                        <Box>
-                          <Button
-                            size="small"
-                            onClick={() =>
-                              onCopyQuestionnaire(questionnaire.id)
-                            }
-                          >
-                            Create Copy
-                          </Button>
-                          <Tooltip title="Preview">
-                            <IconButton
-                              onClick={() => handlePreview(questionnaire.form)}
-                            >
-                              <Eye />
-                            </IconButton>
-                          </Tooltip>
-                        </Box>
-                        <Tooltip title="Delete">
+                {session ? (
+                  session.user.role <= Role.ADMIN ? (
+                    <CardActions
+                      disableSpacing
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                      }}
+                    >
+                      <Box>
+                        <Button
+                          size="small"
+                          onClick={() => onCopyQuestionnaire(questionnaire.id)}
+                        >
+                          Create Copy
+                        </Button>
+                        <Tooltip title="Preview">
                           <IconButton
-                            aria-label="delete"
-                            onClick={() =>
-                              handleDeleteQuestionnaire(questionnaire.id)
-                            }
+                            onClick={() => handlePreview(questionnaire.form)}
                           >
-                            <Delete />
+                            <Eye />
                           </IconButton>
                         </Tooltip>
-                      </CardActions>
-                    )
-                  : null}
+                      </Box>
+                      <Tooltip title="Delete">
+                        <IconButton
+                          aria-label="delete"
+                          onClick={() =>
+                            handleDeleteQuestionnaire(questionnaire.id)
+                          }
+                        >
+                          <Delete />
+                        </IconButton>
+                      </Tooltip>
+                    </CardActions>
+                  ) : (
+                    <CardActions
+                      disableSpacing
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                      }}
+                    >
+                      <Tooltip title="Preview">
+                        <IconButton
+                          onClick={() => handlePreview(questionnaire.form)}
+                        >
+                          <Eye />
+                        </IconButton>
+                      </Tooltip>
+                    </CardActions>
+                  )
+                ) : null}
               </Card>
             ))
           : null}
