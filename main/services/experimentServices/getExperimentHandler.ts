@@ -27,6 +27,7 @@ ipcMain.on('getExperiments', async (event, _arg) => {
   event.reply('getExperiments', experiments)
 })
 
+
 ipcMain.on('validateRestartCode', async (event, arg) => {
   const { experimentId, restartCode } = arg
   console.log(`Validating restart code for experimentId: ${experimentId}`)
@@ -37,15 +38,14 @@ ipcMain.on('validateRestartCode', async (event, arg) => {
     })
 
     if (
-      experiment.restartCode === restartCode &&
-      experiment.restartCode !== ''
+      experiment.restartCode === restartCode && experiment.restartCode !== ''
     ) {
       console.log('Restart code is valid')
       event.reply('restartCodeValidated', { valid: true })
       //event.reply('noRestartCode', { rCode: false })
     }
-    if (experiment.restartCode === '') {
-      console.log('Restart code is invalid')
+    else if (experiment.restartCode === '') {
+      console.log('Restart code is invalid1')
       event.reply('restartCodeValidated', { valid: false })
       //event.reply('noRestartCode', { rCode: true })
     } else {
