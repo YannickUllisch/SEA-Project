@@ -22,21 +22,6 @@ export class Experiment {
     this.setQuestionnaires()
   }
 
-  // //RESTARTCODE
-  // public async restartExperiment(restartCode: string): Promise<void> {
-  //   if (this.restartCode !== restartCode) {
-  //     throw new Error('Invalid restart code')
-  //   }
-
-  //   // Logic to reset the experiment state, e.g., clear responses, etc.
-  //   await db.dbQuestionnaire.updateMany({
-  //     where: { experimentId: this.id },
-  //     data: { responses: null }, // example logic to clear responses
-  //   })
-
-  //   // Additional reset logic if needed
-  // }
-
   private async setQuestionnaires() {
     const experimentQuestionnaires = await db.dbQuestionnaire.findMany({
       where: {

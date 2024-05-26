@@ -32,15 +32,6 @@ export class ExperimentManager {
     this.experiments = experimentArray
   }
 
-  // //RESTARTCODE
-  // public async restartExperiment(experimentId: string, restartCode: string) {
-  //   const experiment = this.getExperimentById(experimentId);
-  //   if (!experiment) {
-  //     throw new Error('Experiment not found');
-  //   }
-  //   await experiment.restartExperiment(restartCode);
-  // }
-
   public async getExperiments() {
     return this.experiments
   }
