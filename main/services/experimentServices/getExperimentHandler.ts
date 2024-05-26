@@ -12,6 +12,7 @@ ipcMain.on('getExperiments', async (event, _arg) => {
   const frontEndExperiments: {
     id: string
     title: string
+    restartCode: string
     description: string
   }[] = []
 
@@ -24,4 +25,36 @@ ipcMain.on('getExperiments', async (event, _arg) => {
     return
   }
   event.reply('getExperiments', experiments)
+})
+
+ipcMain.on('validateRestartCode', async (event, arg) => {
+  const { experimentId, restartCode } = arg
+  console.log(`Validating restart code for experimentId: ${experimentId}`)
+
+  try {
+    const experiment = await db.dbExperiment.findUnique({
+      where: { id: experimentId },
+    })
+
+    if (
+      experiment.restartCode === restartCode &&
+      experiment.restartCode !== ''
+    ) {
+      console.log('Restart code is valid')
+      event.reply('restartCodeValidated', { valid: true })
+      //event.reply('noRestartCode', { rCode: false })
+    }
+    if (experiment.restartCode === '') {
+      console.log('Restart code is invalid')
+      event.reply('restartCodeValidated', { valid: false })
+      //event.reply('noRestartCode', { rCode: true })
+    } else {
+      console.log('Restart code is invalid')
+      event.reply('restartCodeValidated', { valid: false })
+      //event.reply('noRestartCode', { rCode: false })
+    }
+  } catch (error) {
+    console.error('Error validating restart code:', error)
+    event.reply('failValidateRestartCode', error.message)
+  }
 })
