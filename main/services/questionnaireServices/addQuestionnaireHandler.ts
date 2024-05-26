@@ -74,3 +74,49 @@ ipcMain.on(
     }
   },
 )
+
+ipcMain.on(
+  'editQuestionnaire',
+  async (
+    event,
+    arg: {
+      experimentID: string
+      questionnaireID: string
+      experimentStructureData: JSON
+      version?: string
+    },
+  ) => {
+    try {
+      if (Session.getSession().getUser().getUserRole() > 1) {
+        event.reply(
+          'failEditQuestionnaire',
+          'You do not have permission to edit this questionnaire',
+        )
+        return
+      }
+
+      const Experiment = Session.getSession()
+        .getUser()
+        .getExperimentManager()
+        .getExperimentById(arg.experimentID)
+
+      // Assuming updateQuestionnaire is a method that updates an existing questionnaire
+      // by its ID with the new data and version.
+      const updateResult = Experiment.updateQuestionnaire(
+        arg.questionnaireID,
+        arg.experimentStructureData,
+        arg.version,
+      )
+
+      if (updateResult) {
+        event.reply('editedQuestionnaire', 'Questionnaire Updated Successfully')
+      } else {
+        // Handle the case where update is not successful
+        event.reply('failEditQuestionnaire', 'Failed to update questionnaire')
+      }
+    } catch (error) {
+      console.error('Error editing questionnaire:', error)
+      event.reply('failEditQuestionnaire', 'Error editing questionnaire')
+    }
+  },
+)

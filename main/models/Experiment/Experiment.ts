@@ -123,4 +123,45 @@ export class Experiment {
       throw err
     }
   }
+
+  public async updateQuestionnaire(
+    questionnaireId: string,
+    questionnaireData: JSON,
+    version?: string,
+  ): Promise<void> {
+    try {
+      // Check if the questionnaire already exists
+      const existingQuestionnaire = await db.dbQuestionnaire.findUnique({
+        where: { id: questionnaireId },
+      })
+
+      if (!existingQuestionnaire) {
+        throw new Error('Questionnaire not found')
+      }
+
+      // Update the questionnaire in the database
+      await db.dbQuestionnaire.update({
+        where: { id: questionnaireId },
+        data: {
+          version: version ?? existingQuestionnaire.version, // Use existing version if not provided
+          form: JSON.stringify(questionnaireData),
+        },
+      })
+
+      // Find the questionnaire in the local state and update it
+      const index = this.questionnaires.findIndex(
+        (q) => q.getQuestionnaireInfo().id === questionnaireId,
+      )
+      if (index !== -1) {
+        this.questionnaires[index] = new Questionnaire(
+          questionnaireId,
+          JSON.stringify(questionnaireData),
+          version ?? this.questionnaires[index].getQuestionnaireInfo().version,
+        )
+      }
+    } catch (error) {
+      console.error('Failed to update questionnaire:', error)
+      throw error // Optionally, you can throw the error to be handled by the caller
+    }
+  }
 }

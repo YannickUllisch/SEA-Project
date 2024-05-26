@@ -7,127 +7,129 @@ import {
   IconButton,
   Tooltip,
   CardActions,
-} from '@mui/material'
-import { Delete } from '@mui/icons-material'
-import type { FrontendQuestionnaire } from '@renderer/src/lib/types'
-import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
-import { toast } from 'sonner'
-import theme from '@renderer/src/lib/theme'
-import { Role } from '@renderer/src/lib/role'
-import { useSession } from '../SessionProvider'
-import PreviewQuestionnaireDialog from '../modals/previewQuestionnaireDialog'
-import { Edit, Eye } from 'lucide-react'
-import QuestionnaireTitleDialog from '../modals/questionnaireTitleDialog'
+} from "@mui/material";
+import { Delete } from "@mui/icons-material";
+import type { FrontendQuestionnaire } from "@renderer/src/lib/types";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+import { toast } from "sonner";
+import theme from "@renderer/src/lib/theme";
+import { Role } from "@renderer/src/lib/role";
+import { useSession } from "../SessionProvider";
+import PreviewQuestionnaireDialog from "../modals/previewQuestionnaireDialog";
+import { Edit, Eye } from "lucide-react";
+import QuestionnaireTitleDialog from "../modals/questionnaireTitleDialog";
 
-const GeneralTab = () => {
-  const router = useRouter()
-  const session = useSession()
+const GeneralTab = ({ onEditQuestionnaire }) => {
+  const router = useRouter();
+  const session = useSession();
   const [selectedQuestionnaireForm, setSelectedQuestionnaireForm] =
-    useState<string>('')
-  const [isPreviewOpen, setPreviewOpen] = useState(false)
+    useState<string>("");
+  const [isPreviewOpen, setPreviewOpen] = useState(false);
   const [questionnaires, setQuestionnaires] = useState<
     FrontendQuestionnaire[] | undefined
-  >(undefined)
-  const [isEditDialogOpen, setEditDialogOpen] = useState(false)
+  >(undefined);
+  const [isEditDialogOpen, setEditDialogOpen] = useState(false);
   const [editQuestionnaire, setEditQuestionnaire] =
-    useState<FrontendQuestionnaire | null>(null)
+    useState<FrontendQuestionnaire | null>(null);
 
   useEffect(() => {
     const fetchQuestionnaires = () => {
-      window.ipc.send('getQuestionnaires', {
+      window.ipc.send("getQuestionnaires", {
         experimentID: router.query.id as string,
-      })
+      });
 
       const handleGetQuestionnaires = (
-        experimentQuestionnaires: FrontendQuestionnaire[],
+        experimentQuestionnaires: FrontendQuestionnaire[]
       ) => {
-        setQuestionnaires(experimentQuestionnaires)
-      }
+        setQuestionnaires(experimentQuestionnaires);
+      };
 
       const handleFailGetQuestionnaires = (message: string) => {
-        console.error('Failed to get questionnaires:', message)
-      }
+        console.error("Failed to get questionnaires:", message);
+      };
 
-      window.ipc.on('getQuestionnaires', handleGetQuestionnaires)
-      window.ipc.on('failGetQuestionnaires', handleFailGetQuestionnaires)
+      window.ipc.on("getQuestionnaires", handleGetQuestionnaires);
+      window.ipc.on("failGetQuestionnaires", handleFailGetQuestionnaires);
 
       return () => {
-        window.ipc.removeAllListeners('getQuestionnaires')
-        window.ipc.removeAllListeners('failGetQuestionnaires')
-      }
-    }
+        window.ipc.removeAllListeners("getQuestionnaires");
+        window.ipc.removeAllListeners("failGetQuestionnaires");
+      };
+    };
 
     if (questionnaires === undefined) {
-      fetchQuestionnaires()
+      fetchQuestionnaires();
     }
-  }, [questionnaires, router.query.id])
+  }, [questionnaires, router.query.id]);
 
   const handleDeleteQuestionnaire = (questionnaireID: string) => {
-    window.ipc.send('deleteQuestionnaire', {
+    window.ipc.send("deleteQuestionnaire", {
       questionnaireID,
       experimentID: router.query.id,
-    })
+    });
 
-    window.ipc.on('deletedQuestionnaire', (message: string) => {
-      toast.success(message)
-      setQuestionnaires(questionnaires?.filter((q) => q.id !== questionnaireID))
-    })
+    window.ipc.on("deletedQuestionnaire", (message: string) => {
+      toast.success(message);
+      setQuestionnaires(
+        questionnaires?.filter((q) => q.id !== questionnaireID)
+      );
+    });
 
-    window.ipc.on('failDeleteQuestionnaire', (message: string) => {
-      toast.error(message)
-    })
-  }
+    window.ipc.on("failDeleteQuestionnaire", (message: string) => {
+      toast.error(message);
+    });
+  };
 
   const onCopyQuestionnaire = (questionnaireID: string) => {
-    window.ipc.send('copyQuestionnaire', {
+    window.ipc.send("copyQuestionnaire", {
       questionnaireID,
       experimentID: router.query.id,
-    })
+    });
 
-    window.ipc.on('copyQuestionnaire', (message: string) => {
-      toast.success(message)
-      setQuestionnaires(undefined)
-    })
+    window.ipc.on("copyQuestionnaire", (message: string) => {
+      toast.success(message);
+      setQuestionnaires(undefined);
+    });
 
-    window.ipc.on('failedCopy', (message: string) => {
-      toast.error(message)
-    })
-  }
+    window.ipc.on("failedCopy", (message: string) => {
+      toast.error(message);
+    });
+  };
 
   const handlePreview = (stringifiedJSON: string) => {
-    setSelectedQuestionnaireForm(stringifiedJSON)
-    setPreviewOpen(true)
-  }
+    setSelectedQuestionnaireForm(stringifiedJSON);
+    setPreviewOpen(true);
+  };
 
   const handleEditTitle = (questionnaire: FrontendQuestionnaire) => {
-    setEditQuestionnaire(questionnaire)
-    setEditDialogOpen(true)
-  }
+    setEditQuestionnaire(questionnaire);
+    setEditDialogOpen(true);
+  };
 
   const handleSaveTitle = (title: string) => {
     if (editQuestionnaire) {
-      window.ipc.send('updateQuestionnaireTitle', {
+      window.ipc.send("updateQuestionnaireTitle", {
         questionnaireID: editQuestionnaire.id,
         version: title,
         experimentID: router.query.id,
-      })
+      });
 
-      window.ipc.on('updatedQuestionnaireTitle', (message: string) => {
-        toast.success(message)
+      window.ipc.on("updatedQuestionnaireTitle", (message: string) => {
+        toast.success(message);
         setQuestionnaires(
           questionnaires?.map((q) =>
-            q.id === editQuestionnaire.id ? { ...q, version: title } : q,
-          ),
-        )
-        setEditQuestionnaire(null)
-      })
+            q.id === editQuestionnaire.id ? { ...q, version: title } : q
+          )
+        );
+        setEditQuestionnaire(null);
+      });
 
-      window.ipc.on('failUpdateQuestionnaireTitle', (message: string) => {
-        toast.error(message)
-      })
+      window.ipc.on("failUpdateQuestionnaireTitle", (message: string) => {
+        toast.error(message);
+      });
     }
-  }
+  };
 
   return (
     <>
@@ -140,13 +142,13 @@ const GeneralTab = () => {
         open={isEditDialogOpen}
         setOpen={setEditDialogOpen}
         onSave={handleSaveTitle}
-        initialTitle={editQuestionnaire?.version || ''}
+        initialTitle={editQuestionnaire?.version || ""}
       />
       <Box
         sx={{
-          justifyContent: 'center',
-          display: 'flex',
-          flexDirection: 'column',
+          justifyContent: "center",
+          display: "flex",
+          flexDirection: "column",
         }}
       >
         {questionnaires
@@ -155,8 +157,8 @@ const GeneralTab = () => {
                 <CardContent>
                   <Box
                     sx={{
-                      display: 'flex',
-                      alignItems: 'center',
+                      display: "flex",
+                      alignItems: "center",
                     }}
                   >
                     <Typography sx={{ mb: 1 }} variant="h5">
@@ -182,11 +184,17 @@ const GeneralTab = () => {
                     <CardActions
                       disableSpacing
                       sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
+                        display: "flex",
+                        justifyContent: "space-between",
                       }}
                     >
                       <Box>
+                        <Button
+                          size="small"
+                          onClick={() => onEditQuestionnaire(questionnaire.id)}
+                        >
+                          Edit
+                        </Button>
                         <Button
                           size="small"
                           onClick={() => onCopyQuestionnaire(questionnaire.id)}
@@ -216,8 +224,8 @@ const GeneralTab = () => {
                     <CardActions
                       disableSpacing
                       sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
+                        display: "flex",
+                        justifyContent: "space-between",
                       }}
                     >
                       <Tooltip title="Preview">
@@ -235,11 +243,11 @@ const GeneralTab = () => {
           : null}
         <Button
           variant="contained"
-          sx={{ width: 'full' }}
+          sx={{ width: "full" }}
           disabled={!questionnaires || questionnaires.length < 1}
           onClick={() =>
             router.push({
-              pathname: '/participant',
+              pathname: "/participant",
               query: { executedExperiment: router.query.id as string },
             })
           }
@@ -248,7 +256,7 @@ const GeneralTab = () => {
         </Button>
       </Box>
     </>
-  )
-}
+  );
+};
 
-export default GeneralTab
+export default GeneralTab;
