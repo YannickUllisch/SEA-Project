@@ -10,7 +10,8 @@ CREATE TABLE "dbUser" (
 CREATE TABLE "dbExperiment" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "title" TEXT NOT NULL,
-    "description" TEXT NOT NULL
+    "description" TEXT NOT NULL,
+    "restartCode" TEXT
 );
 
 -- CreateTable
@@ -27,6 +28,9 @@ CREATE TABLE "dbQuestionnaireAnswers" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "questionnaireId" TEXT NOT NULL,
     "answers" TEXT NOT NULL,
+    "age" INTEGER,
+    "gender" TEXT,
+    "country" TEXT,
     CONSTRAINT "dbQuestionnaireAnswers_questionnaireId_fkey" FOREIGN KEY ("questionnaireId") REFERENCES "dbQuestionnaire" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 

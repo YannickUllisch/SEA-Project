@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { TextField, Button, Box } from '@mui/material'
-import MenuItem from '@mui/material/MenuItem'
-
+import { Box } from '@mui/material'
 import 'survey-core/defaultV2.min.css'
 import { Model } from 'survey-core'
 import { Survey } from 'survey-react-ui'
 import { useRouter } from 'next/router'
 import Restart from '../src/components/restart'
 import type { FrontendQuestionnaire } from '@renderer/src/lib/types'
-import countries from 'renderer/pages/admin/demograhicsData/countries.json'
-import genders from 'renderer/pages/admin/demograhicsData/genders.json'
 
 const SurveyPage = () => {
   const router = useRouter()
@@ -19,19 +15,19 @@ const SurveyPage = () => {
   >(undefined)
 
   const [surveyModel, setSurveyModel] = useState<Model>(new Model())
-  const [demographicsActive, setDemographicsActive] = useState<boolean>(true)
-  const [age, setAge] = useState('')
-  const [gender, setGender] = useState('')
-  const [country, setCountry] = useState('')
 
-  // Used to check if questionnaire is completed
+  //used to check if questionnaire is completed
   const [isCompleted, setIsCompleted] = useState(false)
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <Needed to fetch from backend>
   useEffect(() => {
+    // This will return us a random questionnaire based on the experiment found using the executedExperiment ID given as a query parameter.
     window.ipc.send('initRandomQuestionnaire', {
       experimentID: router.query.executedExperiment as string,
     })
 
+    // The response we get is a randomized questionnaire from the executed experiment.
+    // TODO: Somehow find a way to parse the JSON and input it correctly into the model and then rendering the model
     window.ipc.on(
       'initRandomQuestionnaire',
       (questionnaire: FrontendQuestionnaire) => {
@@ -43,6 +39,7 @@ const SurveyPage = () => {
     )
   }, [currQuestionnaire === undefined])
 
+  // Use useEffect to add a navigation item once the survey model is set up
   useEffect(() => {
     if (surveyModel) {
       surveyModel.addNavigationItem({
@@ -55,20 +52,12 @@ const SurveyPage = () => {
         window.ipc.send('saveQuestionnaire', {
           questionnaireID: currQuestionnaire.id,
           questionnaireAnswerData: sender.data,
-          age: Number.parseInt(age),
-          gender,
-          country,
         })
 
         setIsCompleted(true)
       })
     }
-  }, [surveyModel, age, gender, country])
-
-  const handleDemographicsSubmit = (event) => {
-    event.preventDefault()
-    setDemographicsActive(false)
-  }
+  }, [surveyModel])
 
   const redirectToHomePage = () => {
     router.push({
@@ -81,67 +70,7 @@ const SurveyPage = () => {
     <Box
       sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
     >
-      {demographicsActive ? (
-        <Box
-          component="form"
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            pt: 3,
-            '& > :not(style)': { m: 1, width: '25ch' },
-          }}
-          noValidate
-          autoComplete="off"
-          onSubmit={handleDemographicsSubmit}
-        >
-          <TextField
-            required
-            id="age-demographics"
-            label="Age"
-            type="number"
-            value={age}
-            onChange={(e) => setAge(e.target.value)}
-            helperText="Please select your age"
-          />
-          <TextField
-            required
-            id="gender-demographics"
-            select
-            label="Gender"
-            value={gender}
-            onChange={(e) => setGender(e.target.value)}
-            helperText="Please select your gender"
-          >
-            {genders.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-          <TextField
-            required
-            id="country-demographics"
-            select
-            label="Country"
-            value={country}
-            onChange={(e) => setCountry(e.target.value)}
-            helperText="Please select your location"
-          >
-            {countries.map((option) => (
-              <MenuItem key={option.name} value={option.name}>
-                {option.name}
-              </MenuItem>
-            ))}
-          </TextField>
-          <Button type="submit" variant="contained" color="primary">
-            Submit
-          </Button>
-        </Box>
-      ) : (
-        <Survey model={surveyModel} />
-      )}
+      <Survey model={surveyModel} />
 
       {isCompleted && <Restart redirectToHomePage={redirectToHomePage} />}
     </Box>

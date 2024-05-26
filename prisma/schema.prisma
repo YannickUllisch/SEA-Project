@@ -27,6 +27,7 @@ model dbExperiment {
   id                     String      @id @default(uuid())
   title                  String
   description            String
+  restartCode            String?
   questionnaireID        dbQuestionnaire[]
   users                  dbUser[]
 }

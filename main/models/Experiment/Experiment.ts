@@ -6,14 +6,36 @@ export class Experiment {
   private title: string
   private description: string
   private id: string
+  private restartCode: string
   private questionnaires: Questionnaire[]
 
-  constructor(title: string, description: string, id: string) {
+  constructor(
+    title: string,
+    description: string,
+    id: string,
+    restartCode: string,
+  ) {
     this.id = id
     this.title = title
     this.description = description
+    this.restartCode = restartCode
     this.setQuestionnaires()
   }
+
+  // //RESTARTCODE
+  // public async restartExperiment(restartCode: string): Promise<void> {
+  //   if (this.restartCode !== restartCode) {
+  //     throw new Error('Invalid restart code')
+  //   }
+
+  //   // Logic to reset the experiment state, e.g., clear responses, etc.
+  //   await db.dbQuestionnaire.updateMany({
+  //     where: { experimentId: this.id },
+  //     data: { responses: null }, // example logic to clear responses
+  //   })
+
+  //   // Additional reset logic if needed
+  // }
 
   private async setQuestionnaires() {
     const experimentQuestionnaires = await db.dbQuestionnaire.findMany({
@@ -41,7 +63,12 @@ export class Experiment {
   }
 
   public getExperimentInfo() {
-    return { id: this.id, title: this.title, description: this.description }
+    return {
+      id: this.id,
+      title: this.title,
+      description: this.description,
+      restartCode: this.restartCode,
+    }
   }
 
   public async createQuestionnaire(questionnaireData: JSON, version?: string) {
