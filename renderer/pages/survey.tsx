@@ -124,6 +124,7 @@ const SurveyPage = () => {
     if (surveyModel) {
       surveyModel.addNavigationItem({
         title: 'Exit',
+        action: () => surveyModel.doComplete(),
       })
 
       surveyModel.onComplete.add((sender) => {
@@ -137,7 +138,7 @@ const SurveyPage = () => {
         setIsCompleted(true)
       })
     }
-  }, [surveyModel])
+  }, [surveyModel, currQuestionnaire])
 
   const redirectToHomePage = () => {
     router.push({
