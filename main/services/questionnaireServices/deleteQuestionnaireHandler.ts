@@ -21,7 +21,7 @@ ipcMain.on(
         .getExperimentManager()
         .getExperimentById(arg.experimentID)
 
-      experiment.deleteQuestionnaire(arg.questionnaireID)
+      await experiment.deleteQuestionnaire(arg.questionnaireID)
 
       event.reply('deletedQuestionnaire', 'Questionnaire deleted successfully')
     } catch (error) {

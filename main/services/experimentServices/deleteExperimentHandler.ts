@@ -11,7 +11,10 @@ ipcMain.on('deleteExperiment', async (event, arg: { id: string }) => {
     return
   }
 
-  Session.getSession().getUser().getExperimentManager().deleteExperiment(arg.id)
+  await Session.getSession()
+    .getUser()
+    .getExperimentManager()
+    .deleteExperiment(arg.id)
 
   event.reply('deletedExperiment', 'Experiment Deleted')
   return

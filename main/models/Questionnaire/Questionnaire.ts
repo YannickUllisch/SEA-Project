@@ -15,16 +15,34 @@ export class Questionnaire {
     return { id: this.id, form: this.form, version: this.version }
   }
 
-  public async updateQuestionnaireForm(newJSON: JSON) {
-    this.form = JSON.stringify(newJSON)
-
+  public async setVersion(version: string) {
+    this.version = version
     await db.dbQuestionnaire.update({
       where: {
         id: this.id,
       },
       data: {
-        form: JSON.stringify(newJSON),
+        version,
       },
     })
+  }
+
+  public async updateQuestionnaireForm(newJSON: JSON) {
+    // Updating locally
+    this.form = JSON.stringify(newJSON)
+
+    // Updating in database
+    try {
+      await db.dbQuestionnaire.update({
+        where: {
+          id: this.id,
+        },
+        data: {
+          form: JSON.stringify(newJSON),
+        },
+      })
+    } catch (err) {
+      throw new Error(err)
+    }
   }
 }

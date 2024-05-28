@@ -32,15 +32,19 @@ const AssistantsTab = () => {
   }, [assistants === undefined])
 
   useEffect(() => {
-    window.ipc.on('deletedAssistant', (message: string) => {
-      toast.error(message)
-    })
-  }, [])
-
-  useEffect(() => {
     window.ipc.on('addedAssistant', () => {
       setAssistants(undefined)
     })
+
+    window.ipc.on('deletedAssistant', (message: string) => {
+      toast.error(message)
+    })
+
+    return () => {
+      // Clean up event listeners to prevent multiple toasts
+      window.ipc.removeAllListeners('addedAssistant')
+      window.ipc.removeAllListeners('deletedAssistant')
+    }
   }, [])
 
   const columns: GridColDef<AssistantTableRow>[] = [

@@ -6,12 +6,19 @@ export class Experiment {
   private title: string
   private description: string
   private id: string
+  private restartCode: string
   private questionnaires: Questionnaire[]
 
-  constructor(title: string, description: string, id: string) {
+  constructor(
+    title: string,
+    description: string,
+    id: string,
+    restartCode: string,
+  ) {
     this.id = id
     this.title = title
     this.description = description
+    this.restartCode = restartCode
     this.setQuestionnaires()
   }
 
@@ -41,21 +48,27 @@ export class Experiment {
   }
 
   public getExperimentInfo() {
-    return { id: this.id, title: this.title, description: this.description }
+    return {
+      id: this.id,
+      title: this.title,
+      description: this.description,
+      restartCode: this.restartCode,
+    }
   }
 
-  public async createQuestionnaire(questionnaireData: JSON) {
+  public async createQuestionnaire(questionnaireData: JSON, version?: string) {
     try {
       const newId = v4()
       await db.dbQuestionnaire.create({
         data: {
+          id: newId,
           experimentId: this.id,
-          version: (this.questionnaires.length + 1).toString(),
+          version: version ?? '',
           form: JSON.stringify(questionnaireData),
         },
       })
       this.questionnaires.push(
-        new Questionnaire(newId, JSON.stringify(questionnaireData)),
+        new Questionnaire(newId, JSON.stringify(questionnaireData), version),
       )
     } catch (error) {
       console.error('Failed to create questionnaire:', error)

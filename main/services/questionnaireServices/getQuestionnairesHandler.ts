@@ -20,3 +20,19 @@ ipcMain.on(
     event.reply('getQuestionnaires', objToReturn)
   },
 )
+
+ipcMain.on(
+  'getQuestionnaire',
+  async (event, arg: { experimentID: string; idQuestionnaire: string }) => {
+    const questionnaire = Session.getSession()
+      .getUser()
+      .getExperimentManager()
+      .getExperimentById(arg.experimentID)
+      .getQuestionnaireById(arg.idQuestionnaire)
+
+    const form = questionnaire.getQuestionnaireInfo().form
+
+    // Reply with the matching questionnaire or an empty array if no match found
+    event.reply('getQuestionnaire', form)
+  },
+)

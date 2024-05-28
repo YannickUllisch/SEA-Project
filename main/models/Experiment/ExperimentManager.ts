@@ -21,7 +21,12 @@ export class ExperimentManager {
     const experimentArray = []
     for (const experiment of userExperiments) {
       experimentArray.push(
-        new Experiment(experiment.title, experiment.description, experiment.id),
+        new Experiment(
+          experiment.title,
+          experiment.description,
+          experiment.id,
+          experiment.restartCode,
+        ),
       )
     }
     this.experiments = experimentArray
@@ -42,6 +47,7 @@ export class ExperimentManager {
   public async createExperiment(
     user: dbUser,
     title: string,
+    restartCode: string,
     description: string,
   ) {
     // We need to create our new ID manually to create a corresponding object aswell
@@ -51,11 +57,14 @@ export class ExperimentManager {
         id: newId,
         title,
         description,
+        restartCode,
         users: { connect: user },
       },
     })
 
-    this.experiments.push(new Experiment(title, description, newId))
+    this.experiments.push(
+      new Experiment(title, description, newId, restartCode),
+    )
   }
 
   public async deleteExperiment(experimentId: string) {

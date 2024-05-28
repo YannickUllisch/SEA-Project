@@ -1,38 +1,37 @@
-import type React from "react";
-import { type FC, useState } from "react";
-import Dialog from "@mui/material/Dialog";
+import React, { FC, useState } from 'react'
+import Dialog from '@mui/material/Dialog'
 import {
   DialogTitle,
   DialogContent,
-  DialogContentText,
   DialogActions,
   Button,
   TextField,
-  Box,
-} from "@mui/material";
+} from '@mui/material'
 
 interface CreateExperimentModalProps {
-  open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  open: boolean
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const CreateExperimentModal: FC<CreateExperimentModalProps> = ({
   open,
   setOpen,
 }) => {
-  const [title, setTitle] = useState(""); // State for experiment title
-  const [description, setDescription] = useState(""); // State for experiment description
+  const [title, setTitle] = useState('') // State for experiment title
+  const [description, setDescription] = useState('') // State for experiment description
+  const [restartCode, setRestartCode] = useState('') // State for restart code
 
   const handleClose = () => {
-    setOpen(false);
-    setTitle(""); // Reset title state on close
-    setDescription(""); // Reset description state on close
-  };
+    setOpen(false)
+    setTitle('') // Reset title state on close
+    setDescription('') // Reset description state on close
+    setRestartCode('') // Reset restart code state on close
+  }
 
   const handleCreate = () => {
-    window.ipc.send("createExperiment", { title, description });
-    handleClose(); // Close the dialog after creating the experiment
-  };
+    window.ipc.send('createExperiment', { title, description, restartCode })
+    handleClose() // Close the dialog after creating the experiment
+  }
 
   return (
     <Dialog open={open} onClose={handleClose}>
@@ -42,25 +41,36 @@ const CreateExperimentModal: FC<CreateExperimentModalProps> = ({
           autoFocus
           required
           margin="dense"
-          id="titel"
-          name="titel"
+          id="title"
+          name="title"
           label="Experiment Title"
-          type="titel"
+          type="text"
           fullWidth
           variant="standard"
+          value={title}
           onChange={(e) => setTitle(e.currentTarget.value)} // Update the state on change
         />
         <TextField
-          autoFocus
           margin="dense"
-          id="Description"
-          name="Description"
+          id="description"
+          name="description"
           label="Description"
-          value={description}
-          type="Description"
+          type="text"
           fullWidth
           variant="standard"
+          value={description}
           onChange={(e) => setDescription(e.currentTarget.value)} // Update the state on change
+        />
+        <TextField
+          margin="dense"
+          id="restartCode"
+          name="restartCode"
+          label="Restart Code"
+          type="text"
+          fullWidth
+          variant="standard"
+          value={restartCode}
+          onChange={(e) => setRestartCode(e.currentTarget.value)} // Update the state on change
         />
       </DialogContent>
       <DialogActions>
@@ -70,7 +80,7 @@ const CreateExperimentModal: FC<CreateExperimentModalProps> = ({
         </Button>
       </DialogActions>
     </Dialog>
-  );
-};
+  )
+}
 
-export default CreateExperimentModal;
+export default CreateExperimentModal

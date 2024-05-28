@@ -27,7 +27,7 @@ const settingsPage = () => {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <needed for items to be fetched>
   useEffect(() => {
-    window.ipc.send('getAdmins', router.query.id)
+    window.ipc.send('getAdmins', '')
     window.ipc.on('getAdmins', (admins: dbUser[]) => {
       setAdmins(admins)
     })
@@ -36,13 +36,20 @@ const settingsPage = () => {
   useEffect(() => {
     window.ipc.on('deletedAdmin', (message: string) => {
       toast.error(message)
+      setAdmins(undefined)
     })
   }, [])
 
   useEffect(() => {
     window.ipc.on('addedAdmin', (message: string) => {
       toast.success(message)
+      setAdmins(undefined)
     })
+
+    return () => {
+      window.ipc.removeAllListeners('deletedAdmin')
+      window.ipc.removeAllListeners('addedAdmin')
+    }
   }, [])
 
   const columns: GridColDef<AdminTableRow>[] = [

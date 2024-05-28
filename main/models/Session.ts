@@ -40,6 +40,17 @@ export class Session {
         // And also send authenticated status to the frontend
         return existingUser
       }
+
+      // If a session is active, we overwride it with the new valid logon
+      if (Session.instance) {
+        Session.instance = new Session()
+        Session.instance.user = new User(
+          existingUser.id,
+          existingUser.name,
+          existingUser.role,
+        )
+        return existingUser
+      }
     } else {
       throw new Error('Invalid credentials')
     }
