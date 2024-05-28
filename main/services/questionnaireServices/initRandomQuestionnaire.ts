@@ -8,7 +8,6 @@ ipcMain.on(
   async (event, arg: { experimentID: string }) => {
     // We have to manually query and cant use the object backend logic, since Session will not defined when this is called.
     // This is because we log out the user on questionnaire initialization.
-    console.log('Received experiment ID:', arg.experimentID) // Log the received ID
     const dbquestionnaires = await db.dbQuestionnaire.findMany({
       where: {
         experimentId: arg.experimentID,
@@ -49,7 +48,7 @@ ipcMain.on(
     try {
       const questionnaireManager = new QuestionnaireManager(arg.questionnaireID)
 
-      questionnaireManager.saveQuestionnaire(
+      await questionnaireManager.saveQuestionnaire(
         arg.questionnaireAnswerData,
         arg.age,
         arg.gender,

@@ -26,7 +26,10 @@ ipcMain.on(
         .getExperimentManager()
         .getExperimentById(arg.experimentID)
 
-      Experiment.createQuestionnaire(arg.experimentStructureData, arg.version)
+      await Experiment.createQuestionnaire(
+        arg.experimentStructureData,
+        arg.version,
+      )
 
       event.reply('createdQuestionnaire', 'Questionnaire Added')
     } catch (error) {
@@ -60,7 +63,7 @@ ipcMain.on(
         .getExperimentManager()
         .getExperimentById(arg.experimentID)
 
-      Experiment.getQuestionnaireById(arg.questionnaireID).setVersion(
+      await Experiment.getQuestionnaireById(arg.questionnaireID).setVersion(
         arg.version,
       )
 
@@ -83,7 +86,6 @@ ipcMain.on(
       experimentID: string
       questionnaireID: string
       experimentStructureData: JSON
-      version?: string
     },
   ) => {
     try {
@@ -100,20 +102,12 @@ ipcMain.on(
         .getExperimentManager()
         .getExperimentById(arg.experimentID)
 
-      // Assuming updateQuestionnaire is a method that updates an existing questionnaire
-      // by its ID with the new data and version.
-      const updateResult = Experiment.updateQuestionnaire(
+      // Updating the questionnaire form
+      await Experiment.getQuestionnaireById(
         arg.questionnaireID,
-        arg.experimentStructureData,
-        arg.version,
-      )
+      ).updateQuestionnaireForm(arg.experimentStructureData)
 
-      if (updateResult) {
-        event.reply('editedQuestionnaire', 'Questionnaire Updated Successfully')
-      } else {
-        // Handle the case where update is not successful
-        event.reply('failEditQuestionnaire', 'Failed to update questionnaire')
-      }
+      event.reply('editedQuestionnaire', 'Questionnaire Updated Successfully')
     } catch (error) {
       console.error('Error editing questionnaire:', error)
       event.reply('failEditQuestionnaire', 'Error editing questionnaire')

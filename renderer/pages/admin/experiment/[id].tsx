@@ -20,7 +20,6 @@ const ExperimentPage = () => {
   const handleEditQuestionnaire = (id: string) => {
     setQuestionnaireId(id)
     setTab('creator')
-    console.log('editing questionnaire', id)
   }
 
   const experimentTabs: {

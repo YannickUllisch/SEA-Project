@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { ICreatorOptions } from 'survey-creator-core'
 import { SurveyCreatorComponent, SurveyCreator } from 'survey-creator-react'
 import 'survey-core/defaultV2.css'
@@ -27,11 +27,18 @@ const defaultCreatorOptions: ICreatorOptions = {
 const SurveyCreatorWidget = (props: {
   json: object
   options?: ICreatorOptions
+  isUpdate?: boolean
+  setFinishedEditing?: React.Dispatch<React.SetStateAction<boolean>>
   setSurveyJSON: React.Dispatch<React.SetStateAction<object>>
   setSurveyTitle?: React.Dispatch<React.SetStateAction<string>>
 }) => {
   let [creator, setCreator] = useState<SurveyCreator>()
   const [createDialog, setCreateDialog] = useState(false)
+
+  // Updating creator JSON, when input JSON changes (in cases of edit)
+  useEffect(() => {
+    creator.JSON = props.json
+  }, [props.json, creator])
 
   if (!creator) {
     creator = new SurveyCreator(props.options || defaultCreatorOptions)
@@ -46,9 +53,21 @@ const SurveyCreatorWidget = (props: {
     creator.JSON = props.json
   }
 
+  // On create we both want to save title and json
   const handleCreate = (title: string) => {
+    if (props.setFinishedEditing) {
+      props.setFinishedEditing(true)
+    }
     props.setSurveyJSON(creator.JSON)
     props.setSurveyTitle(title)
+  }
+
+  // On Update this is run, we avoid starting prompt to enter Title.
+  const handleUpdate = () => {
+    if (props.setFinishedEditing) {
+      props.setFinishedEditing(true)
+    }
+    props.setSurveyJSON(creator.JSON)
   }
 
   return (
@@ -61,7 +80,9 @@ const SurveyCreatorWidget = (props: {
           fullWidth
           sx={{ zIndex: 5, height: '50px' }}
           variant="contained"
-          onClick={() => setCreateDialog(true)}
+          onClick={() =>
+            props.isUpdate ? handleUpdate() : setCreateDialog(true)
+          }
         >
           Save
         </Button>
