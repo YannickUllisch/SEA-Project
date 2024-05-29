@@ -8,6 +8,7 @@ export class QuestionnaireManager {
 
   constructor(experimentId: string) {
     this.experimentId = experimentId
+    this.questionnaires = []
     this.setQuestionnaires()
   }
   public async setQuestionnaires() {

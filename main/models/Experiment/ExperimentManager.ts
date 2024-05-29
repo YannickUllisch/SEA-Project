@@ -7,6 +7,7 @@ export class ExperimentManager {
   private experiments: Experiment[]
 
   constructor(userId: string) {
+    this.experiments = []
     this.setExperiments(userId)
   }
 
