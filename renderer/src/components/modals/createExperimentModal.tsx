@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import { type FC, useState } from 'react'
 import Dialog from '@mui/material/Dialog'
 import {
   DialogTitle,

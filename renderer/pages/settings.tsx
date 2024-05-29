@@ -1,5 +1,4 @@
 import { Box, ButtonBase, Divider, Tooltip, Typography } from '@mui/material'
-import type { dbUser } from '@prisma/client'
 import { useSession } from '@renderer/src/components/SessionProvider'
 import AddUserDialog from '@renderer/src/components/modals/addUserDialog'
 import { Role } from '@renderer/src/lib/role'
@@ -12,7 +11,7 @@ import {
   GridActionsCellItem,
   type GridColDef,
 } from '@mui/x-data-grid'
-import router from 'next/router'
+import type { FrontendUser } from '@renderer/src/lib/types'
 
 interface AdminTableRow {
   id: string
@@ -23,14 +22,11 @@ const settingsPage = () => {
   const session = useSession()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
-  const [admins, setAdmins] = useState<dbUser[] | undefined>(undefined)
+  const [admins, setAdmins] = useState<FrontendUser[] | undefined>(undefined)
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <needed for items to be fetched>
   useEffect(() => {
     window.ipc.send('getAdmins', '')
-    window.ipc.on('getAdmins', (admins: dbUser[]) => {
-      setAdmins(admins)
-    })
   }, [admins === undefined])
 
   useEffect(() => {
@@ -38,15 +34,18 @@ const settingsPage = () => {
       toast.error(message)
       setAdmins(undefined)
     })
-  }, [])
 
-  useEffect(() => {
+    window.ipc.on('getAdmins', (admins: FrontendUser[]) => {
+      setAdmins(admins)
+    })
+
     window.ipc.on('addedAdmin', (message: string) => {
       toast.success(message)
       setAdmins(undefined)
     })
-
     return () => {
+      // Clean up event listeners to prevent multiple toasts
+      window.ipc.removeAllListeners('getAdmins')
       window.ipc.removeAllListeners('deletedAdmin')
       window.ipc.removeAllListeners('addedAdmin')
     }
@@ -94,7 +93,7 @@ const settingsPage = () => {
 
     if (admins) {
       for (const admin of admins) {
-        data.push({ id: admin.id, name: admin.name })
+        data.push({ id: admin.id, name: admin.username })
       }
     }
 

@@ -9,7 +9,10 @@ import {
   CardActions,
 } from '@mui/material'
 import { Delete } from '@mui/icons-material'
-import type { FrontendQuestionnaire } from '@renderer/src/lib/types'
+import type {
+  FrontendExperiment,
+  FrontendQuestionnaire,
+} from '@renderer/src/lib/types'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
@@ -62,7 +65,7 @@ const GeneralTab = ({ onEditQuestionnaire }) => {
     const fetchExperiment = () => {
       window.ipc.send('getExperiments', {})
 
-      const handleGetExperiments = (experiments) => {
+      const handleGetExperiments = (experiments: FrontendExperiment[]) => {
         const experiment = experiments.find((exp) => exp.id === router.query.id)
         setExperiment(experiment)
       }

@@ -29,6 +29,11 @@ const SessionProvider: FC<PropsWithChildren> = ({ children }) => {
     window.ipc.on('resetSession', () => {
       setSession(null)
     })
+
+    return () => {
+      window.ipc.removeAllListeners('authenticated')
+      window.ipc.removeAllListeners('resetSession')
+    }
   }, [])
 
   return (
