@@ -21,10 +21,6 @@ export class Experiment {
     this.restartCode = restartCode
   }
 
-  public getQuestionnaireManager() {
-    return this.questionnaireManager
-  }
-
   public getExperimentInfo() {
     return {
       id: this.id,
@@ -60,6 +56,7 @@ export class Experiment {
       return userObj
     } catch (err: any) {
       console.error('Failed to fetch experiment assistants', err)
+      throw err
     }
   }
 
