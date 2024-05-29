@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import ExportButton from '../ExportButton' // Adjust the import path
 import type { ExperimentAnswers } from '@renderer/src/lib/types'
 import { toast } from 'sonner'
+import { Box, Typography } from '@mui/material'
 
 const AnalyticsTab = () => {
   const router = useRouter()
@@ -35,13 +36,26 @@ const AnalyticsTab = () => {
     }
   }, [experimentAnswers, router.query.id])
 
-  useEffect(() => {
-    console.log(experimentAnswers)
-  }, [experimentAnswers])
-
   return (
     <div>
       <h2>Analytics</h2>
+      {experimentAnswers
+        ? experimentAnswers.map((answer) => (
+            <Box
+              sx={{
+                justifyContent: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }}
+            >
+              <Typography>Questionnaire Version: {answer.version}</Typography>{' '}
+              <Typography>
+                Version Answer Amount: {answer.answers.length}
+              </Typography>
+            </Box>
+          ))
+        : null}
       <h3>Download questionnaire answer data below</h3>
       <ExportButton />
     </div>
