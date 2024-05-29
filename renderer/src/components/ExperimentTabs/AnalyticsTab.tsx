@@ -12,7 +12,8 @@ import { Box, Divider, MenuItem, TextField, Typography } from '@mui/material'
 import GeneralAnalytics from '../GeneralAnalytics'
 
 const vizPanelOptions = {
-  allowHideQuestions: false,
+  showClearButton: false,
+  allowHideQuestions: true,
   visualizerTypes: {
     text: ['bar', 'pie', 'line'],
   },
@@ -84,19 +85,32 @@ const AnalyticsTab = () => {
       (answer) => answer.version === newVal,
     )
     if (selectedAnswer) {
-      vizPanelRef.current = null
+      // Reset existing visualization panel
+      if (vizPanel) {
+        if (vizPanelRef.current) {
+          while (vizPanelRef.current.firstChild) {
+            vizPanelRef.current.removeChild(vizPanelRef.current.firstChild)
+          }
+        }
+
+        setVizPanel(null)
+      }
+      if (vizPanelRef.current) {
+        vizPanelRef.current.innerHTML = '' // Clear the container
+      }
+
+      // Create and set new visualization panel
       const surveyModel = new Model(selectedAnswer.form)
-      setSurvey(surveyModel)
       const newVizPanel = new VisualizationPanel(
         surveyModel.getAllQuestions(),
         selectedAnswer.answers.map((answer) => answer.answerJSON),
         vizPanelOptions,
       )
-      newVizPanel.showToolbar = false
+      //newVizPanel.showToolbar = false
+      setSurvey(surveyModel)
       setVizPanel(newVizPanel)
     }
   }
-
   const versionOptions = useMemo(() => {
     if (experimentAnswers) {
       return experimentAnswers.map((answer) => (
