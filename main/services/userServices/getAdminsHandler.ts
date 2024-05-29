@@ -8,6 +8,8 @@ ipcMain.on('getAdmins', async (event, _arg) => {
     return
   }
 
+  // This is just needed to setup basic admins, and not part of the larger functionality needed for this project, hence
+  // we just handle it directly throught the database
   const admins = await db.dbUser.findMany({
     where: {
       role: 1,
@@ -26,3 +28,4 @@ ipcMain.on('getAdmins', async (event, _arg) => {
 
   event.reply('getAdmins', returnObj)
 })
+

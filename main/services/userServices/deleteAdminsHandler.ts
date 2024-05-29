@@ -7,12 +7,9 @@ ipcMain.on('deleteAdmins', async (event, arg: { userID: string }) => {
     event.reply('failDeleteAdmin', 'You do not have permission to delete this')
     return
   }
+
   try {
-    await db.dbUser.delete({
-      where: {
-        id: arg.userID,
-      },
-    })
+    await Session.getSession().getUser().handleDeleteUser(arg.userID)
     event.reply('deletedAdmin', 'Admin Deleted')
   } catch (error) {
     console.error(error)

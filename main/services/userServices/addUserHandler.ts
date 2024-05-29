@@ -14,6 +14,11 @@ ipcMain.on(
       experimentId: string
     },
   ) => {
+    if (arg.roleToAdd !== 1 && arg.roleToAdd !== 10) {
+      event.reply('failAddUser', 'Invalid Role')
+      return
+    }
+
     if (arg.username === '') {
       event.reply('failAddUser', 'Username is required')
       return
@@ -29,16 +34,14 @@ ipcMain.on(
     }
 
     try {
-      await db.dbUser.create({
-        data: {
-          name: arg.username,
-          password: arg.hashedPassword,
-          role: arg.roleToAdd,
-          experiments: arg.experimentId
-            ? { connect: { id: arg.experimentId } }
-            : undefined,
-        },
-      })
+      await Session.getSession()
+        .getUser()
+        .handleAddUser(
+          arg.username,
+          arg.hashedPassword,
+          arg.roleToAdd,
+          arg.experimentId,
+        )
 
       // Determine if an assistant is being added or a regular user
       if (arg.roleToAdd === 10) {
