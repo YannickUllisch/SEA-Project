@@ -233,9 +233,12 @@ const SurveyPage = () => {
             '& > :not(style)': { m: 1, width: '35ch' },
           }}
         >
-          <Typography variant="h4" align="center">
-            Survey
-          </Typography>
+          {!isCompleted && (
+            <Typography variant="h4" align="center">
+              Survey
+            </Typography>
+          )}
+
           <Survey model={surveyModel} />
         </Box>
       )}
