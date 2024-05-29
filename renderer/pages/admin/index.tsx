@@ -31,16 +31,22 @@ const AdminPage = () => {
   >(undefined)
 
   useEffect(() => {
-    window.ipc.send('getExperiments', '')
+    const fetchExperiments = () => {
+      window.ipc.send('getExperiments', '')
+    }
 
     window.ipc.on('getExperiments', (experiments: FrontendExperiment[]) => {
       setExperiments(experiments)
     })
 
+    if (experiments === undefined) {
+      fetchExperiments()
+    }
+
     return () => {
       window.ipc.removeAllListeners('getExperiments')
     }
-  }, [experiments === undefined])
+  }, [experiments])
 
   useEffect(() => {
     window.ipc.on('createdExperiment', (message: string) => {
