@@ -35,7 +35,6 @@ export class Experiment {
   }
 
   public async getExperimentAssistants() {
-    // Finds all users with rank assistant = 10, that is associated with this objects id.
     try {
       const experimentAssistants = await db.dbUser.findMany({
         where: {
@@ -57,6 +56,7 @@ export class Experiment {
       return userObj
     } catch (err: any) {
       console.error('Failed to fetch experiment assistants', err)
+      throw err
     }
   }
 

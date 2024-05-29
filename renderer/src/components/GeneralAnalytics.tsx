@@ -46,6 +46,29 @@ const GeneralAnalytics: FC<GeneralAnalyticsProps> = ({ answers }) => {
     }))
   }, [answers])
 
+  const ageChartData = useMemo(() => {
+    const ageGroups = {
+      '0-18': 0,
+      '18-35': 0,
+      '35-65': 0,
+      '65-99': 0,
+    }
+
+    for (const answer of answers) {
+      answer.answers.map((a) => {
+        if (a.age < 18) ageGroups['0-18'] += 1
+        if (a.age >= 18 && a.age < 35) ageGroups['18-35'] += 1
+        if (a.age >= 35 && a.age < 65) ageGroups['35-65'] += 1
+        if (a.age >= 65) ageGroups['65-99'] += 1
+      })
+    }
+
+    return Object.entries(ageGroups).map(([ageGroup, sum]) => ({
+      label: `Age: ${ageGroup}`,
+      value: sum, // Rename sum to value
+    }))
+  }, [answers])
+
   return (
     <Box sx={{ mt: 2 }}>
       <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
@@ -65,6 +88,17 @@ const GeneralAnalytics: FC<GeneralAnalyticsProps> = ({ answers }) => {
             theme.palette.primary.light,
             theme.palette.primary.main,
             theme.palette.secondary.main,
+          ]} // Using palette for colors
+          width={350}
+          height={350}
+        />
+        <PieChart
+          series={[{ data: ageChartData }]}
+          colors={[
+            theme.palette.primary.light,
+            theme.palette.primary.main,
+            theme.palette.secondary.main,
+            'pink',
           ]} // Using palette for colors
           width={350}
           height={350}

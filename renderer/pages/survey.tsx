@@ -1,5 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Box, Button, MenuItem, TextField } from '@mui/material'
+import {
+  Box,
+  Button,
+  FormControlLabel,
+  MenuItem,
+  TextField,
+  Typography,
+} from '@mui/material'
+import Checkbox from '@mui/material/Checkbox'
 import 'survey-core/defaultV2.min.css'
 import { Model } from 'survey-core'
 import { Survey } from 'survey-react-ui'
@@ -8,6 +16,7 @@ import Restart from '../src/components/restart'
 import type { FrontendQuestionnaire } from '@renderer/src/lib/types'
 import countries from '@renderer/pages/admin/demograhicsData/countries.json'
 import genders from '@renderer/pages/admin/demograhicsData/genders.json'
+import { set } from 'react-hook-form'
 
 const SurveyPage = () => {
   const router = useRouter()
@@ -24,9 +33,12 @@ const SurveyPage = () => {
   const genderRef = useRef(gender)
   const [country, setCountry] = useState<string>('')
   const countryRef = useRef(country)
+  const [gdprConsent, setGdprConsent] = useState<boolean>(false)
+
   const [ageError, setAgeError] = useState('')
   const [genderError, setGenderError] = useState('')
   const [countryError, setCountryError] = useState('')
+  const [gdprError, setGdprError] = useState('')
 
   useEffect(() => {
     genderRef.current = gender
@@ -44,6 +56,7 @@ const SurveyPage = () => {
     setAgeError('')
     setGenderError('')
     setCountryError('')
+    setGdprError('')
 
     // Validate age
     if (!age) {
@@ -60,6 +73,11 @@ const SurveyPage = () => {
     // Validate country
     if (!country) {
       setCountryError('Please select your location.')
+      valid = false
+    }
+
+    if (!gdprConsent) {
+      setGdprError('Please agree to the GDPR consent.')
       valid = false
     }
 
@@ -113,6 +131,7 @@ const SurveyPage = () => {
         setAge('')
         setCountry('')
         setGender('')
+        setGdprConsent(false)
 
         setIsCompleted(true)
       })
@@ -121,7 +140,12 @@ const SurveyPage = () => {
 
   return (
     <Box
-      sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        p: 3,
+      }}
     >
       {demographicsActive ? (
         <Box
@@ -132,19 +156,22 @@ const SurveyPage = () => {
             alignItems: 'center',
             justifyContent: 'center',
             pt: 3,
-            mt: 10,
-            '& > :not(style)': { m: 1, width: '25ch' },
+            mt: 5,
+            '& > :not(style)': { m: 1, width: '35ch' },
           }}
           noValidate
           autoComplete="off"
           onSubmit={handleDemographicsSubmit}
         >
+          <Typography variant="h4" align="center">
+            Demographics
+          </Typography>
           <TextField
             required
             label="Age"
             value={age}
             onChange={(e) => setAge(e.target.value)}
-            helperText="Please select your age"
+            helperText={ageError || 'Please select your age'}
             error={!!ageError}
           />
           <TextField
@@ -177,12 +204,43 @@ const SurveyPage = () => {
               </MenuItem>
             ))}
           </TextField>
+          <FormControlLabel
+            required
+            control={
+              <Checkbox
+                checked={gdprConsent}
+                onChange={(e) => setGdprConsent(e.target.checked)}
+              />
+            }
+            label="I accept the GDPR consent"
+          />
+          {gdprError && <Typography color="error">{gdprError}</Typography>}
+
           <Button type="submit" variant="contained" color="primary">
             Submit
           </Button>
         </Box>
       ) : (
-        <Survey model={surveyModel} />
+        <Box
+          component="form"
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            pt: 3,
+            mt: 5,
+            '& > :not(style)': { m: 1, width: '35ch' },
+          }}
+        >
+          {!isCompleted && (
+            <Typography variant="h4" align="center">
+              Survey
+            </Typography>
+          )}
+
+          <Survey model={surveyModel} />
+        </Box>
       )}
 
       {isCompleted && <Restart />}

@@ -1,5 +1,6 @@
 import { db } from '@main/helpers/db'
 import { Questionnaire } from './Questionnaire'
+import { exportToCSV } from '../DataHandler/DataHandler'
 import { v4 } from 'uuid'
 
 export class QuestionnaireManager {
@@ -11,6 +12,7 @@ export class QuestionnaireManager {
     this.questionnaires = []
     this.setQuestionnaires()
   }
+
   public async setQuestionnaires() {
     const experimentQuestionnaires = await db.dbQuestionnaire.findMany({
       where: {
@@ -118,4 +120,38 @@ export class QuestionnaireManager {
       }
     }
   }
+
+  public static async exportAllAnswers(experimentId: string): Promise<string> {
+    try {
+      const questionnaires = await db.dbQuestionnaire.findMany({
+        where: { experimentId },
+        include: {
+          questionnaireAnswersID: true,
+        },
+      })
+
+      if (questionnaires.length === 0) {
+        throw new Error('No questionnaires found for the given experiment ID')
+      }
+
+      const data = questionnaires.map((q) => ({
+        id: q.id,
+        version: q.version,
+        form: q.form,
+        answers: q.questionnaireAnswersID.map((a) => ({
+          answers: a.answers,
+          age: a.age,
+          gender: a.gender,
+          country: a.country,
+        })),
+      }))
+
+      return exportToCSV(data)
+    } catch (error) {
+      console.error('Failed to export answers:', error)
+      throw error
+    }
+  }
 }
+
+export default QuestionnaireManager

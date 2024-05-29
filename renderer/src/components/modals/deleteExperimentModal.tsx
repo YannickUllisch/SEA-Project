@@ -42,13 +42,13 @@ const DeleteExperimentModal: FC<DeleteExperimentModalProps> = ({
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button variant="text" onClick={handleClose} color="primary">
+        <Button variant="text" onClick={handleClose} sx={{ color: 'black' }}>
           No
         </Button>
         <Button
           variant="contained"
           onClick={handleDelete}
-          color="secondary"
+          color="error"
           autoFocus
         >
           Yes

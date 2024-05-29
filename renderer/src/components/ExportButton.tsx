@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Snackbar, Alert, type AlertColor, Box } from '@mui/material'
+import { useRouter } from 'next/router'
 
 const isElectron =
   typeof window !== 'undefined' &&
@@ -7,16 +8,28 @@ const isElectron =
   window.process.type === 'renderer'
 
 const ExportButton = () => {
-  const [ipcRenderer, setIpcRenderer] = useState<any>(null)
   const [snackbarOpen, setSnackbarOpen] = useState(false)
   const [snackbarMessage, setSnackbarMessage] = useState('')
   const [snackbarSeverity, setSnackbarSeverity] =
     useState<AlertColor>('success')
 
+  const router = useRouter()
+
   useEffect(() => {
-    if (isElectron) {
-      const { ipcRenderer } = window.require('electron')
-      setIpcRenderer(ipcRenderer)
+    const handleGeneratedCSV = (_event, filePath) => {
+      showNotification(`CSV file created at: ${filePath}`)
+    }
+
+    const handleFailGenerateCSV = (_event, errorMessage) => {
+      showNotification(`Failed to create CSV file: ${errorMessage}`, 'error')
+    }
+
+    window.ipc.on('generatedCSV', handleGeneratedCSV)
+    window.ipc.on('failGenerateCSV', handleFailGenerateCSV)
+
+    return () => {
+      window.ipc.removeAllListeners('generatedCSV')
+      window.ipc.removeAllListeners('failGenerateCSV')
     }
   }, [])
 
@@ -35,27 +48,15 @@ const ExportButton = () => {
 
   const downloadCSV = async () => {
     try {
-      if (ipcRenderer) {
-        const filePath = await ipcRenderer.invoke('generate-csv')
-        showNotification(`CSV file created at: ${filePath}`)
-      } else {
-        showNotification('Not running in Electron environment', 'error')
+      const experimentId = router.query.id as string // Assuming 'id' is the correct query parameter
+      if (!experimentId) {
+        showNotification('Experiment ID not found in the URL', 'error')
+        return
       }
-    } catch (error) {
-      showNotification('Failed to create CSV file', 'error')
-    }
-  }
 
-  const downloadXLSX = async () => {
-    try {
-      if (ipcRenderer) {
-        const filePath = await ipcRenderer.invoke('generate-xlsx')
-        showNotification(`XLSX file created at: ${filePath}`)
-      } else {
-        showNotification('Not running in Electron environment', 'error')
-      }
+      window.ipc.send('generate-csv', { experimentId })
     } catch (error) {
-      showNotification('Failed to create XLSX file', 'error')
+      showNotification(`Error during CSV download: ${error.message}`, 'error')
     }
   }
 
@@ -68,9 +69,6 @@ const ExportButton = () => {
         sx={{ marginRight: 2 }}
       >
         Download CSV
-      </Button>
-      <Button variant="contained" color="primary" onClick={downloadXLSX}>
-        Download XLSX
       </Button>
       <Snackbar
         open={snackbarOpen}
