@@ -7,30 +7,42 @@ interface ValidationResponse {
   rCode: boolean
 }
 // State to keep track of the entered code
-const Restart = ({ experimentId, redirectToHomePage }) => {
+const Restart = () => {
+  const router = useRouter()
   const [code, setCode] = useState('')
   const [error, setError] = useState('')
 
   // Function to handle the redirection to the participant's homepage
   const handleRedirect = () => {
-    window.ipc.send('validateRestartCode', { experimentId, restartCode: code })
+    window.ipc.send('validateRestartCode', {
+      experimentId: router.query.executedExperiment as string,
+      restartCode: code,
+    })
 
     window.ipc.on('restartCodeValidated', (response: ValidationResponse) => {
       if (response.valid) {
-        redirectToHomePage()
+        router.push({
+          pathname: '/participant',
+          query: {
+            executedExperiment: router.query.executedExperiment as string,
+          },
+        })
         setCode('')
       } else {
         setError('Invalid restart code. Please try again.')
       }
     })
 
-    window.ipc.on('failValidateRestartCode', (message) => {
+    window.ipc.on('failValidateRestartCode', () => {
       setError('An error occurred. Please try again later.')
     })
+
+    return () => {
+      window.ipc.removeAllListeners('restartCodeValidated')
+      window.ipc.removeAllListeners('failValidateRestartCode')
+    }
   }
 
-  //window.ipc.on('noRestartCode', (response: ValidationResponse) => {
-  //  if (response.rCode === false) {
   return (
     <Box
       sx={{
@@ -47,14 +59,16 @@ const Restart = ({ experimentId, redirectToHomePage }) => {
         error={!!error}
         helperText={error}
       />
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleRedirect}
-        sx={{ marginTop: 1 }}
-      >
-        Go to Home Page
-      </Button>
+      {code !== '' && (
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleRedirect}
+          sx={{ marginTop: 1 }}
+        >
+          Restart Experiment
+        </Button>
+      )}
     </Box>
   )
   //    }

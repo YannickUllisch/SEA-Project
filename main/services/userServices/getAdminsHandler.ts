@@ -13,10 +13,16 @@ ipcMain.on('getAdmins', async (event, _arg) => {
       role: 1,
     },
   })
+  const returnObj = []
+
+  // Need to convert it to fit 'FrontendUser' type
+  for (const admin of admins) {
+    returnObj.push({ id: admin.id, username: admin.name, role: admin.role })
+  }
   if (!admins) {
     event.reply('failedGetAdmins', 'Error Occurred')
     return
   }
 
-  event.reply('getAdmins', admins)
+  event.reply('getAdmins', returnObj)
 })
