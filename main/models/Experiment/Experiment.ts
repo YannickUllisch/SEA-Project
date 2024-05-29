@@ -21,6 +21,10 @@ export class Experiment {
     this.restartCode = restartCode
   }
 
+  public getQuestionnaireManager() {
+    return this.questionnaireManager
+  }
+
   public getExperimentInfo() {
     return {
       id: this.id,
