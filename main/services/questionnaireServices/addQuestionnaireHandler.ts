@@ -26,7 +26,7 @@ ipcMain.on(
         .getExperimentManager()
         .getExperimentById(arg.experimentID)
 
-      await Experiment.createQuestionnaire(
+      await Experiment.getQuestionnaireManager().createQuestionnaire(
         arg.experimentStructureData,
         arg.version,
       )
@@ -63,9 +63,9 @@ ipcMain.on(
         .getExperimentManager()
         .getExperimentById(arg.experimentID)
 
-      await Experiment.getQuestionnaireById(arg.questionnaireID).setVersion(
-        arg.version,
-      )
+      await Experiment.getQuestionnaireManager()
+        .getQuestionnaireById(arg.questionnaireID)
+        .setVersion(arg.version)
 
       event.reply('updatedQuestionnaireTitle', 'Title saved')
     } catch (error) {
@@ -103,9 +103,9 @@ ipcMain.on(
         .getExperimentById(arg.experimentID)
 
       // Updating the questionnaire form
-      await Experiment.getQuestionnaireById(
-        arg.questionnaireID,
-      ).updateQuestionnaireForm(arg.experimentStructureData)
+      await Experiment.getQuestionnaireManager()
+        .getQuestionnaireById(arg.questionnaireID)
+        .updateQuestionnaireForm(arg.experimentStructureData)
 
       event.reply('editedQuestionnaire', 'Questionnaire Updated Successfully')
     } catch (error) {

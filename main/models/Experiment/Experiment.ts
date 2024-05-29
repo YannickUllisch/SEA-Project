@@ -1,13 +1,12 @@
 import { db } from '@main/helpers/db'
-import { Questionnaire } from '../Questionnaire/Questionnaire'
-import { v4 } from 'uuid'
+import { QuestionnaireManager } from '../Questionnaire/QuestionnaireManager'
 
 export class Experiment {
   private title: string
   private description: string
   private id: string
   private restartCode: string
-  private questionnaires: Questionnaire[]
+  private questionnaireManager: QuestionnaireManager
 
   constructor(
     title: string,
@@ -17,34 +16,9 @@ export class Experiment {
   ) {
     this.id = id
     this.title = title
+    this.questionnaireManager = new QuestionnaireManager(id)
     this.description = description
     this.restartCode = restartCode
-    this.setQuestionnaires()
-  }
-
-  private async setQuestionnaires() {
-    const experimentQuestionnaires = await db.dbQuestionnaire.findMany({
-      where: {
-        experimentId: this.id,
-      },
-    })
-
-    // Setting the objects questionnaires equal to the imported db questionnaires
-    const questionnaireArray = []
-    for (const questionnaire of experimentQuestionnaires) {
-      questionnaireArray.push(
-        new Questionnaire(
-          questionnaire.id,
-          questionnaire.form,
-          questionnaire.version,
-        ),
-      )
-    }
-    this.questionnaires = questionnaireArray
-  }
-
-  public getQuestionnaires() {
-    return this.questionnaires
   }
 
   public getExperimentInfo() {
@@ -56,69 +30,8 @@ export class Experiment {
     }
   }
 
-  public async createQuestionnaire(questionnaireData: JSON, version?: string) {
-    try {
-      const newId = v4()
-      await db.dbQuestionnaire.create({
-        data: {
-          id: newId,
-          experimentId: this.id,
-          version: version ?? '',
-          form: JSON.stringify(questionnaireData),
-        },
-      })
-      this.questionnaires.push(
-        new Questionnaire(newId, JSON.stringify(questionnaireData), version),
-      )
-    } catch (error) {
-      console.error('Failed to create questionnaire:', error)
-      // Optionally, you can throw the error to be handled by the caller
-      throw error
-    }
-  }
-
-  public async deleteQuestionnaire(questionnaireId: string) {
-    await db.dbQuestionnaire.delete({
-      where: {
-        id: questionnaireId,
-      },
-    })
-    this.questionnaires = this.questionnaires.filter(
-      (questionnaire) =>
-        questionnaire.getQuestionnaireInfo().id !== questionnaireId,
-    )
-  }
-
-  public getQuestionnaireById(questionnaireId: string) {
-    for (const questionnaire of this.questionnaires) {
-      if (questionnaire.getQuestionnaireInfo().id === questionnaireId) {
-        return questionnaire
-      }
-    }
-  }
-
-  public async copyQuestionnaireById(questionnaireId: string) {
-    for (const questionnaire of this.questionnaires) {
-      if (questionnaire.getQuestionnaireInfo().id === questionnaireId) {
-        const uid = v4()
-        await db.dbQuestionnaire.create({
-          data: {
-            id: uid,
-            form: questionnaire.getQuestionnaireInfo().form,
-            version: `${questionnaire.getQuestionnaireInfo().version} copy`,
-            experimentId: this.id,
-          },
-        })
-
-        this.questionnaires.push(
-          new Questionnaire(
-            uid,
-            questionnaire.getQuestionnaireInfo().form,
-            `${questionnaire.getQuestionnaireInfo().version} copy`,
-          ),
-        )
-      }
-    }
+  public getQuestionnaireManager() {
+    return this.questionnaireManager
   }
 
   public async getExperimentAssistants() {
@@ -135,5 +48,9 @@ export class Experiment {
       console.error('Failed to fetch experiment assistants', err)
       throw err
     }
+  }
+
+  public async getRestartCode() {
+    return this.restartCode
   }
 }

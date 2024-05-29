@@ -102,6 +102,7 @@ const SurveyPage = () => {
 
       surveyModel.onComplete.add((sender) => {
         window.ipc.send('saveQuestionnaire', {
+          experimentID: router.query.executedExperiment as string,
           questionnaireID: currQuestionnaire.id,
           questionnaireAnswerData: sender.data,
           age: Number(ageRef.current),
@@ -116,7 +117,7 @@ const SurveyPage = () => {
         setIsCompleted(true)
       })
     }
-  }, [surveyModel, currQuestionnaire])
+  }, [surveyModel, currQuestionnaire, router.query.executedExperiment])
 
   return (
     <Box

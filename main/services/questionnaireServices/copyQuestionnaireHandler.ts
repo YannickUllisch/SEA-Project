@@ -15,7 +15,9 @@ ipcMain.on(
       .getExperimentManager()
       .getExperimentById(arg.experimentID)
 
-    await experiment.copyQuestionnaireById(arg.questionnaireID)
+    await experiment
+      .getQuestionnaireManager()
+      .copyQuestionnaireById(arg.questionnaireID)
 
     event.reply('copyQuestionnaire', 'Questionnaire copied successfully')
   },

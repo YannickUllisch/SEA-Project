@@ -45,4 +45,27 @@ export class Questionnaire {
       throw new Error(err)
     }
   }
+
+  public async saveQuestionnaireAnswer(
+    questionnaireData: JSON,
+    age: number,
+    gender: string,
+    country: string,
+  ) {
+    try {
+      //const newId = v4()
+      await db.dbQuestionnaireAnswers.create({
+        data: {
+          questionnaireId: this.id,
+          answers: JSON.stringify(questionnaireData),
+          age,
+          gender,
+          country,
+        },
+      })
+    } catch (error) {
+      console.error('Failed to save questionnaire:', error)
+      throw error
+    }
+  }
 }

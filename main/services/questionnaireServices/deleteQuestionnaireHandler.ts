@@ -1,5 +1,4 @@
 import { ipcMain } from 'electron'
-import { db } from '@main/helpers/db'
 import { Session } from '@main/models/Session'
 
 // Handle deleting a questionnaire
@@ -21,7 +20,9 @@ ipcMain.on(
         .getExperimentManager()
         .getExperimentById(arg.experimentID)
 
-      await experiment.deleteQuestionnaire(arg.questionnaireID)
+      await experiment
+        .getQuestionnaireManager()
+        .deleteQuestionnaire(arg.questionnaireID)
 
       event.reply('deletedQuestionnaire', 'Questionnaire deleted successfully')
     } catch (error) {
