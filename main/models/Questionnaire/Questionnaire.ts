@@ -41,6 +41,10 @@ export class Questionnaire {
     }
   }
 
+  public getAnswers() {
+    return this.answers
+  }
+
   public getQuestionnaireInfo() {
     return { id: this.id, form: this.form, version: this.version }
   }

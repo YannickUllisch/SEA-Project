@@ -15,3 +15,15 @@ export interface FrontendUser {
   username: string
   role: number
 }
+
+export interface QuestionnaireAnswer {
+  age: number
+  gender: string
+  country: string
+  answerJSON: JSON
+}
+
+export interface ExperimentAnswers {
+  answers: QuestionnaireAnswer[]
+  version: string
+}

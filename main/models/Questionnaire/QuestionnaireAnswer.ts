@@ -1,8 +1,8 @@
 export class QuestionnaireAnswer {
-  age: number
-  gender: string
-  country: string
-  answerJSON: string
+  private age: number
+  private gender: string
+  private country: string
+  private answerJSON: string
 
   constructor(
     age: number,

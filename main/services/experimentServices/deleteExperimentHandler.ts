@@ -1,5 +1,4 @@
 import { ipcMain } from 'electron'
-import { db } from '@main/helpers/db'
 import { Session } from '@main/models/Session'
 
 ipcMain.on('deleteExperiment', async (event, arg: { id: string }) => {

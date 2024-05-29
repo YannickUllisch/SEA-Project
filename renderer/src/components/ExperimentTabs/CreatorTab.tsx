@@ -25,11 +25,6 @@ const CreatorTab = ({ questionnaireId }) => {
 
   useEffect(() => {
     if (questionnaireId) {
-      // Simulate fetching data from the database
-      console.log('Fetching data for ID:', questionnaireId)
-      // Fetch the data for the given ID
-      //fetchQuestionnaireData(questionnaireId);
-
       window.ipc.send('getQuestionnaire', {
         experimentID: currExperimentId,
         idQuestionnaire: questionnaireId,

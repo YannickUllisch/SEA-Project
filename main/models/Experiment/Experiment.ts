@@ -43,14 +43,24 @@ export class Experiment {
           role: 10,
         },
       })
-      return experimentAssistants
+
+      const userObj: { id: string; username: string; role: number }[] = []
+
+      // Need to convert it to fit 'FrontendUser' type
+      for (const assistant of experimentAssistants) {
+        userObj.push({
+          id: assistant.id,
+          username: assistant.name,
+          role: assistant.role,
+        })
+      }
+      return userObj
     } catch (err: any) {
       console.error('Failed to fetch experiment assistants', err)
-      throw err
     }
   }
 
-  public async getRestartCode() {
+  public getRestartCode() {
     return this.restartCode
   }
 }
