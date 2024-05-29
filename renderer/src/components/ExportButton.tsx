@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Snackbar, Alert, type AlertColor } from '@mui/material'
+import { Button, Snackbar, Alert, type AlertColor, Box } from '@mui/material'
 import { useRouter } from 'next/router'
+
+const isElectron =
+  typeof window !== 'undefined' &&
+  typeof window.process !== 'undefined' &&
+  window.process.type === 'renderer'
 
 const ExportButton = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false)
@@ -56,7 +61,7 @@ const ExportButton = () => {
   }
 
   return (
-    <>
+    <Box sx={{ margin: 2, justifyContent: 'center', display: 'flex' }}>
       <Button
         variant="contained"
         color="primary"
@@ -74,7 +79,7 @@ const ExportButton = () => {
           {snackbarMessage}
         </Alert>
       </Snackbar>
-    </>
+    </Box>
   )
 }
 

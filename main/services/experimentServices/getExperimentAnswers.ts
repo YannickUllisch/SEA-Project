@@ -11,6 +11,7 @@ interface QuestionnaireAnswer {
 interface ExperimentAnswers {
   answers: QuestionnaireAnswer[]
   version: string
+  form: string
 }
 
 ipcMain.on(
@@ -50,6 +51,7 @@ ipcMain.on(
       returnAnswers.push({
         answers: answerArray,
         version: questionnaire.getQuestionnaireInfo().version,
+        form: questionnaire.getQuestionnaireInfo().form,
       })
     }
 
