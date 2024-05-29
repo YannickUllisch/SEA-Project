@@ -26,4 +26,5 @@ export interface QuestionnaireAnswer {
 export interface ExperimentAnswers {
   answers: QuestionnaireAnswer[]
   version: string
+  form: string
 }
