@@ -1,34 +1,25 @@
 import { useRouter } from 'next/router'
 import type React from 'react'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import ExportButton from '../ExportButton' // Adjust the import path
 import type { ExperimentAnswers } from '@renderer/src/lib/types'
 import { toast } from 'sonner'
-import { BarChart } from '@mui/x-charts'
 import 'survey-analytics/survey.analytics.min.css'
-import { Model } from 'survey-core'
-import { VisualizationPanel } from 'survey-analytics'
-import { Box, Divider, MenuItem, TextField, Typography } from '@mui/material'
+import { Box, Divider, Typography } from '@mui/material'
 import GeneralAnalytics from '../GeneralAnalytics'
+import dynamic from 'next/dynamic'
 
-const vizPanelOptions = {
-  showClearButton: false,
-  allowHideQuestions: true,
-  visualizerTypes: {
-    text: ['bar', 'pie', 'line'],
-  },
-}
+// Dynamically import the wrapper component
+const SurveyDashboard = dynamic(
+  () => import('@renderer/src/components/survey/SurveyDashboard'),
+  { ssr: false },
+)
 
 const AnalyticsTab = () => {
   const router = useRouter()
   const [experimentAnswers, setExperimentAnswers] = useState<
     ExperimentAnswers[] | undefined
   >(undefined)
-
-  const [selectedVersion, setSelectedVersion] = useState<string>(null)
-  const [survey, setSurvey] = useState<Model>(null)
-  const [vizPanel, setVizPanel] = useState(null)
-  const vizPanelRef = useRef(null)
 
   useEffect(() => {
     const fetchAnswers = () => {
@@ -39,9 +30,6 @@ const AnalyticsTab = () => {
 
     window.ipc.on('getExperimentAnswers', (answers: ExperimentAnswers[]) => {
       setExperimentAnswers(answers)
-      if (answers.length > 0) {
-        setSurvey(new Model(answers[0].form))
-      }
     })
 
     window.ipc.on('failGetExperimentAnswers', (message: string) => {
@@ -58,69 +46,6 @@ const AnalyticsTab = () => {
     }
   }, [experimentAnswers, router.query.id])
 
-  useEffect(() => {
-    if (experimentAnswers) {
-      if (!vizPanel && !!survey) {
-        const vizPanel = new VisualizationPanel(
-          survey.getAllQuestions(),
-          experimentAnswers[0].answers.map((answer) => answer.answerJSON),
-          vizPanelOptions,
-        )
-
-        setVizPanel(vizPanel)
-        setSelectedVersion(experimentAnswers[0].version)
-      }
-    }
-  }, [experimentAnswers, survey, vizPanel])
-
-  useEffect(() => {
-    if (vizPanel && vizPanelRef.current) {
-      vizPanel.render(vizPanelRef.current) // Render the vizPanel in the container
-    }
-  }, [vizPanel])
-
-  const handleVersionChange = (newVal: string) => {
-    setSelectedVersion(newVal)
-    const selectedAnswer = experimentAnswers.find(
-      (answer) => answer.version === newVal,
-    )
-    if (selectedAnswer) {
-      // Reset existing visualization panel
-      if (vizPanel) {
-        if (vizPanelRef.current) {
-          while (vizPanelRef.current.firstChild) {
-            vizPanelRef.current.removeChild(vizPanelRef.current.firstChild)
-          }
-        }
-
-        setVizPanel(null)
-      }
-      if (vizPanelRef.current) {
-        vizPanelRef.current.innerHTML = '' // Clear the container
-      }
-
-      // Create and set new visualization panel
-      const surveyModel = new Model(selectedAnswer.form)
-      const newVizPanel = new VisualizationPanel(
-        surveyModel.getAllQuestions(),
-        selectedAnswer.answers.map((answer) => answer.answerJSON),
-        vizPanelOptions,
-      )
-      //newVizPanel.showToolbar = false
-      setSurvey(surveyModel)
-      setVizPanel(newVizPanel)
-    }
-  }
-  const versionOptions = useMemo(() => {
-    if (experimentAnswers) {
-      return experimentAnswers.map((answer) => (
-        <MenuItem key={answer.version} value={answer.version}>
-          {answer.version}
-        </MenuItem>
-      ))
-    }
-  }, [experimentAnswers])
-
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ marginTop: 1, marginBottom: 4 }}>
@@ -136,23 +61,8 @@ const AnalyticsTab = () => {
       {experimentAnswers && <GeneralAnalytics answers={experimentAnswers} />}
 
       <Divider />
-      <Box sx={{ mt: 2 }}>
-        <Typography sx={{ fontWeight: 'bold', mb: 2 }} variant="h5">
-          Questionnaire Version Analytics
-        </Typography>
-        {selectedVersion && (
-          <TextField
-            select
-            fullWidth
-            label="Version"
-            value={selectedVersion}
-            onChange={(e) => handleVersionChange(e.target.value)}
-          >
-            {versionOptions}
-          </TextField>
-        )}
-      </Box>
-      <Box ref={vizPanelRef} />
+
+      {experimentAnswers && <SurveyDashboard answers={experimentAnswers} />}
     </Box>
   )
 }
