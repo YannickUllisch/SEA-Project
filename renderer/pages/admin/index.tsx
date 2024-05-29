@@ -9,17 +9,15 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material'
-import type { dbExperiment } from '@prisma/client'
 import { useSession } from '@renderer/src/components/SessionProvider'
 import CreateExperimentModal from '@renderer/src/components/modals/createExperimentModal'
 import { Role } from '@renderer/src/lib/role'
 import theme from '@renderer/src/lib/theme'
-import { Play, SquarePlus, UserRoundPlus, CirclePlus } from 'lucide-react'
+import { CirclePlus, UserRoundPlus } from 'lucide-react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import AddUserDialog from '@renderer/src/components/modals/addUserDialog'
-import type { dbUser } from '@prisma/client'
 import type { FrontendExperiment } from '@renderer/src/lib/types'
 
 const AdminPage = () => {
@@ -27,21 +25,28 @@ const AdminPage = () => {
   const session = useSession()
 
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-
   const [isAssistantDialogOpen, setIsAssistantDialogOpen] = useState(false)
-
   const [experiments, setExperiments] = useState<
     FrontendExperiment[] | undefined
   >(undefined)
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <Needed to fetch from backend>
   useEffect(() => {
-    window.ipc.send('getExperiments', '')
+    const fetchExperiments = () => {
+      window.ipc.send('getExperiments', '')
+    }
 
     window.ipc.on('getExperiments', (experiments: FrontendExperiment[]) => {
       setExperiments(experiments)
     })
-  }, [experiments === undefined])
+
+    if (experiments === undefined) {
+      fetchExperiments()
+    }
+
+    return () => {
+      window.ipc.removeAllListeners('getExperiments')
+    }
+  }, [experiments])
 
   useEffect(() => {
     window.ipc.on('createdExperiment', (message: string) => {
@@ -56,9 +61,17 @@ const AdminPage = () => {
     window.ipc.on('addedAssistant', (message: string) => {
       toast.success(message)
     })
+
     window.ipc.on('failAddUser', (message: string) => {
       toast.error(message)
     })
+
+    return () => {
+      window.ipc.removeAllListeners('createdExperiment')
+      window.ipc.removeAllListeners('failCreateExperiment')
+      window.ipc.removeAllListeners('addedAssistant')
+      window.ipc.removeAllListeners('failAddUser')
+    }
   }, [])
 
   return (
@@ -75,8 +88,8 @@ const AdminPage = () => {
         sx={{
           backgroundColor: 'white',
           padding: 5,
-          minWidth: '95%',
-          minHeight: '500px',
+          minWidth: '100%',
+          minHeight: 'screen',
           borderRadius: 4,
         }}
       >
@@ -159,22 +172,6 @@ const AdminPage = () => {
                                 </>
                               )
                             : null}
-
-                          <Tooltip title={'Start Experiment'}>
-                            <Play
-                              onClick={() =>
-                                router.push({
-                                  pathname: '/participant',
-                                  query: { executedExperiment: experiment.id },
-                                })
-                              }
-                              style={{
-                                color: 'green',
-                                cursor: 'pointer',
-                                strokeWidth: '1.5px',
-                              }}
-                            />
-                          </Tooltip>
                         </Box>
                       </CardContent>
                     </Card>
@@ -193,10 +190,9 @@ const AdminPage = () => {
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        transition: 'transform 0.2s', // Adding transition for smooth effect
+                        transition: 'transform 0.2s',
                         '&:hover': {
-                          // Defining styles for hover state
-                          transform: 'scale(1.1)', // Increase size on hover
+                          transform: 'scale(1.1)',
                         },
                       }}
                     >

@@ -36,24 +36,22 @@ export class User {
   }
 
   public async handleAddUser(
-    _name: string,
-    _hashedPassword: string,
+    name: string,
+    hashedPassword: string,
     role: number,
     experimentId?: string,
   ) {
-    // Admin case
-    if (role === 1 && this.role < 1) {
-      // create new admin
-      return true
-    }
-
-    // Assistant case, we need experimentId to link added assistant to specific experiment
-    if (role === 10 && this.role < role && experimentId) {
-      // add new assistant
-      return true
-    }
-
-    return false
+    // Role checks are handled in eventHandler
+    await db.dbUser.create({
+      data: {
+        name,
+        password: hashedPassword,
+        role,
+        experiments: experimentId
+          ? { connect: { id: experimentId } }
+          : undefined,
+      },
+    })
   }
   public async handleDeleteUser(id: string) {
     // We first fetch the user we try to delete for permission checks

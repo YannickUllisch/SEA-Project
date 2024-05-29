@@ -11,11 +11,7 @@ ipcMain.on('deleteAssistant', async (event, arg: { userID: string }) => {
     return
   }
   try {
-    await db.dbUser.delete({
-      where: {
-        id: arg.userID,
-      },
-    })
+    await Session.getSession().getUser().handleDeleteUser(arg.userID)
     event.reply('deletedAssistant', 'Assistant Deleted')
   } catch (error) {
     console.error(error)

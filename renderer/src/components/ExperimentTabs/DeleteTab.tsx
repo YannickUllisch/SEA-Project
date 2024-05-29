@@ -17,6 +17,12 @@ const DeleteTab = () => {
       toast.success(message)
       router.push('/admin')
     })
+
+    return () => {
+      // Clean up event listeners to prevent multiple toasts
+      window.ipc.removeAllListeners('deletedExperiment')
+      window.ipc.removeAllListeners('failDeleteExperiment')
+    }
   }, [router])
 
   return (

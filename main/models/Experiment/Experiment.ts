@@ -1,111 +1,37 @@
 import { db } from '@main/helpers/db'
-import { Questionnaire } from '../Questionnaire/Questionnaire'
-import { v4 } from 'uuid'
+import { QuestionnaireManager } from '../Questionnaire/QuestionnaireManager'
 
 export class Experiment {
   private title: string
   private description: string
   private id: string
-  private questionnaires: Questionnaire[]
+  private restartCode: string
+  private questionnaireManager: QuestionnaireManager
 
-  constructor(title: string, description: string, id: string) {
+  constructor(
+    title: string,
+    description: string,
+    id: string,
+    restartCode: string,
+  ) {
     this.id = id
     this.title = title
+    this.questionnaireManager = new QuestionnaireManager(id)
     this.description = description
-    this.setQuestionnaires()
-  }
-
-  private async setQuestionnaires() {
-    const experimentQuestionnaires = await db.dbQuestionnaire.findMany({
-      where: {
-        experimentId: this.id,
-      },
-    })
-
-    // Setting the objects questionnaires equal to the imported db questionnaires
-    const questionnaireArray = []
-    for (const questionnaire of experimentQuestionnaires) {
-      questionnaireArray.push(
-        new Questionnaire(
-          questionnaire.id,
-          questionnaire.form,
-          questionnaire.version,
-        ),
-      )
-    }
-    this.questionnaires = questionnaireArray
-  }
-
-  public getQuestionnaires() {
-    return this.questionnaires
+    this.restartCode = restartCode
   }
 
   public getExperimentInfo() {
-    return { id: this.id, title: this.title, description: this.description }
-  }
-
-  public async createQuestionnaire(questionnaireData: JSON) {
-    try {
-      const newId = v4()
-      await db.dbQuestionnaire.create({
-        data: {
-          experimentId: this.id,
-          version: (this.questionnaires.length + 1).toString(),
-          form: JSON.stringify(questionnaireData),
-        },
-      })
-      this.questionnaires.push(
-        new Questionnaire(newId, JSON.stringify(questionnaireData)),
-      )
-    } catch (error) {
-      console.error('Failed to create questionnaire:', error)
-      // Optionally, you can throw the error to be handled by the caller
-      throw error
+    return {
+      id: this.id,
+      title: this.title,
+      description: this.description,
+      restartCode: this.restartCode,
     }
   }
 
-  public async deleteQuestionnaire(questionnaireId: string) {
-    await db.dbQuestionnaire.delete({
-      where: {
-        id: questionnaireId,
-      },
-    })
-    this.questionnaires = this.questionnaires.filter(
-      (questionnaire) =>
-        questionnaire.getQuestionnaireInfo().id !== questionnaireId,
-    )
-  }
-
-  public getQuestionnaireById(questionnaireId: string) {
-    for (const questionnaire of this.questionnaires) {
-      if (questionnaire.getQuestionnaireInfo().id === questionnaireId) {
-        return questionnaire
-      }
-    }
-  }
-
-  public async copyQuestionnaireById(questionnaireId: string) {
-    for (const questionnaire of this.questionnaires) {
-      if (questionnaire.getQuestionnaireInfo().id === questionnaireId) {
-        const uid = v4()
-        await db.dbQuestionnaire.create({
-          data: {
-            id: uid,
-            form: questionnaire.getQuestionnaireInfo().form,
-            version: `${questionnaire.getQuestionnaireInfo().version} copy`,
-            experimentId: this.id,
-          },
-        })
-
-        this.questionnaires.push(
-          new Questionnaire(
-            uid,
-            questionnaire.getQuestionnaireInfo().form,
-            `${questionnaire.getQuestionnaireInfo().version} copy`,
-          ),
-        )
-      }
-    }
+  public getQuestionnaireManager() {
+    return this.questionnaireManager
   }
 
   public async getExperimentAssistants() {
@@ -117,10 +43,24 @@ export class Experiment {
           role: 10,
         },
       })
-      return experimentAssistants
+
+      const userObj: { id: string; username: string; role: number }[] = []
+
+      // Need to convert it to fit 'FrontendUser' type
+      for (const assistant of experimentAssistants) {
+        userObj.push({
+          id: assistant.id,
+          username: assistant.name,
+          role: assistant.role,
+        })
+      }
+      return userObj
     } catch (err: any) {
       console.error('Failed to fetch experiment assistants', err)
-      throw err
     }
+  }
+
+  public getRestartCode() {
+    return this.restartCode
   }
 }

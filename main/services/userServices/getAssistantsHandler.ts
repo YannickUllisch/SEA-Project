@@ -1,4 +1,3 @@
-import { db } from '@main/helpers/db'
 import { Session } from '@main/models/Session'
 import { ipcMain } from 'electron'
 

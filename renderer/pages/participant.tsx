@@ -13,10 +13,7 @@ const ParticipantHomePage = () => {
     if (session) {
       logout()
     }
-
-    // Testing if the correct ID is sent here based on launch button
-    console.log(router.query.executedExperiment as string)
-  }, [session, router])
+  }, [session])
 
   return (
     <Box
@@ -50,7 +47,7 @@ const ParticipantHomePage = () => {
           variant="contained"
           sx={{
             backgroundImage: `linear-gradient(to right, ${theme.palette.primary.dark}, ${theme.palette.secondary.light})`,
-            color: 'white', // Text color
+            color: 'white',
             '&:hover': {
               backgroundImage: `linear-gradient(to right, ${theme.palette.primary.dark}, ${theme.palette.secondary.main})`,
             },

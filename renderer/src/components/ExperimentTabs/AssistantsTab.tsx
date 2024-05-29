@@ -8,9 +8,9 @@ import {
   GridActionsCellItem,
   type GridColDef,
 } from '@mui/x-data-grid'
-import type { dbUser } from '@prisma/client'
 import { useRouter } from 'next/router'
 import { toast } from 'sonner'
+import type { FrontendUser } from '@renderer/src/lib/types'
 
 interface AssistantTableRow {
   id: string
@@ -21,26 +21,32 @@ const AssistantsTab = () => {
   const router = useRouter()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
-  const [assistants, setAssistants] = useState<dbUser[] | undefined>(undefined)
+  const [assistants, setAssistants] = useState<FrontendUser[] | undefined>(
+    undefined,
+  )
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <needed for items to be fetched>
   useEffect(() => {
     window.ipc.send('getAssistants', { experimentID: router.query.id })
-    window.ipc.on('getAssistants', (assistants: dbUser[]) => {
+    window.ipc.on('getAssistants', (assistants: FrontendUser[]) => {
       setAssistants(assistants)
     })
   }, [assistants === undefined])
 
   useEffect(() => {
-    window.ipc.on('deletedAssistant', (message: string) => {
-      toast.error(message)
-    })
-  }, [])
-
-  useEffect(() => {
     window.ipc.on('addedAssistant', () => {
       setAssistants(undefined)
     })
+
+    window.ipc.on('deletedAssistant', (message: string) => {
+      toast.success(message)
+    })
+
+    return () => {
+      // Clean up event listeners to prevent multiple toasts
+      window.ipc.removeAllListeners('addedAssistant')
+      window.ipc.removeAllListeners('deletedAssistant')
+    }
   }, [])
 
   const columns: GridColDef<AssistantTableRow>[] = [
@@ -85,7 +91,7 @@ const AssistantsTab = () => {
 
     if (assistants) {
       for (const assistant of assistants) {
-        data.push({ id: assistant.id, name: assistant.name })
+        data.push({ id: assistant.id, name: assistant.username })
       }
     }
 

@@ -1,136 +1,191 @@
-// import React from "react";
-// import Head from "next/head";
-// import { Box, Button } from "@mui/material";
-// import "survey-core/defaultV2.min.css";
-// import { Model } from "survey-core";
-// import { Survey } from "survey-react-ui";
-
-// const NextPage = () => {
-//   const surveyJson = {
-//     title: "Yehaw Trest",
-//     description: "Yehaw telelelele",
-//     logoPosition: "right",
-//     pages: [
-//       {
-//         name: "page1",
-//         elements: [
-//           {
-//             type: "rating",
-//             name: "question1",
-//             title: "yo",
-//           },
-//           {
-//             type: "text",
-//             name: "question2",
-//             title: "yo2",
-//           },
-//         ],
-//       },
-//     ],
-//   };
-
-//   const survey = new Model(surveyJson);
-//   survey.addNavigationItem({
-//     title: "Exit",
-//   });
-
-//   return (
-//     <Box
-//       sx={{ display: "flex", justifyContent: "center", alignContent: "center" }}
-//     >
-//       <Survey model={survey} />
-//     </Box>
-//   );
-// };
-
-// export default NextPage;
-
-import React, { useState, useEffect } from 'react'
-import { Box } from '@mui/material'
+import React, { useState, useEffect, useRef } from 'react'
+import { Box, Button, MenuItem, TextField } from '@mui/material'
 import 'survey-core/defaultV2.min.css'
 import { Model } from 'survey-core'
 import { Survey } from 'survey-react-ui'
 import { useRouter } from 'next/router'
 import Restart from '../src/components/restart'
 import type { FrontendQuestionnaire } from '@renderer/src/lib/types'
-import type { dbQuestionnaire } from '@prisma/client'
+import countries from '@renderer/pages/admin/demograhicsData/countries.json'
+import genders from '@renderer/pages/admin/demograhicsData/genders.json'
 
 const SurveyPage = () => {
   const router = useRouter()
   const [currQuestionnaire, setCurrQuestionnaire] = useState<
     FrontendQuestionnaire | undefined
   >(undefined)
+  const [surveyModel, setSurveyModel] = useState<Model>(new Model())
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <Needed to fetch from backend>
+  // Handling demographics data
+  const [demographicsActive, setDemographicsActive] = useState(true)
+  const [age, setAge] = useState<string>('')
+  const ageRef = useRef(age)
+  const [gender, setGender] = useState<string>('')
+  const genderRef = useRef(gender)
+  const [country, setCountry] = useState<string>('')
+  const countryRef = useRef(country)
+  const [ageError, setAgeError] = useState('')
+  const [genderError, setGenderError] = useState('')
+  const [countryError, setCountryError] = useState('')
+
   useEffect(() => {
-    // This will return us a random questionnaire based on the experiment found using the executedExperiment ID given as a query parameter.
-    window.ipc.send(
-      'initRandomQuestionnaire',
-      router.query.executedExperiment as string,
-    )
+    genderRef.current = gender
+    ageRef.current = age
+    countryRef.current = country
+  }, [gender, country, age])
+  // Used to check if questionnaire is completed
+  const [isCompleted, setIsCompleted] = useState(false)
+
+  const handleDemographicsSubmit = (e) => {
+    e.preventDefault()
+    let valid = true
+
+    // Reset errors
+    setAgeError('')
+    setGenderError('')
+    setCountryError('')
+
+    // Validate age
+    if (!age) {
+      setAgeError('Please enter a valid age.')
+      valid = false
+    }
+
+    // Validate gender
+    if (!gender) {
+      setGenderError('Please select your gender.')
+      valid = false
+    }
+
+    // Validate country
+    if (!country) {
+      setCountryError('Please select your location.')
+      valid = false
+    }
+
+    if (valid) {
+      setDemographicsActive(false)
+    }
+  }
+
+  useEffect(() => {
+    const fetchRandomQuestionnaire = () => {
+      // This will return us a random questionnaire based on the experiment found using the executedExperiment ID given as a query parameter.
+      window.ipc.send('initRandomQuestionnaire', {
+        experimentID: router.query.executedExperiment as string,
+      })
+    }
 
     // The response we get is a randomized questionnaire from the executed experiment.
-    // TODO: Somehow find a way to parse the JSON and input it correctly into the model and then rendering the model
     window.ipc.on(
       'initRandomQuestionnaire',
       (questionnaire: FrontendQuestionnaire) => {
         setCurrQuestionnaire(questionnaire)
+        const surveyModel = new Model(JSON.parse(questionnaire.form))
+        surveyModel.showTitle = false
+        setSurveyModel(surveyModel)
       },
     )
-  }, [currQuestionnaire === undefined])
 
-  const surveyJson = {
-    title: 'Yehaw Trest',
-    description: 'Yehaw telelelele',
-    logoPosition: 'right',
-    pages: [
-      {
-        name: 'page1',
-        elements: [
-          {
-            type: 'rating',
-            name: 'question1',
-            title: 'yo',
-          },
-          {
-            type: 'text',
-            name: 'question2',
-            title: 'yo2',
-          },
-        ],
-      },
-    ],
-  }
-
-  const [surveyModel, _setSurveyModel] = useState<Model>(new Model(surveyJson))
-
-  //used to check if questionnaire is completed
-  const [isCompleted, setIsCompleted] = useState(false)
+    if (currQuestionnaire === undefined) {
+      fetchRandomQuestionnaire()
+    }
+  }, [currQuestionnaire, router.query])
 
   // Use useEffect to add a navigation item once the survey model is set up
   useEffect(() => {
     if (surveyModel) {
       surveyModel.addNavigationItem({
         title: 'Exit',
+        action: () => surveyModel.doComplete(),
       })
 
-      surveyModel.onComplete.add(() => {
+      surveyModel.onComplete.add((sender) => {
+        window.ipc.send('saveQuestionnaire', {
+          experimentID: router.query.executedExperiment as string,
+          questionnaireID: currQuestionnaire.id,
+          questionnaireAnswerData: sender.data,
+          age: Number(ageRef.current),
+          gender: genderRef.current,
+          country: countryRef.current,
+        })
+        // Resetting Demographic states
+        setAge('')
+        setCountry('')
+        setGender('')
+
         setIsCompleted(true)
       })
     }
-  }, [surveyModel])
-
-  const redirectToHomePage = () => {
-    router.push('/participant')
-  }
+  }, [surveyModel, currQuestionnaire, router.query.executedExperiment])
 
   return (
     <Box
       sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
     >
-      {surveyJson ? <Survey model={surveyModel} /> : null}
+      {demographicsActive ? (
+        <Box
+          component="form"
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            pt: 3,
+            mt: 10,
+            '& > :not(style)': { m: 1, width: '25ch' },
+          }}
+          noValidate
+          autoComplete="off"
+          onSubmit={handleDemographicsSubmit}
+        >
+          <TextField
+            required
+            label="Age"
+            value={age}
+            onChange={(e) => setAge(e.target.value)}
+            helperText="Please select your age"
+            error={!!ageError}
+          />
+          <TextField
+            required
+            select
+            label="Gender"
+            value={gender}
+            onChange={(e) => setGender(e.target.value)}
+            helperText="Please select your gender"
+            error={!!genderError}
+          >
+            {genders.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            required
+            select
+            label="Country"
+            value={country}
+            onChange={(e) => setCountry(e.target.value)}
+            helperText="Please select your location"
+            error={!!countryError}
+          >
+            {countries.map((option) => (
+              <MenuItem key={option.name} value={option.name}>
+                {option.name}
+              </MenuItem>
+            ))}
+          </TextField>
+          <Button type="submit" variant="contained" color="primary">
+            Submit
+          </Button>
+        </Box>
+      ) : (
+        <Survey model={surveyModel} />
+      )}
 
-      {isCompleted && <Restart redirectToHomePage={redirectToHomePage} />}
+      {isCompleted && <Restart />}
     </Box>
   )
 }

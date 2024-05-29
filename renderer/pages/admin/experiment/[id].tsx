@@ -10,45 +10,56 @@ import { Role } from '@renderer/src/lib/role'
 import type React from 'react'
 import { useState } from 'react'
 
-const experimentTabs: {
-  roles: Role[]
-  id: string
-  component: JSX.Element
-}[] = [
-  {
-    roles: [Role.ADMIN, Role.ASSISTANT, Role.OWNER],
-    id: 'general',
-    component: <GeneralTab />,
-  },
-  {
-    roles: [Role.ADMIN, Role.ASSISTANT, Role.OWNER],
-    id: 'analytics',
-    component: <AnalyticsTab />,
-  },
-  {
-    roles: [Role.ADMIN, Role.OWNER],
-    id: 'assistants',
-    component: <AssistantsTab />,
-  },
-  {
-    roles: [Role.ADMIN, Role.OWNER],
-    id: 'delete',
-    component: <DeleteTab />,
-  },
-  {
-    roles: [Role.ADMIN, Role.OWNER],
-    id: 'creator',
-    component: <CreatorTab />,
-  },
-]
-
 const ExperimentPage = () => {
+  const [questionnaireId, setQuestionnaireId] = useState<string | null>(null)
+
   const session = useSession()
 
   const [tab, setTab] = useState<string>('general')
 
+  const handleEditQuestionnaire = (id: string) => {
+    setQuestionnaireId(id)
+    setTab('creator')
+  }
+
+  const experimentTabs: {
+    roles: Role[]
+    id: string
+    component: JSX.Element
+  }[] = [
+    {
+      roles: [Role.ADMIN, Role.ASSISTANT, Role.OWNER],
+      id: 'general',
+      component: <GeneralTab onEditQuestionnaire={handleEditQuestionnaire} />,
+    },
+    {
+      roles: [Role.ADMIN, Role.ASSISTANT, Role.OWNER],
+      id: 'analytics',
+      component: <AnalyticsTab />,
+    },
+    {
+      roles: [Role.ADMIN, Role.OWNER],
+      id: 'assistants',
+      component: <AssistantsTab />,
+    },
+    {
+      roles: [Role.ADMIN, Role.OWNER],
+      id: 'delete',
+      component: <DeleteTab />,
+    },
+    {
+      roles: [Role.ADMIN, Role.OWNER],
+      id: 'creator',
+      component: <CreatorTab questionnaireId={questionnaireId} />,
+    },
+  ]
+
   const handleTabChange = (_event: React.SyntheticEvent, newValue: string) => {
     setTab(newValue)
+    if (newValue !== 'creator') {
+      // Reset questionnaireId when not navigating to creator tab
+      setQuestionnaireId(null)
+    }
   }
 
   return (
@@ -65,8 +76,8 @@ const ExperimentPage = () => {
         sx={{
           backgroundColor: 'white',
           padding: 5,
-          minWidth: '95%',
-          minHeight: '500px',
+          minWidth: '100%',
+          minHeight: 'screen',
           borderRadius: 4,
         }}
       >
