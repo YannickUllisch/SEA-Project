@@ -86,7 +86,7 @@ const SurveyCreatorWidget = (props: {
         <Box sx={{ mb: 10 }}>
           <Button
             fullWidth
-            sx={{ zIndex: 5, height: '50px' }}
+            sx={{ zIndex: 5, height: '50px', color: 'white' }}
             variant="contained"
             onClick={() =>
               props.isUpdate ? handleUpdate() : setCreateDialog(true)

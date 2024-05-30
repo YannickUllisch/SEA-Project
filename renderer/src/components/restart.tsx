@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Button, TextField, Box } from '@mui/material'
 import { useRouter } from 'next/router'
+import theme from '../lib/theme'
 
 interface ValidationResponse {
   valid: boolean
@@ -64,7 +65,7 @@ const Restart = () => {
           variant="contained"
           color="primary"
           onClick={handleRedirect}
-          sx={{ marginTop: 1 }}
+          sx={{ marginTop: 1, color: 'white' }}
         >
           Restart Experiment
         </Button>

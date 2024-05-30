@@ -26,9 +26,8 @@ const ParticipantHomePage = () => {
     >
       <Box
         sx={{
-          backgroundColor: 'white',
           padding: 5,
-          marginTop: 10,
+          marginTop: 25,
           minWidth: '500px',
           textAlign: 'center',
           borderRadius: 4,
@@ -45,13 +44,8 @@ const ParticipantHomePage = () => {
 
         <Button
           variant="contained"
-          sx={{
-            backgroundImage: `linear-gradient(to right, ${theme.palette.primary.dark}, ${theme.palette.secondary.light})`,
-            color: 'white',
-            '&:hover': {
-              backgroundImage: `linear-gradient(to right, ${theme.palette.primary.dark}, ${theme.palette.secondary.main})`,
-            },
-          }}
+          color="primary"
+          sx={{ color: 'white' }}
           onClick={() =>
             router.push({
               pathname: '/survey',
