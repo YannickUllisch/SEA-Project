@@ -4,6 +4,7 @@ module.exports = {
   images: {
     unoptimized: true,
   },
+  transpilePackages: ['@mui/x-charts'],
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {

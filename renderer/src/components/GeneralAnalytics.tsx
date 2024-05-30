@@ -64,7 +64,7 @@ const GeneralAnalytics: FC<GeneralAnalyticsProps> = ({ answers }) => {
     }
 
     return Object.entries(ageGroups).map(([ageGroup, sum]) => ({
-      label: `Age: ${ageGroup})`,
+      label: `Age: ${ageGroup}`,
       value: sum, // Rename sum to value
     }))
   }, [answers])
