@@ -9,7 +9,8 @@
     "dev": "nextron",
     "build": "nextron build",
     "postinstall": "electron-builder install-app-deps",
-    "build:mac": "nextron build --mac --x64"
+    "build:mac": "nextron build --mac --x64",
+    "build:mac:arm": "nextron build --mac --arm64"
   },
   "build": {
     "extraResources": [
