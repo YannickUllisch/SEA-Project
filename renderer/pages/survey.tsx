@@ -20,6 +20,9 @@ import { set } from 'react-hook-form'
 
 const SurveyPage = () => {
   const router = useRouter()
+
+  console.log(router.query.executedExperiment)
+
   const [currQuestionnaire, setCurrQuestionnaire] = useState<
     FrontendQuestionnaire | undefined
   >(undefined)
@@ -89,6 +92,9 @@ const SurveyPage = () => {
   useEffect(() => {
     const fetchRandomQuestionnaire = () => {
       // This will return us a random questionnaire based on the experiment found using the executedExperiment ID given as a query parameter.
+      if ((router.query.executedExperiment as string) === undefined) {
+        router.push('/')
+      }
       window.ipc.send('initRandomQuestionnaire', {
         experimentID: router.query.executedExperiment as string,
       })
@@ -108,7 +114,7 @@ const SurveyPage = () => {
     if (currQuestionnaire === undefined) {
       fetchRandomQuestionnaire()
     }
-  }, [currQuestionnaire, router.query])
+  }, [currQuestionnaire, router.query, router])
 
   // Use useEffect to add a navigation item once the survey model is set up
   useEffect(() => {
