@@ -26,6 +26,7 @@ const Header = () => {
             justifyContent: 'space-between',
             alignItems: 'center',
           }}
+          style={{ boxShadow: '0px 0px 2px rgba(0,0,0,0.1)' }}
         >
           <Box sx={{ ml: 3, mt: 1 }}>
             <Image src={logo} width={60} height={60} alt="AB Testing Logo" />

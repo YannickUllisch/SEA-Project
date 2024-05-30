@@ -20,9 +20,6 @@ import { set } from 'react-hook-form'
 
 const SurveyPage = () => {
   const router = useRouter()
-
-  console.log(router.query.executedExperiment)
-
   const [currQuestionnaire, setCurrQuestionnaire] = useState<
     FrontendQuestionnaire | undefined
   >(undefined)
@@ -119,10 +116,16 @@ const SurveyPage = () => {
   // Use useEffect to add a navigation item once the survey model is set up
   useEffect(() => {
     if (surveyModel) {
-      surveyModel.addNavigationItem({
-        title: 'Exit',
-        action: () => surveyModel.doComplete(),
-      })
+      const exitExists = surveyModel.navigationBar.actions.find(
+        (action) => action._title === 'Exit',
+      )
+
+      if (!exitExists) {
+        surveyModel.addNavigationItem({
+          title: 'Exit',
+          action: () => surveyModel.doComplete(),
+        })
+      }
 
       surveyModel.onComplete.add((sender) => {
         window.ipc.send('saveQuestionnaire', {
@@ -222,7 +225,12 @@ const SurveyPage = () => {
           />
           {gdprError && <Typography color="error">{gdprError}</Typography>}
 
-          <Button type="submit" variant="contained" color="primary">
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            disabled={!gdprConsent}
+          >
             Submit
           </Button>
         </Box>

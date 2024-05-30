@@ -88,10 +88,11 @@ const AdminPage = () => {
         sx={{
           backgroundColor: 'white',
           padding: 5,
-          minWidth: '100%',
+          minWidth: '98%',
           minHeight: 'screen',
           borderRadius: 4,
         }}
+        style={{ boxShadow: '0px 0px 5px rgba(0,0,0,0.1)' }}
       >
         <Typography sx={{ fontSize: 30, fontWeight: 'bold' }}>
           Experiments
@@ -117,11 +118,13 @@ const AdminPage = () => {
                   <Grid item xs={2} sm={4} md={4} key={experiment.title}>
                     <Card
                       key={experiment.title}
+                      style={{ boxShadow: '0px 0px 5px rgba(0,0,0,0.05)' }}
                       sx={{
-                        boxShadow: 3,
                         minWidth: '20%',
                         m: 2,
                         borderRadius: 2,
+                        border: 1,
+                        borderColor: theme.palette.grey[300],
                       }}
                     >
                       <CardActionArea

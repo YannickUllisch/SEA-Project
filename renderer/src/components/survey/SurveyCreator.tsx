@@ -6,7 +6,8 @@ import 'survey-creator-core/survey-creator-core.css'
 import { Box, Button, Divider, Box as MuiBox } from '@mui/material'
 import QuestionnaireTitleDialog from '@renderer/src/components/modals/questionnaireTitleDialog'
 
-import { setLicenseKey } from 'survey-core'
+import { Action, setLicenseKey } from 'survey-core'
+import theme from '@renderer/src/lib/theme'
 
 setLicenseKey(
   'M2Q5NzE0OGItYTI3Ny00ZTc5LTk1NWUtZmJhNDAxNDZjNDk3OzE9MjAyNC0wNy0zMSwyPTIwMjQtMDctMzEsND0yMDI0LTA3LTMx',
@@ -72,26 +73,34 @@ const SurveyCreatorWidget = (props: {
 
   return (
     <>
-      <div style={{ position: 'relative', height: '1000px' }}>
+      <Box
+        style={{
+          height: '700px',
+          outlineColor: theme.palette.grey[300],
+        }}
+        sx={{ outline: 1 }}
+      >
         {/* White box to overlay missing license problem */}
         <SurveyCreatorComponent creator={creator} />
 
-        <Button
-          fullWidth
-          sx={{ zIndex: 5, height: '50px' }}
-          variant="contained"
-          onClick={() =>
-            props.isUpdate ? handleUpdate() : setCreateDialog(true)
-          }
-        >
-          Save
-        </Button>
+        <Box sx={{ mb: 10 }}>
+          <Button
+            fullWidth
+            sx={{ zIndex: 5, height: '50px' }}
+            variant="contained"
+            onClick={() =>
+              props.isUpdate ? handleUpdate() : setCreateDialog(true)
+            }
+          >
+            Save
+          </Button>
+        </Box>
         <QuestionnaireTitleDialog
           open={createDialog}
           setOpen={setCreateDialog}
           onSave={handleCreate}
         />
-      </div>
+      </Box>
     </>
   )
 }
