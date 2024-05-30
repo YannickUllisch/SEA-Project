@@ -213,7 +213,15 @@ const GeneralTab = ({ onEditQuestionnaire }) => {
         )}
         {questionnaires
           ? questionnaires.map((questionnaire) => (
-              <Card key={questionnaire.id} sx={{ margin: 2, boxShadow: 3 }}>
+              <Card
+                key={questionnaire.id}
+                sx={{
+                  margin: 2,
+                  border: 1,
+                  borderColor: theme.palette.grey[300],
+                }}
+                style={{ boxShadow: '0px 0px 5px rgba(0,0,0,0.1)' }}
+              >
                 <CardContent>
                   <Box
                     sx={{

@@ -10,7 +10,7 @@ const MainLoginPage = () => {
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'column',
-        mt: 20,
+        mt: 30,
       }}
     >
       <Box
@@ -28,8 +28,8 @@ const MainLoginPage = () => {
             padding: 1,
             border: 1,
             borderColor: theme.palette.grey[200],
-            boxShadow: 1,
           }}
+          style={{ boxShadow: '0px 0px 5px rgba(0,0,0,0.05)' }}
         >
           <CardContent>
             <LoginForm />

@@ -42,10 +42,20 @@ const AssistantsTab = () => {
       toast.success(message)
     })
 
+    window.ipc.on('failAddUser', (message: string) => {
+      toast.success(message)
+    })
+
+    window.ipc.on('addedAssistant', (message: string) => {
+      toast.success(message)
+    })
+
     return () => {
       // Clean up event listeners to prevent multiple toasts
       window.ipc.removeAllListeners('addedAssistant')
       window.ipc.removeAllListeners('deletedAssistant')
+      window.ipc.removeAllListeners('failAddUser')
+      window.ipc.removeAllListeners('addedAssistant')
     }
   }, [])
 
