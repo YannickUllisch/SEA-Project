@@ -229,6 +229,7 @@ const SurveyPage = () => {
             type="submit"
             variant="contained"
             color="primary"
+            sx={{ color: 'white' }}
             disabled={!gdprConsent}
           >
             Submit

@@ -317,7 +317,7 @@ const GeneralTab = ({ onEditQuestionnaire }) => {
           : null}
         <Button
           variant="contained"
-          sx={{ width: 'full', mt: 2 }}
+          sx={{ width: 'full', mt: 2, color: 'white' }}
           disabled={!questionnaires || questionnaires.length < 1}
           onClick={() =>
             router.push({

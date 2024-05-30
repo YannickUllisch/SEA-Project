@@ -1,5 +1,4 @@
 import { ipcMain } from 'electron'
-import { db } from '@main/helpers/db'
 import { Session } from '@main/models/Session'
 
 ipcMain.on(
@@ -25,6 +24,18 @@ ipcMain.on(
         .getUser()
         .getExperimentManager()
         .getExperimentById(arg.experimentID)
+
+      const questionnaires =
+        Experiment.getQuestionnaireManager().getQuestionnaires()
+
+      const existingTitle = questionnaires.find(
+        (q) => q.getQuestionnaireInfo().version === arg.version,
+      )
+
+      if (existingTitle) {
+        event.reply('failCreateQuestionnaire', 'Please choose a unique Title')
+        return
+      }
 
       await Experiment.getQuestionnaireManager().createQuestionnaire(
         arg.experimentStructureData,
@@ -52,7 +63,7 @@ ipcMain.on(
     try {
       if (Session.getSession().getUser().getUserRole() > 1) {
         event.reply(
-          'failCreateQuestionnaire',
+          'failUpdateQuestionnaireTitle',
           'You do not have permission for this',
         )
         return
@@ -62,6 +73,21 @@ ipcMain.on(
         .getUser()
         .getExperimentManager()
         .getExperimentById(arg.experimentID)
+
+      const questionnaires =
+        Experiment.getQuestionnaireManager().getQuestionnaires()
+
+      const existingTitle = questionnaires.find(
+        (q) => q.getQuestionnaireInfo().version === arg.version,
+      )
+
+      if (existingTitle) {
+        event.reply(
+          'failUpdateQuestionnaireTitle',
+          'Please choose a unique Title',
+        )
+        return
+      }
 
       await Experiment.getQuestionnaireManager()
         .getQuestionnaireById(arg.questionnaireID)

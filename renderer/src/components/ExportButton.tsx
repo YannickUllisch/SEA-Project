@@ -66,7 +66,7 @@ const ExportButton = () => {
         variant="contained"
         color="primary"
         onClick={downloadCSV}
-        sx={{ marginRight: 2 }}
+        sx={{ color: 'white' }}
       >
         Download CSV
       </Button>
