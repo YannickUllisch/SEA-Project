@@ -1,11 +1,21 @@
+import { db } from '@main/helpers/db'
 import { Session } from '@main/models/Session'
+import bcrypt from 'bcryptjs'
 
 describe('Session', () => {
   beforeEach(async () => {})
 
   it('should...', async () => {
-    // Currently we have the issue that the db we use is not the same as in the test environment, so we need to find a way to
-    // either connect the test env to the actual db directly or some other work around
-    //Session.authenticate()
+    // We have to create our own user, since the database is empty initially
+    await db.dbUser.create({
+      data: {
+        name: 'test',
+        password: await bcrypt.hash('123', 10),
+        role: 1,
+        id: 'test',
+      },
+    })
+
+    expect(await Session.authenticate('test', '123')).toBeDefined()
   })
 })
