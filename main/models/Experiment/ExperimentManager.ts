@@ -59,16 +59,19 @@ export class ExperimentManager {
       },
     })
     const newId = v4()
-    await db.dbExperiment.create({
-      data: {
-        id: newId,
-        title,
-        description,
-        restartCode,
-        users: { connect: associatedUser },
-      },
-    })
-
+    try {
+      await db.dbExperiment.create({
+        data: {
+          id: newId,
+          title,
+          description,
+          restartCode,
+          users: { connect: associatedUser },
+        },
+      })
+    } catch (error) {
+      console.error(error)
+    }
     this.experiments.push(
       new Experiment(title, description, newId, restartCode),
     )
