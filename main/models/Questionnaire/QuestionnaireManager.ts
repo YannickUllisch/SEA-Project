@@ -134,17 +134,24 @@ export class QuestionnaireManager {
         throw new Error('No questionnaires found for the given experiment ID')
       }
 
-      const data = questionnaires.map((q) => ({
-        id: q.id,
-        version: q.version,
-        form: q.form,
-        answers: q.questionnaireAnswersID.map((a) => ({
-          answers: a.answers,
-          age: a.age,
-          gender: a.gender,
-          country: a.country,
-        })),
-      }))
+      // Flatten the data
+      const data = []
+      for (const questionnaire of questionnaires) {
+        for (const answer of questionnaire.questionnaireAnswersID) {
+          const parsedAnswers = JSON.parse(answer.answers)
+          for (const [question, response] of Object.entries(parsedAnswers)) {
+            data.push({
+              id: questionnaire.id,
+              version: questionnaire.version,
+              question,
+              response,
+              age: answer.age,
+              gender: answer.gender,
+              country: answer.country,
+            })
+          }
+        }
+      }
 
       return exportToCSV(data)
     } catch (error) {

@@ -15,6 +15,7 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "baseUrl": ".",
+    "types": ["node", "jest"],
     "paths": {
       "@renderer/*": ["renderer/*"],
       "@main/*": ["main/*"],
@@ -22,6 +23,6 @@
       "@models/*": ["main/models/*"]
     }
   },
-  "include": ["main/**/*"],
+  "include": ["main/**/*", "main/tests/**/*"],
   "exclude": ["node_modules", "next.config.js", "app", "dist"]
 }

@@ -46,36 +46,52 @@ export class ExperimentManager {
   }
 
   public async createExperiment(
-    user: dbUser,
+    userId: string,
     title: string,
     restartCode: string,
     description: string,
+    id?: string, // needed for testing, since we otherwise cannot delete it again without knowing id
   ) {
     // We need to create our new ID manually to create a corresponding object aswell
-    const newId = v4()
-    await db.dbExperiment.create({
-      data: {
-        id: newId,
-        title,
-        description,
-        restartCode,
-        users: { connect: user },
+
+    const associatedUser = await db.dbUser.findUnique({
+      where: {
+        id: userId,
       },
     })
+    const newId = id ?? v4()
 
     this.experiments.push(
       new Experiment(title, description, newId, restartCode),
     )
+
+    try {
+      await db.dbExperiment.create({
+        data: {
+          id: newId,
+          title,
+          description,
+          restartCode,
+          users: { connect: associatedUser },
+        },
+      })
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   public async deleteExperiment(experimentId: string) {
-    await db.dbExperiment.delete({
-      where: {
-        id: experimentId,
-      },
-    })
     this.experiments = this.experiments.filter(
       (experiment) => experiment.getExperimentInfo().id !== experimentId,
     )
+    try {
+      await db.dbExperiment.delete({
+        where: {
+          id: experimentId,
+        },
+      })
+    } catch (error) {
+      console.error(error)
+    }
   }
 }
