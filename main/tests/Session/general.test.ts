@@ -17,5 +17,7 @@ describe('Session', () => {
     })
 
     expect(await Session.authenticate('test', '123')).toBeDefined()
+
+    expect(Session.getSession().getUser().getUserRole()).toBe(1)
   })
 })
