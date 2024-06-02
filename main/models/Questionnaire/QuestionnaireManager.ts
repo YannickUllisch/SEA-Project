@@ -56,9 +56,13 @@ export class QuestionnaireManager {
     }
   }
 
-  public async createQuestionnaire(questionnaireData: JSON, version?: string) {
+  public async createQuestionnaire(
+    questionnaireData: JSON,
+    version?: string,
+    id?: string,
+  ) {
     try {
-      const newId = v4()
+      const newId = id ?? v4()
       await db.dbQuestionnaire.create({
         data: {
           id: newId,
