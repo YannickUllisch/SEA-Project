@@ -50,6 +50,7 @@ export class ExperimentManager {
     title: string,
     restartCode: string,
     description: string,
+    id?: string, // needed for testing, since we otherwise cannot delete it again without knowing id
   ) {
     // We need to create our new ID manually to create a corresponding object aswell
 
@@ -58,7 +59,12 @@ export class ExperimentManager {
         id: userId,
       },
     })
-    const newId = v4()
+    const newId = id ?? v4()
+
+    this.experiments.push(
+      new Experiment(title, description, newId, restartCode),
+    )
+
     try {
       await db.dbExperiment.create({
         data: {
@@ -72,19 +78,20 @@ export class ExperimentManager {
     } catch (error) {
       console.error(error)
     }
-    this.experiments.push(
-      new Experiment(title, description, newId, restartCode),
-    )
   }
 
   public async deleteExperiment(experimentId: string) {
-    await db.dbExperiment.delete({
-      where: {
-        id: experimentId,
-      },
-    })
     this.experiments = this.experiments.filter(
       (experiment) => experiment.getExperimentInfo().id !== experimentId,
     )
+    try {
+      await db.dbExperiment.delete({
+        where: {
+          id: experimentId,
+        },
+      })
+    } catch (error) {
+      console.error(error)
+    }
   }
 }
