@@ -46,12 +46,18 @@ export class ExperimentManager {
   }
 
   public async createExperiment(
-    user: dbUser,
+    userId: string,
     title: string,
     restartCode: string,
     description: string,
   ) {
     // We need to create our new ID manually to create a corresponding object aswell
+
+    const associatedUser = await db.dbUser.findUnique({
+      where: {
+        id: userId,
+      },
+    })
     const newId = v4()
     await db.dbExperiment.create({
       data: {
@@ -59,7 +65,7 @@ export class ExperimentManager {
         title,
         description,
         restartCode,
-        users: { connect: user },
+        users: { connect: associatedUser },
       },
     })
 
