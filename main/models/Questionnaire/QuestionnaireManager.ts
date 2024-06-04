@@ -146,7 +146,7 @@ export class QuestionnaireManager {
           const parsedAnswers = JSON.parse(answer.answers)
           for (const [question, response] of Object.entries(parsedAnswers)) {
             data.push({
-              id: questionnaire.id,
+              id: answer.id,
               version: questionnaire.version,
               question,
               response,
