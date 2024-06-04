@@ -86,6 +86,7 @@ export class Questionnaire implements iQuestionnaire {
     age: number,
     gender: string,
     country: string,
+    id?: string,
   ) {
     try {
       this.answers.push(
@@ -98,6 +99,7 @@ export class Questionnaire implements iQuestionnaire {
           age,
           gender,
           country,
+          id: id ?? undefined,
         },
       })
     } catch (error) {

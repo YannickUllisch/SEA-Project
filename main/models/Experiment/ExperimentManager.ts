@@ -13,7 +13,7 @@ export class ExperimentManager {
 
   // Once a user logs in we should set this to all the user specific experiments from the db.
   // We transform the entries from the DB table to Experiment Class objects.
-  private async setExperiments(userId: string) {
+  public async setExperiments(userId: string) {
     const userExperiments = await db.dbExperiment.findMany({
       where: {
         users: { some: { id: userId } },
