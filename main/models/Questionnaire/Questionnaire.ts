@@ -1,7 +1,8 @@
 import { db } from '@main/helpers/db'
 import { QuestionnaireAnswer } from './QuestionnaireAnswer'
+import type { iQuestionnaire } from './iQuestionnaire'
 
-export class Questionnaire {
+export class Questionnaire implements iQuestionnaire {
   private id: string
   private form: string // string form of the JSON, we can always convert it back later
   private version: string

@@ -1,10 +1,10 @@
 import { db } from '@main/helpers/db'
 import { Experiment } from './Experiment'
-import type { dbUser } from '@prisma/client'
 import { v4 } from 'uuid'
+import type { iExperiment } from './iExperiment'
 
 export class ExperimentManager {
-  private experiments: Experiment[]
+  private experiments: iExperiment[]
 
   constructor(userId: string) {
     this.experiments = []

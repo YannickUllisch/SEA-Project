@@ -2,10 +2,11 @@ import { db } from '@main/helpers/db'
 import { Questionnaire } from './Questionnaire'
 import { exportToCSV } from '../DataHandler/DataHandler'
 import { v4 } from 'uuid'
+import type { iQuestionnaire } from './iQuestionnaire'
 
 export class QuestionnaireManager {
   private experimentId: string
-  private questionnaires: Questionnaire[]
+  private questionnaires: iQuestionnaire[]
 
   constructor(experimentId: string) {
     this.experimentId = experimentId
