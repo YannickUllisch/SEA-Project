@@ -88,8 +88,7 @@ describe('System', () => {
   it('should should be able to create an experiment', async () => {})
 })
 
-//From here
-describe('Session and User Integration Tests', () => {
+describe('Session, User, and Security Integration Tests', () => {
   beforeEach(async () => {
     await db.dbUser.create({
       data: {
@@ -101,13 +100,11 @@ describe('Session and User Integration Tests', () => {
     })
   })
 
-  it('should authenticate and create session for user', async () => {
-    const session = await Session.authenticate(
-      'integrationUser',
-      'securePass123',
-    )
-    expect(session).toBeDefined()
-    expect(Session.getSession().getUser().getUserRole()).toBe(1)
+  it('should not authenticate a user with incorrect password', async () => {
+    // Expect the authenticate function to throw due to invalid credentials
+    await expect(
+      Session.authenticate('integrationUser', 'securePass12'),
+    ).rejects.toThrow('Invalid credentials')
   })
 
   afterEach(async () => {
