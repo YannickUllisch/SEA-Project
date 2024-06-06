@@ -12,7 +12,7 @@ export class Session {
 
   public static getSession(): Session {
     if (!Session.instance) {
-      throw new Error('Session has not been initialized.')
+      return null
     }
     return Session.instance
   }

@@ -174,11 +174,11 @@ describe('QuestionnaireManager', () => {
 
     expect(manager.getQuestionnaires()).toHaveLength(0)
 
-    await manager.createQuestionnaire(randJSON, 'version 1', '1 VersionID')
+    await manager.createQuestionnaire(randJSON, 'version 1', 'version1')
 
-    await manager.createQuestionnaire(randJSON, 'version 2', '2 VersionID')
+    await manager.createQuestionnaire(randJSON, 'version 2', 'version2')
     expect(manager.getQuestionnaires()).toHaveLength(2)
     const rand = await manager.initRdmQuestionnaire()
-    expect(rand.id).toMatch('1 VersionID' || '2 VersionID')
+    expect(rand.id).toMatch(/^version[12]$/)
   })
 })
