@@ -2,7 +2,7 @@
 For this project we use the NextJS framework with react, wrapped by Electron. This is combined with TypeScript/Electron for the backend. For styling we use either TailwindCSS or MaterialUIs theming options. Additionally, we make use of the surveyJS libraries: Creator, Form and Dashbord.
 
 Demo video of out application:
-https://github.com/YannickUllisch/SEA-Project/assets/79836801/e99c7298-9387-413f-bacf-5d97bbd0826f
+https://github.com/YannickUllisch/SEA-Project/assets/79836801/e99c7298-9387-413f-bacf-5d97bbd0826f.mp4
 
 
 
