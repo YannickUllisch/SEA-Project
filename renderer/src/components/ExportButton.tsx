@@ -1,22 +1,18 @@
-import React, { useState, useEffect } from 'react'
-import { Button, Snackbar, Alert, type AlertColor, Box } from '@mui/material'
+import React, { useEffect } from 'react'
+import { Button, Box } from '@mui/material'
 import { useRouter } from 'next/router'
+import { toast } from 'sonner'
 
 const ExportButton = () => {
-  const [snackbarOpen, setSnackbarOpen] = useState(false)
-  const [snackbarMessage, setSnackbarMessage] = useState('')
-  const [snackbarSeverity, setSnackbarSeverity] =
-    useState<AlertColor>('success')
-
   const router = useRouter()
 
   useEffect(() => {
     const handleGeneratedCSV = (_event, filePath) => {
-      showNotification(`CSV file created at: ${filePath}`)
+      toast.success(`CSV file created at: ${filePath}`)
     }
 
     const handleFailGenerateCSV = (_event, errorMessage) => {
-      showNotification(`Failed to create CSV file: ${errorMessage}`, 'error')
+      toast.error(`Failed to create CSV file: ${errorMessage}`)
     }
 
     window.ipc.on('generatedCSV', handleGeneratedCSV)
@@ -28,30 +24,17 @@ const ExportButton = () => {
     }
   }, [])
 
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false)
-  }
-
-  const showNotification = (
-    message: string,
-    severity: AlertColor = 'success',
-  ) => {
-    setSnackbarMessage(message)
-    setSnackbarSeverity(severity)
-    setSnackbarOpen(true)
-  }
-
   const downloadCSV = async () => {
     try {
       const experimentId = router.query.id as string // Assuming 'id' is the correct query parameter
       if (!experimentId) {
-        showNotification('Experiment ID not found in the URL', 'error')
+        toast.error('Experiment ID not found in the URL')
         return
       }
 
       window.ipc.send('generate-csv', { experimentId })
     } catch (error) {
-      showNotification(`Error during CSV download: ${error.message}`, 'error')
+      toast.error(`Error during CSV download: ${error.message}`)
     }
   }
 
@@ -65,15 +48,6 @@ const ExportButton = () => {
       >
         Download CSV
       </Button>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-      >
-        <Alert onClose={handleSnackbarClose} severity={snackbarSeverity}>
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
     </Box>
   )
 }

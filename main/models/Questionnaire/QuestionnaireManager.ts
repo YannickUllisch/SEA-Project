@@ -2,10 +2,11 @@ import { db } from '@main/helpers/db'
 import { Questionnaire } from './Questionnaire'
 import { exportToCSV } from '../DataHandler/DataHandler'
 import { v4 } from 'uuid'
+import type { iQuestionnaire } from './iQuestionnaire'
 
 export class QuestionnaireManager {
   private experimentId: string
-  private questionnaires: Questionnaire[]
+  private questionnaires: iQuestionnaire[]
 
   constructor(experimentId: string) {
     this.experimentId = experimentId
@@ -56,9 +57,13 @@ export class QuestionnaireManager {
     }
   }
 
-  public async createQuestionnaire(questionnaireData: JSON, version?: string) {
+  public async createQuestionnaire(
+    questionnaireData: JSON,
+    version?: string,
+    id?: string,
+  ) {
     try {
-      const newId = v4()
+      const newId = id ?? v4()
       await db.dbQuestionnaire.create({
         data: {
           id: newId,
@@ -141,7 +146,7 @@ export class QuestionnaireManager {
           const parsedAnswers = JSON.parse(answer.answers)
           for (const [question, response] of Object.entries(parsedAnswers)) {
             data.push({
-              id: questionnaire.id,
+              id: answer.id,
               version: questionnaire.version,
               question,
               response,

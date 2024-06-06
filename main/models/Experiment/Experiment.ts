@@ -1,7 +1,8 @@
 import { db } from '@main/helpers/db'
 import { QuestionnaireManager } from '../Questionnaire/QuestionnaireManager'
+import type { iExperiment } from './iExperiment'
 
-export class Experiment {
+export class Experiment implements iExperiment {
   private title: string
   private description: string
   private id: string
