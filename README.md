@@ -1,5 +1,10 @@
 # SeaProject
-For this project we use the NextJS framework with react, wrapped by Electron. This is combined with TypeScript/Electron for the backend. For styling we use either TailwindCSS or MaterialUIs theming options. 
+For this project we use the NextJS framework with react, wrapped by Electron. This is combined with TypeScript/Electron for the backend. For styling we use either TailwindCSS or MaterialUIs theming options. Additionally, we make use of the surveyJS libraries: Creator, Form and Dashbord.
+
+Demo video of out application:
+https://github.com/YannickUllisch/SEA-Project/assets/79836801/e99c7298-9387-413f-bacf-5d97bbd0826f
+
+
 
 ## Installation Guide
 - Download and install `nodeJS`, make sure to download v20.12.2, Angular doesn't work for newer versions yet. https://nodejs.org/en/download  <br />
