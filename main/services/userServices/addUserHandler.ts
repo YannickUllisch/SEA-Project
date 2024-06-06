@@ -34,6 +34,20 @@ ipcMain.on(
     }
 
     try {
+      const existingUser = await db.dbUser.findFirst({
+        where: {
+          name: arg.username,
+        },
+      })
+
+      if (existingUser) {
+        event.reply(
+          'failAddUser',
+          'Please choose a different name for your user',
+        )
+        return
+      }
+
       await Session.getSession()
         .getUser()
         .handleAddUser(

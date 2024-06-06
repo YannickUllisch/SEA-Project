@@ -213,7 +213,15 @@ const GeneralTab = ({ onEditQuestionnaire }) => {
         )}
         {questionnaires
           ? questionnaires.map((questionnaire) => (
-              <Card key={questionnaire.id} sx={{ margin: 2, boxShadow: 3 }}>
+              <Card
+                key={questionnaire.id}
+                sx={{
+                  margin: 2,
+                  border: 1,
+                  borderColor: theme.palette.grey[300],
+                }}
+                style={{ boxShadow: '0px 0px 5px rgba(0,0,0,0.1)' }}
+              >
                 <CardContent>
                   <Box
                     sx={{
@@ -309,7 +317,7 @@ const GeneralTab = ({ onEditQuestionnaire }) => {
           : null}
         <Button
           variant="contained"
-          sx={{ width: 'full', mt: 2 }}
+          sx={{ width: 'full', mt: 2, color: 'white' }}
           disabled={!questionnaires || questionnaires.length < 1}
           onClick={() =>
             router.push({

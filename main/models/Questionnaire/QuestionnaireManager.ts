@@ -1,16 +1,19 @@
 import { db } from '@main/helpers/db'
 import { Questionnaire } from './Questionnaire'
+import { exportToCSV } from '../DataHandler/DataHandler'
 import { v4 } from 'uuid'
+import type { iQuestionnaire } from './iQuestionnaire'
 
 export class QuestionnaireManager {
   private experimentId: string
-  private questionnaires: Questionnaire[]
+  private questionnaires: iQuestionnaire[]
 
   constructor(experimentId: string) {
     this.experimentId = experimentId
     this.questionnaires = []
     this.setQuestionnaires()
   }
+
   public async setQuestionnaires() {
     const experimentQuestionnaires = await db.dbQuestionnaire.findMany({
       where: {
@@ -54,9 +57,13 @@ export class QuestionnaireManager {
     }
   }
 
-  public async createQuestionnaire(questionnaireData: JSON, version?: string) {
+  public async createQuestionnaire(
+    questionnaireData: JSON,
+    version?: string,
+    id?: string,
+  ) {
     try {
-      const newId = v4()
+      const newId = id ?? v4()
       await db.dbQuestionnaire.create({
         data: {
           id: newId,
@@ -118,4 +125,45 @@ export class QuestionnaireManager {
       }
     }
   }
+
+  public static async exportAllAnswers(experimentId: string): Promise<string> {
+    try {
+      const questionnaires = await db.dbQuestionnaire.findMany({
+        where: { experimentId },
+        include: {
+          questionnaireAnswersID: true,
+        },
+      })
+
+      if (questionnaires.length === 0) {
+        throw new Error('No questionnaires found for the given experiment ID')
+      }
+
+      // Flatten the data
+      const data = []
+      for (const questionnaire of questionnaires) {
+        for (const answer of questionnaire.questionnaireAnswersID) {
+          const parsedAnswers = JSON.parse(answer.answers)
+          for (const [question, response] of Object.entries(parsedAnswers)) {
+            data.push({
+              id: answer.id,
+              version: questionnaire.version,
+              question,
+              response,
+              age: answer.age,
+              gender: answer.gender,
+              country: answer.country,
+            })
+          }
+        }
+      }
+
+      return exportToCSV(data)
+    } catch (error) {
+      console.error('Failed to export answers:', error)
+      throw error
+    }
+  }
 }
+
+export default QuestionnaireManager

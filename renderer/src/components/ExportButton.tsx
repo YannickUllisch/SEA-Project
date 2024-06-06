@@ -1,87 +1,54 @@
-import React, { useState, useEffect } from 'react'
-import { Button, Snackbar, Alert, type AlertColor } from '@mui/material'
-
-const isElectron =
-  typeof window !== 'undefined' &&
-  typeof window.process !== 'undefined' &&
-  window.process.type === 'renderer'
+import React, { useEffect } from 'react'
+import { Button, Box } from '@mui/material'
+import { useRouter } from 'next/router'
+import { toast } from 'sonner'
 
 const ExportButton = () => {
-  const [ipcRenderer, setIpcRenderer] = useState<any>(null)
-  const [snackbarOpen, setSnackbarOpen] = useState(false)
-  const [snackbarMessage, setSnackbarMessage] = useState('')
-  const [snackbarSeverity, setSnackbarSeverity] =
-    useState<AlertColor>('success')
+  const router = useRouter()
 
   useEffect(() => {
-    if (isElectron) {
-      const { ipcRenderer } = window.require('electron')
-      setIpcRenderer(ipcRenderer)
+    const handleGeneratedCSV = (_event, filePath) => {
+      toast.success(`CSV file created at: ${filePath}`)
+    }
+
+    const handleFailGenerateCSV = (_event, errorMessage) => {
+      toast.error(`Failed to create CSV file: ${errorMessage}`)
+    }
+
+    window.ipc.on('generatedCSV', handleGeneratedCSV)
+    window.ipc.on('failGenerateCSV', handleFailGenerateCSV)
+
+    return () => {
+      window.ipc.removeAllListeners('generatedCSV')
+      window.ipc.removeAllListeners('failGenerateCSV')
     }
   }, [])
 
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false)
-  }
-
-  const showNotification = (
-    message: string,
-    severity: AlertColor = 'success',
-  ) => {
-    setSnackbarMessage(message)
-    setSnackbarSeverity(severity)
-    setSnackbarOpen(true)
-  }
-
   const downloadCSV = async () => {
     try {
-      if (ipcRenderer) {
-        const filePath = await ipcRenderer.invoke('generate-csv')
-        showNotification(`CSV file created at: ${filePath}`)
-      } else {
-        showNotification('Not running in Electron environment', 'error')
+      const experimentId = router.query.id as string // Assuming 'id' is the correct query parameter
+      if (!experimentId) {
+        toast.error('Experiment ID not found in the URL')
+        return
       }
-    } catch (error) {
-      showNotification('Failed to create CSV file', 'error')
-    }
-  }
 
-  const downloadXLSX = async () => {
-    try {
-      if (ipcRenderer) {
-        const filePath = await ipcRenderer.invoke('generate-xlsx')
-        showNotification(`XLSX file created at: ${filePath}`)
-      } else {
-        showNotification('Not running in Electron environment', 'error')
-      }
+      window.ipc.send('generate-csv', { experimentId })
     } catch (error) {
-      showNotification('Failed to create XLSX file', 'error')
+      toast.error(`Error during CSV download: ${error.message}`)
     }
   }
 
   return (
-    <>
+    <Box sx={{ margin: 2, justifyContent: 'center', display: 'flex' }}>
       <Button
         variant="contained"
         color="primary"
         onClick={downloadCSV}
-        sx={{ marginRight: 2 }}
+        sx={{ color: 'white' }}
       >
         Download CSV
       </Button>
-      <Button variant="contained" color="primary" onClick={downloadXLSX}>
-        Download XLSX
-      </Button>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-      >
-        <Alert onClose={handleSnackbarClose} severity={snackbarSeverity}>
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
-    </>
+    </Box>
   )
 }
 

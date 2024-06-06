@@ -24,7 +24,7 @@ export default function MyDocument(
         <meta name="emotion-insertion-point" content="" />
         <DocumentHeadTags {...props} />
       </Head>
-      <body style={{ backgroundColor: '#f5f5f5' }}>
+      <body style={{ backgroundColor: '#f3f3f3' }}>
         <Main />
         <NextScript />
       </body>

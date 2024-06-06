@@ -69,17 +69,18 @@ const ExperimentPage = () => {
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'column',
-        marginTop: 3,
+        mt: 3,
       }}
     >
       <Box
         sx={{
           backgroundColor: 'white',
-          padding: 5,
-          minWidth: '100%',
+          padding: 4,
+          minWidth: '98%',
           minHeight: 'screen',
           borderRadius: 4,
         }}
+        style={{ boxShadow: '0px 0px 5px rgba(0,0,0,0.1)' }}
       >
         <Typography sx={{ fontSize: 30, fontWeight: 'bold' }}>
           Edit Experiment

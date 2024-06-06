@@ -1,7 +1,8 @@
 import { db } from '@main/helpers/db'
 import { QuestionnaireManager } from '../Questionnaire/QuestionnaireManager'
+import type { iExperiment } from './iExperiment'
 
-export class Experiment {
+export class Experiment implements iExperiment {
   private title: string
   private description: string
   private id: string
@@ -35,7 +36,6 @@ export class Experiment {
   }
 
   public async getExperimentAssistants() {
-    // Finds all users with rank assistant = 10, that is associated with this objects id.
     try {
       const experimentAssistants = await db.dbUser.findMany({
         where: {
@@ -57,6 +57,7 @@ export class Experiment {
       return userObj
     } catch (err: any) {
       console.error('Failed to fetch experiment assistants', err)
+      throw err
     }
   }
 

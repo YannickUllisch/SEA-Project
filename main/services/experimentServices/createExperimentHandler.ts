@@ -16,17 +16,16 @@ ipcMain.on('createExperiment', async (event, arg) => {
     return
   }
 
-  const associatedUser = await db.dbUser.findUnique({
-    where: {
-      id: Session.getSession().getUser().getUserID(),
-    },
-  })
-
   try {
     await Session.getSession()
       .getUser()
       .getExperimentManager()
-      .createExperiment(associatedUser, title, restartCode, description)
+      .createExperiment(
+        Session.getSession().getUser().getUserID(),
+        title,
+        restartCode,
+        description,
+      )
 
     event.reply('createdExperiment', 'Experiment Created')
   } catch (error) {

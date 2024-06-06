@@ -11,19 +11,12 @@ interface QuestionnaireAnswer {
 interface ExperimentAnswers {
   answers: QuestionnaireAnswer[]
   version: string
+  form: string
 }
 
 ipcMain.on(
   'getExperimentAnswers',
   async (event, arg: { experimentID: string }) => {
-    if (Session.getSession().getUser().getUserRole() > 1) {
-      event.reply(
-        'failGetExperimentAnswers',
-        'You do not have permission to delete this',
-      )
-      return
-    }
-
     const questionnaires = Session.getSession()
       .getUser()
       .getExperimentManager()
@@ -50,6 +43,7 @@ ipcMain.on(
       returnAnswers.push({
         answers: answerArray,
         version: questionnaire.getQuestionnaireInfo().version,
+        form: questionnaire.getQuestionnaireInfo().form,
       })
     }
 

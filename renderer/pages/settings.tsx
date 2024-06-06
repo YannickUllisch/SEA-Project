@@ -119,10 +119,11 @@ const settingsPage = () => {
         sx={{
           backgroundColor: 'white',
           padding: 5,
-          minWidth: '95%',
+          minWidth: '98%',
           minHeight: '500px',
           borderRadius: 4,
         }}
+        style={{ boxShadow: '0px 0px 5px rgba(0,0,0,0.05)' }}
       >
         <AddUserDialog
           open={isDialogOpen}

@@ -1,9 +1,19 @@
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import type React from 'react'
+import { useEffect, useState } from 'react'
 import ExportButton from '../ExportButton' // Adjust the import path
 import type { ExperimentAnswers } from '@renderer/src/lib/types'
 import { toast } from 'sonner'
-import { Box, Typography } from '@mui/material'
+import 'survey-analytics/survey.analytics.min.css'
+import { Box, Divider, Typography } from '@mui/material'
+import GeneralAnalytics from '../GeneralAnalytics'
+import dynamic from 'next/dynamic'
+
+// Dynamically import the wrapper component
+const SurveyDashboard = dynamic(
+  () => import('@renderer/src/components/survey/SurveyDashboard'),
+  { ssr: false },
+)
 
 const AnalyticsTab = () => {
   const router = useRouter()
@@ -37,28 +47,23 @@ const AnalyticsTab = () => {
   }, [experimentAnswers, router.query.id])
 
   return (
-    <div>
-      <h2>Analytics</h2>
-      {experimentAnswers
-        ? experimentAnswers.map((answer) => (
-            <Box
-              sx={{
-                justifyContent: 'center',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-              }}
-            >
-              <Typography>Questionnaire Version: {answer.version}</Typography>{' '}
-              <Typography>
-                Version Answer Amount: {answer.answers.length}
-              </Typography>
-            </Box>
-          ))
-        : null}
-      <h3>Download questionnaire answer data below</h3>
-      <ExportButton />
-    </div>
+    <Box sx={{ width: '100%' }}>
+      <Box sx={{ marginTop: 1, marginBottom: 4 }}>
+        <Typography
+          variant="h5"
+          sx={{ fontWeight: 'bold', display: 'flex', justifyContent: 'center' }}
+        >
+          Export Data
+        </Typography>
+        <ExportButton />
+      </Box>
+      <Divider />
+      {experimentAnswers && <GeneralAnalytics answers={experimentAnswers} />}
+
+      <Divider />
+
+      {experimentAnswers && <SurveyDashboard answers={experimentAnswers} />}
+    </Box>
   )
 }
 
