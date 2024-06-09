@@ -59,8 +59,14 @@ const SurveyPage = () => {
     setGdprError('')
 
     // Validate age
-    if (!age) {
-      setAgeError('Please enter a valid age.')
+    const ageNumber = Number.parseInt(age)
+    if (
+      !/^\d+$/.test(age) ||
+      Number.isNaN(ageNumber) ||
+      ageNumber < 0 ||
+      ageNumber > 99
+    ) {
+      setAgeError('Please enter a valid age between 0 and 99.')
       valid = false
     }
 
