@@ -4,6 +4,7 @@ import { User } from '@main/models/User/User'
 import bcrypt from 'bcryptjs'
 import { ExperimentManager } from '@main/models/Experiment/ExperimentManager'
 import QuestionnaireManager from '@main/models/Questionnaire/QuestionnaireManager'
+import { version } from 'node:os'
 
 describe('System', () => {
   beforeAll(async () => {
@@ -177,7 +178,7 @@ describe('ExperimentManager and Experiment integration test', () => {
     manager = new ExperimentManager(userId)
   })
 
-  it('should create and then delete an experiment', async () => {
+  it('should create experiment and then delete an experiment', async () => {
     const title = 'Test Experiment'
     const description = 'This is a test experiment.'
     const restartCode = 'test123'
@@ -200,16 +201,28 @@ describe('Questionnaire and questionnaire integration test', () => {
     qManager = new QuestionnaireManager(experimentId)
   })
 
-  it('should create, update and validate a questionnaire', async () => {
+  it('should create, update, copy and delete a questionnaire', async () => {
+    // Create a questionnaire
     const questionnaireData = JSON.stringify({
-      question: 'What is your favorite color?',
+      question1: 'What is your favorite color?',
+      question2: 'Is that color nice to you?',
     })
     await qManager.createQuestionnaire(JSON.parse(questionnaireData), 'v1')
-    const questionnaires = qManager.getQuestionnaires()
+    let questionnaires = qManager.getQuestionnaires()
     expect(questionnaires.length).toBeGreaterThan(0)
+    const createdQuestionnaireId = questionnaires[0].getQuestionnaireInfo().id
 
-    const newForm = JSON.stringify({ question: 'What is your favorite food?' })
+    // Update the questionnaire
+    const newForm = JSON.stringify({ question1: 'What is your favorite food?' })
     await questionnaires[0].updateQuestionnaireForm(JSON.parse(newForm))
     expect(questionnaires[0].getQuestionnaireInfo().form).toEqual(newForm)
+    // Copy a questionnaire
+    await qManager.copyQuestionnaireById(createdQuestionnaireId)
+    questionnaires = qManager.getQuestionnaires()
+    expect(questionnaires.length).toBeGreaterThan(1)
+    // Delete the questionnaire
+    await qManager.deleteQuestionnaire(createdQuestionnaireId)
+    questionnaires = qManager.getQuestionnaires()
+    expect(questionnaires.length).toBe(1)
   })
 })
