@@ -162,7 +162,23 @@ describe('QuestionnaireManager', () => {
   })
 
   // TODO -->
-  it('should intialize random questionnaires --> initRdmQuestionnaire', async () => {})
+  it('should intialize random questionnaires --> initRdmQuestionnaire', async () => {
+    const manager = new QuestionnaireManager('new-testMan-id')
+    const randJSON: JSON = <JSON>(<unknown>{
+      logoPosition: 'right',
+      elements: [
+        { type: 'text', name: 'question1' },
+        { type: 'text', name: 'question2' },
+      ],
+    })
 
-  it('should export all answer to a CSV --> exportAllAnswers', async () => {})
+    expect(manager.getQuestionnaires()).toHaveLength(0)
+
+    await manager.createQuestionnaire(randJSON, 'version 1', 'version1')
+
+    await manager.createQuestionnaire(randJSON, 'version 2', 'version2')
+    expect(manager.getQuestionnaires()).toHaveLength(2)
+    const rand = await manager.initRdmQuestionnaire()
+    expect(rand.id).toMatch(/^version[12]$/)
+  })
 })
