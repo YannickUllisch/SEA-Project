@@ -11,6 +11,8 @@
     "postinstall": "electron-builder install-app-deps",
     "build:mac": "nextron build --mac --x64",
     "build:mac:arm": "nextron build --mac --arm64",
+    "build:linux": "nextron build --linux",
+    "build:win64": "nextron build --win --x64",
     "test": "jest"
   },
   "build": {

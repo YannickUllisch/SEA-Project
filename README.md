@@ -5,9 +5,8 @@ Demo video of the application:
 https://github.com/YannickUllisch/SEA-Project/assets/79836801/e99c7298-9387-413f-bacf-5d97bbd0826f
 
 
-
 ## Installation Guide
-- Download and install `nodeJS`, make sure to download v20.12.2, Angular doesn't work for newer versions yet. https://nodejs.org/en/download  <br />
+- Download and install `nodeJS`, make sure to download v20.12.2<br />
 - Download and install `yarn` (our package manager) - https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable  <br />
 - Check if yarn has been installed correctly by checking `yarn --version`.
 - Add VSCode Extensions listed below AND setup biome as code formatter
@@ -18,7 +17,6 @@ Add the following extensions:
   * React
   * Biome
   * Prisma
-  * Tailwind CSS IntelliSense
 
 ### Code Formatter setup
 Before doing this make sure to have the Biome extension added in VSCode. This is quite important since it will ensure that the code upholds a specific standard. 
@@ -70,14 +68,6 @@ Prisma is a library that makes it easy to setup database tables, perform querys 
 
 Watch this for a very quick overview: `https://www.youtube.com/watch?v=rLRIB6AF2Dg`.
 
-## UI Libraries
-For UI library we use MaterialUI. This has a bunch of components that can easily be a copied into the frontend. You dont have to install the @mui/material package, it is already added. To change the looks of MUI components you apply CSS inline through the `sx={{}}` props. Inside you can e.g. change background color by `sx={{backgroundColor='red'}}`. 
-
-## Useful Links for Web-Dev onboarding
-* For ICONS use Lucide-React. The package is already installed, individual Icons can just be imported. You can find the Icon overview here `https://lucide.dev/icons/` and a guide over how to use it here `https://lucide.dev/guide/packages/lucide-react`. 
-* Communication from backend to frontend via ElectronJS is done through ipc: https://www.electronjs.org/docs/latest/tutorial/ipc
-* The most important react hooks to learn: `https://www.youtube.com/watch?v=-4XpG5_Lj_o` `https://www.youtube.com/watch?v=vpE9I_eqHdM` and `https://www.youtube.com/watch?v=V9i3cGD-mts&list=PLApy4UwQM3UrZsBTY111R6P4frt6WK-G2`.
-
-## Running unit tests
-Run `yarn test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Running unit and integration tests
+Run `yarn test` to execute the unit tests via Jest.
 
