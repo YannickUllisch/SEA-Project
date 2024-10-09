@@ -10,7 +10,7 @@ import { Action, setLicenseKey } from 'survey-core'
 import theme from '@renderer/src/lib/theme'
 
 setLicenseKey(
-  'M2Q5NzE0OGItYTI3Ny00ZTc5LTk1NWUtZmJhNDAxNDZjNDk3OzE9MjAyNC0wNy0zMSwyPTIwMjQtMDctMzEsND0yMDI0LTA3LTMx',
+  'removed',
 )
 
 const defaultCreatorOptions: ICreatorOptions = {
